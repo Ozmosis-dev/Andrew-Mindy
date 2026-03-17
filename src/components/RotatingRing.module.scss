@@ -1,0 +1,31 @@
+.container {
+    position: absolute;
+    width: 100%;
+    /* Fill parent container */
+    height: 100%;
+    z-index: 0;
+    /* Behind the title */
+    opacity: 0.1;
+    /* Faded/Darker as per screenshot */
+    pointer-events: none;
+    transform: translate(30px, 35px) scale(0.75); /* Move right, lower, and make smaller */
+}
+
+.rotatingText {
+    width: 100%;
+    height: 100%;
+}
+
+.textCircle {
+    font-family: var(--font-space-grotesk); /* Changed to Space Grotesk */
+    font-size: 11.5px; /* Slightly adjusted to fit new phrase length */
+    /* Adjusted for larger SVG viewbox context */
+    font-weight: 700;
+    fill: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.58em;
+
+    :global(.light-mode) & {
+        fill: #000;
+    }
+}

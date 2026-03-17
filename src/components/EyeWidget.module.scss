@@ -1,0 +1,34 @@
+.container {
+    position: absolute;
+    /* Adjust positioning as needed, e.g., centered or specific coordinates */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    z-index: 5;
+}
+
+.rotatingText {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.textCircle {
+    font-family: var(--font-space-grotesk);
+    font-size: 10px;
+    font-weight: 700;
+    fill: #fff;
+    /* White text */
+    text-transform: uppercase;
+    letter-spacing: 0.58em;
+}
+
+.eye {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

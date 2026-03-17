@@ -1,0 +1,330 @@
+.section {
+    position: relative;
+    padding: 10rem 2rem;
+    color: var(--foreground);
+    background-color: var(--background);
+
+    :global(.light-mode) & {
+        background-color: var(--background);
+    }
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5rem;
+    padding: 0 4vw;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: 3.5fr 6.5fr;
+        gap: 8rem;
+    }
+}
+
+.leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: 1024px) {
+        position: sticky;
+        top: 20vh;
+        height: max-content;
+    }
+}
+
+.sectionTitle {
+    font-family: var(--font-phosphate);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin: 0;
+
+    > span {
+        display: block; // For MaskedTextReveal
+    }
+
+    & > span:nth-child(1) {
+        font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+        line-height: 1;
+        letter-spacing: 0.05em;
+        margin-left: 0.1em;
+        opacity: 0.8;
+    }
+
+    & > span:nth-child(2) {
+        font-size: clamp(4rem, 7vw, 6.5rem);
+        line-height: 0.75;
+        letter-spacing: -0.02em;
+        margin-top: -0.08em;
+
+        & > span > span:last-child {
+            background: linear-gradient(135deg, #E16922 0%, #ff8a47 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+}
+
+.pLead {
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    line-height: 1.6;
+    color: var(--secondary);
+    max-width: 450px;
+}
+
+.rightCol {
+    position: relative;
+    display: block; // Change from flex
+
+    @media (min-width: 1024px) {
+        margin-top: -3rem; // Aligns the inner card text identically with the "HOW I OPERATE" main title
+        padding-top: 0;
+    }
+}
+
+.scrollFade {
+    position: sticky;
+    bottom: -1px; // Help avoid an edge line
+    height: 35vh;
+    width: 100%;
+    margin-top: -35vh; // Pulls it up over the content without taking document height
+    background: linear-gradient(to top, var(--background) 5%, transparent 100%);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.scrollSpacer {
+    height: 250vh; // Match new TSX height calc!
+    width: 100%;
+}
+
+.absoluteWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none; // Let clicks pass down recursively
+    
+    // Enable interaction only on the card itself
+    & > * {
+        pointer-events: auto;
+    }
+}
+
+
+
+.decorativeLine {
+    width: 3.5rem;
+    height: 4px;
+    background: linear-gradient(90deg, #E16922 0%, rgba(225, 105, 34, 0) 100%);
+    border-radius: 2px;
+    margin-top: -1.5rem;
+}
+
+.visualElement {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    @media (max-width: 1023px) {
+        height: 250px;
+        margin-top: 1.5rem;
+    }
+}
+
+.lineDiagram {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    overflow: visible;
+
+    text {
+        user-select: none;
+    }
+}
+
+.progressContainerFull {
+    position: sticky;
+    bottom: 40px; 
+    width: 100vw;
+    margin-left: calc(50% - 50vw); // Full bleed hack
+    height: 64px; // Gives some padding
+    display: flex;
+    align-items: center;
+    background: transparent;
+    z-index: 100;
+}
+
+.progressBarFull {
+    position: relative;
+    width: 100%; 
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.rotatingSquareFull {
+    position: absolute;
+    top: -15px; // Center it on the 1px line (size is 32, line is 1, half is ~15-16)
+    left: 0;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--accent);
+    background: var(--background);
+    border-radius: 6px; // Optional: soften edges slightly
+    box-shadow: 0 0 15px rgba(225, 105, 34, 0.5);
+}
+
+.label {
+    fill: rgba(255, 255, 255, 0.6);
+
+    :global(.light-mode) & {
+        fill: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.primaryLabel {
+    fill: #ff8a47;
+
+    :global(.light-mode) & {
+        fill: #E16922;
+    }
+}
+
+.cardWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    
+    // We synchronize height completely across ALL cards so the physics formulas align
+    // perfectly when leaving the page regardless of their internal text length!
+    height: 480px;
+    
+    // The exact distance to perfectly overlap the glassmorphic card on the internal divider.
+    // 3rem (card top padding) + 2.5rem (40px graphic) + 1.5rem (header bottom padding) + 1px border
+    --stack-offset: 7.1rem; 
+
+    top: calc(10vh + (var(--card-idx) * var(--stack-offset))); // Mobile stack spacing
+
+    @media (min-width: 1024px) {
+        top: calc(20vh + (var(--card-idx) * var(--stack-offset))); // Desktop stack spacing matching left col
+        height: 400px; 
+    }
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%; // Extends rigidly out of flow
+    padding: 3rem 3rem 3rem 3rem;
+    
+    /* Using an opaque background mapped to the site canvas perfectly hides the underlying text */
+    background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, transparent 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    
+    /* Fade out the bottom of the card smoothly so stacked cards dissolve completely */
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+
+    :global(.light-mode) & {
+        background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, transparent 100%);
+        border-color: rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+        :global(.light-mode) & {
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+    }
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+
+    :global(.light-mode) & {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+}
+
+.cardGraphic {
+    opacity: 0.7;
+}
+
+.stepId {
+    font-family: var(--font-space-grotesk);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: rgba(225, 105, 34, 0.1); // Tinted with accent color
+    border: 1px solid rgba(225, 105, 34, 0.2);
+    letter-spacing: 0.05em;
+
+    :global(.light-mode) & {
+        background: rgba(225, 105, 34, 0.05);
+    }
+}
+
+.cardTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.cardDesc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--secondary);
+    margin: 0;
+}
+
+.glowLine {
+    width: 2px;
+    height: 6rem;
+    background: linear-gradient(to bottom, rgba(225, 105, 34, 0.5), rgba(225, 105, 34, 0));
+    margin: 1rem 0;
+    opacity: 0.6;
+}

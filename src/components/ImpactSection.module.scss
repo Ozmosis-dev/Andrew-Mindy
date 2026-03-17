@@ -1,0 +1,339 @@
+// ─────────────────────────────────────────────────────
+//  Impact Section — Glassmorphic Stat Cards
+// ─────────────────────────────────────────────────────
+
+.section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem;
+    background-color: var(--background);
+    position: relative;
+    overflow: visible;
+}
+
+.container {
+    max-width: 1336px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 900px;
+    z-index: 2;
+    position: relative;
+}
+
+.headline {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.9;
+    color: var(--foreground);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+
+    span:nth-last-child(-n+3) {
+        &>span:last-child {
+            /* Create a rich, flowing gradient */
+            background: linear-gradient(110deg,
+                    #8dcbf9 10%,
+                    #50a7ea 30%,
+                    #b0e0ff 50%,
+                    /* Bright shimmer point */
+                    #50a7ea 70%,
+                    #3584c9 90%);
+            background-size: 200% auto;
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            /* Continuous animations */
+            animation:
+                shimmerFlow 5s linear infinite,
+                glowPulse 3s ease-in-out infinite alternate;
+        }
+    }
+}
+
+@keyframes shimmerFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0px 0px 15px rgba(98, 175, 239, 0.2);
+    }
+
+    100% {
+        text-shadow: 0px 0px 25px rgba(138, 208, 255, 0.5), 0px 0px 10px rgba(98, 175, 239, 0.3);
+    }
+}
+
+.subtext {
+    font-family: var(--font-montserrat);
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--secondary);
+    max-width: 700px;
+    font-weight: 400;
+}
+
+// ─── Stats Grid ──────────────────────────────────────
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    width: 100%;
+    margin-top: 2rem;
+    z-index: 2;
+    position: relative;
+}
+
+// ─── Stat Card ───────────────────────────────────────
+
+.statCard {
+    position: relative;
+    padding: 2.25rem 1.25rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+
+    // Glassmorphic background
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    transition:
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s ease,
+        box-shadow 0.4s ease;
+
+    // ── Animated glow border (::after) ──
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: conic-gradient(from var(--border-angle, 0deg),
+                transparent 40%,
+                rgba(141, 203, 249, 0.0) 45%,
+                rgba(98, 175, 239, 0.15) 50%,
+                rgba(53, 132, 201, 0.0) 55%,
+                transparent 60%);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        z-index: -1;
+        animation: rotateBorder 6s linear infinite;
+        opacity: 0.5;
+        transition: opacity 0.4s ease;
+    }
+
+    // ── Cursor-tracking radial glow (::before) ──
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(98, 175, 239, 0.08),
+                transparent 60%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    // ── Hover Effects ──
+    &:hover {
+        transform: translateY(-8px);
+        border-color: rgba(98, 175, 239, 0.25);
+        box-shadow:
+            0 8px 32px rgba(98, 175, 239, 0.08),
+            0 0 0 1px rgba(98, 175, 239, 0.1);
+
+        &::after {
+            opacity: 1;
+        }
+
+        &::before {
+            opacity: 1;
+        }
+
+        .statValue {
+            text-shadow:
+                0 0 20px rgba(98, 175, 239, 0.4),
+                0 0 40px rgba(98, 175, 239, 0.15);
+        }
+
+        .statLabel {
+            color: rgba(141, 203, 249, 0.85);
+        }
+
+        .icon {
+            color: rgba(141, 203, 249, 0.85);
+            transform: scale(1.15) rotate(-8deg);
+        }
+
+        .cardLine {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+    }
+}
+
+// ── Card accent line ─────────────────────────────────
+
+.cardLine {
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #62afef, transparent);
+    border-radius: 1px;
+    transform: scaleX(0);
+    opacity: 0;
+    transition:
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.4s ease;
+}
+
+// ── Stat Value ───────────────────────────────────────
+
+.statValue {
+    font-family: var(--font-space-grotesk);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    white-space: nowrap;
+    color: var(--foreground);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    transition: text-shadow 0.4s ease;
+
+    .arrow {
+        display: inline-block;
+        font-size: 0.7em;
+        opacity: 0.5;
+        margin: 0 0.15em;
+        vertical-align: middle;
+    }
+}
+
+// ── Stat Label & Icon ────────────────────────────────
+
+.labelContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icon {
+    font-size: 1.1rem;
+    color: var(--secondary);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.4s ease;
+}
+
+.statLabel {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--secondary);
+    font-weight: 500;
+    transition: color 0.4s ease;
+}
+
+// ─── Border Rotation Keyframes ───────────────────────
+
+@keyframes rotateBorder {
+    0% {
+        --border-angle: 0deg;
+    }
+
+    100% {
+        --border-angle: 360deg;
+    }
+}
+
+@property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+// ─── Responsive ──────────────────────────────────────
+
+@media (max-width: 1024px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .section {
+        padding: 4rem 1.25rem;
+    }
+
+    .headline {
+        font-size: 2rem;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .statCard {
+        padding: 1.75rem 1.5rem;
+    }
+}
+
+// ─── Reduced Motion ──────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+    .statCard {
+        transition: none;
+
+        &::after {
+            animation: none;
+        }
+
+        &::before {
+            display: none;
+        }
+    }
+
+    .cardLine {
+        transition: none;
+    }
+}

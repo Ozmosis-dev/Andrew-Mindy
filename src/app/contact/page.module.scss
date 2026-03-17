@@ -1,0 +1,21 @@
+.page {
+    padding-top: 100px;
+    /* Accounts for fixed nav */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top right, #1a1a1a, #0a0a0a);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+        font-size: 4rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+    }
+}

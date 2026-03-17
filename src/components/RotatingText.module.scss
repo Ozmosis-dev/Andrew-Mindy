@@ -1,0 +1,95 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-family: var(--font-space-grotesk);
+    z-index: 2;
+    position: relative;
+}
+
+.wrapper {
+    height: 2.5rem;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: none;
+    /* Changed from 95vw to none to prevent clipping */
+
+    @media (max-width: 600px) {
+        height: 1.6rem;
+    }
+}
+
+.ghost {
+    visibility: hidden;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.5em;
+    /* 500 tracking */
+    white-space: nowrap;
+    text-transform: uppercase;
+    display: block;
+
+    @media (max-width: 600px) {
+        font-size: 1.2rem;
+    }
+}
+
+.staticText {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+    /* Adaptive color */
+    opacity: 0.8;
+
+    @media (max-width: 600px) {
+        font-size: 1rem;
+    }
+}
+
+.wordContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.char {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: 900;
+    /* color: #62afef; replaced by gradient below */
+    background: linear-gradient(180deg, #8dcbf9 0%, #62afef 50%, #3584c9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0px 2px 10px rgba(98, 175, 239, 0.3);
+    /* Metallic Gold */
+    letter-spacing: 0.5em;
+    /* 500 tracking */
+    text-transform: uppercase;
+    white-space: pre;
+
+    @media (max-width: 600px) {
+        font-size: 1.2rem;
+    }
+}

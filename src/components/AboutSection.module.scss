@@ -1,0 +1,197 @@
+.aboutSection {
+    position: relative;
+    padding: 10rem 2rem;
+    overflow: clip; /* clip allows sticky to work unlike hidden */
+    color: var(--foreground);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    :global(.light-mode) & {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+}
+
+.bgBlob {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 60vw;
+    height: 80vh;
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.05) 0%, rgba(5, 5, 5, 0) 70%);
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    pointer-events: none;
+
+    :global(.light-mode) & {
+        background: radial-gradient(circle, rgba(98, 175, 239, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    }
+}
+
+.container {
+    position: relative;
+    z-index: 10;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5rem;
+    padding: 0 4vw;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: 3.5fr 6.5fr;
+        gap: 8rem;
+    }
+}
+
+.leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: 1024px) {
+        position: sticky;
+        top: 20vh;
+        /* Sticky scroll for the title */
+        height: max-content;
+        align-self: start;
+    }
+}
+
+.sectionTitle {
+    font-family: var(--font-phosphate);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin: 0;
+
+    & > span:nth-child(1) {
+        font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+        line-height: 1;
+        letter-spacing: 0.05em;
+        margin-left: 0.1em;
+        opacity: 0.8;
+    }
+
+    & > span:nth-child(2) {
+        font-size: clamp(4rem, 7vw, 6.5rem);
+        line-height: 0.75;
+        letter-spacing: -0.02em;
+        margin-top: -0.08em;
+
+        & > span > span:last-child {
+            background: linear-gradient(135deg, rgba(141, 203, 249, 1) 0%, rgba(98, 175, 239, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    }
+}
+
+.decorativeLine {
+    width: 3.5rem;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(141, 203, 249, 1) 0%, rgba(98, 175, 239, 0) 100%);
+    border-radius: 2px;
+    margin-top: -1.5rem;
+}
+
+.rightCol {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.scrollFade {
+    position: sticky;
+    bottom: -1px; // Help avoid an edge line
+    height: 25vh;
+    width: 100%;
+    margin-top: -25vh; // Pulls it up over the content without taking document height
+    background: linear-gradient(to top, var(--background) 5%, transparent 100%);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.leadText {
+
+    // Style for the H3 MaskedTextReveal
+    // Needs to wrap deep
+    :global(.masked-reveal-component) {
+        display: inline-block;
+    }
+
+    h3 {
+        font-family: var(--font-phosphate);
+        font-size: clamp(2rem, 3.3vw, 3.7rem);
+        line-height: 1.0;
+        color: var(--primary);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+    }
+}
+
+.paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    p {
+        font-family: var(--font-montserrat);
+        font-size: clamp(1.05rem, 1.2vw, 1.15rem);
+        line-height: 1.8;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        color: rgba(255, 255, 255, 0.75);
+        margin: 0;
+        max-width: 750px;
+
+        :global(.light-mode) & {
+            color: rgba(0, 0, 0, 0.7);
+        }
+    }
+}
+
+.visualElement {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 1023px) {
+        height: 300px;
+        margin-top: 2rem;
+    }
+}
+
+.lineDiagram {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    overflow: visible;
+
+    text {
+        user-select: none;
+    }
+}
+
+.label {
+    fill: rgba(255, 255, 255, 0.6);
+
+    :global(.light-mode) & {
+        fill: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.primaryLabel {
+    fill: var(--primary);
+
+    :global(.light-mode) & {
+        fill: #000;
+    }
+}

@@ -1,0 +1,45 @@
+.word {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    line-height: 0.9;
+    /* Adjust as needed to fit the text tightly */
+    vertical-align: top;
+    margin-right: 0.25em;
+    /* Space between words */
+    padding-bottom: 0.1em;
+    /* Prevent descenders from being cut off */
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.wordHidden {
+    display: inline-block;
+    color: transparent;
+    /* Takes up space but isn't seen, allows native selection highlight */
+
+    &::selection {
+        color: var(--foreground);
+        background-color: var(--accent);
+    }
+
+    &::-moz-selection {
+        color: var(--foreground);
+        background-color: var(--accent);
+    }
+}
+
+.wordVisible {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* pass clicks/selection to the hidden word */
+    user-select: none;
+    /* prevent double copy-paste */
+}

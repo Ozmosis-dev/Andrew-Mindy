@@ -1,0 +1,226 @@
+/* Hero.module.scss */
+
+/* Global cursor hide for this effect usually requires specific handling, 
+   but we'll apply it to the hero specifically */
+
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: visible;
+    /* Changed from hidden to allow text to fly out */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    /* Background handled by inner container */
+    z-index: 10;
+    /* Ensure Hero sits on top of ImpactSection's overflowing animation */
+
+    .heroBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+        border-radius: inherit;
+        /* Inherit border radius from parent for animation */
+        background: var(--background);
+    }
+
+    .cursor {
+        position: fixed;
+        background: #2128bd;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border-radius: 50%;
+        will-change: transform;
+        user-select: none;
+        pointer-events: none;
+        z-index: 10000;
+    }
+
+    .videoBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        transition: filter 0.3s ease;
+
+        :global(.light-mode) & {
+            filter: invert(1);
+        }
+    }
+
+
+
+    .shape {
+        will-change: transform;
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.8;
+
+        &.shape1 {
+            background: #62afef;
+            width: 650px;
+            height: 650px;
+            margin: -325px 0 0 -325px;
+        }
+
+        &.shape2 {
+            background: #ffe5e3;
+            width: 440px;
+            height: 440px;
+            margin: -220px 0 0 -220px;
+        }
+
+        &.shape3 {
+            background: #f9bb69;
+            width: 270px;
+            height: 270px;
+            margin: -135px 0 0 -135px;
+        }
+    }
+
+    /* Content Overlay */
+    .content {
+        position: relative;
+        text-align: center;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+
+        width: 100%;
+        height: 100%;
+
+        /* Text Color is white */
+        color: #fff;
+
+        :global(.light-mode) & {
+            color: #000;
+        }
+    }
+
+    .titleWrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .title {
+        font-family: var(--font-phosphate);
+        font-size: 192px;
+        line-height: 0.8;
+        margin: 0;
+        padding-top: 60px;
+        text-transform: uppercase;
+        letter-spacing: -3px;
+        position: relative;
+        z-index: 2;
+        color: #fff;
+
+        :global(.light-mode) & {
+            color: #000;
+        }
+
+        // Remove mix-blend-mode stuff if present in global overrides, 
+        // but here we just ensure white color.
+
+        @media (max-width: 1200px) {
+            font-size: 150px;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 80px;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 70px;
+            letter-spacing: 2px;
+            line-height: 0.9;
+        }
+    }
+
+    .ringContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(45%, -90%);
+        z-index: 1;
+        width: 300px;
+        height: 300px;
+        pointer-events: none;
+
+        @media (max-width: 768px) {
+            width: 250px;
+            height: 250px;
+            transform: translate(-50%, -50%);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+    .eyeContainer {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 20;
+
+        &:hover {
+            color: #62afef;
+        }
+    }
+
+    .rotatingTextContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        // Allows text to be top layer
+        position: relative;
+        z-index: 30;
+    }
+
+    .staticText {
+        font-family: var(--font-space-grotesk); // Use same font as RotatingText if possible
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #fff; // or adaptive
+        opacity: 0.9;
+        text-align: center;
+
+        :global(.light-mode) & {
+            color: #000;
+        }
+
+        @media (max-width: 600px) {
+            font-size: 1rem;
+        }
+    }
+
+
+    .connectContainer {
+        margin-top: 1rem;
+    }
+
+    .vignette {
+        display: none;
+    }
+}

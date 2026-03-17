@@ -1,0 +1,53 @@
+.footer {
+    padding: 4rem 2rem;
+    background-color: #050505;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--secondary);
+    font-size: 0.9rem;
+
+    .content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .socials {
+        display: flex;
+        gap: 1.5rem;
+
+        a {
+            transition: color 0.2s;
+
+            &:hover {
+                color: var(--primary);
+            }
+        }
+    }
+
+    .copy {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 768px) {
+        .content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .copy {
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .socials {
+            gap: 1.25rem;
+            font-size: 0.85rem;
+        }
+    }
+}

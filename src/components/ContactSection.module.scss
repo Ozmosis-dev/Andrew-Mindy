@@ -1,0 +1,467 @@
+/* ═══════════════════════════════════════════════════════════════
+   ContactSection.module.scss  —  Final CTA
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Section shell ──────────────────────────────────────────── */
+
+.section {
+    position: relative;
+    padding: 9rem 2rem 0;
+    background-color: var(--background);
+    overflow: hidden;
+
+    /* Subtle warm tint to distinguish from rest of page */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 80% 60% at 75% 50%,
+            rgba(225, 105, 34, 0.055) 0%,
+            transparent 65%
+        );
+        pointer-events: none;
+        z-index: 0;
+    }
+}
+
+/* Warm radial glow behind SVG */
+.bgGlow {
+    position: absolute;
+    top: 50%;
+    right: -8%;
+    transform: translateY(-55%);
+    width: min(65vw, 700px);
+    height: min(65vw, 700px);
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(225, 105, 34, 0.1) 0%,
+        rgba(225, 105, 34, 0.04) 40%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Container ──────────────────────────────────────────────── */
+
+.container {
+    max-width: 1336px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Two-column layout ──────────────────────────────────────── */
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    padding-bottom: 7rem;
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 3rem;
+    }
+}
+
+.leftCol {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+
+    @media (min-width: 1024px) {
+        flex: 0 0 56%;
+    }
+}
+
+.rightCol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (min-width: 1024px) {
+        flex: 0 0 44%;
+    }
+
+    /* Subtly fade on mobile to save space */
+    @media (max-width: 1023px) {
+        opacity: 0.6;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
+
+/* ── Eyebrow ────────────────────────────────────────────────── */
+
+.eyebrow {
+    display: block;
+    font-family: var(--font-montserrat);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--accent);
+}
+
+/* ── Headline ───────────────────────────────────────────────── */
+
+/* Flex column so every child gets the same gap — no margin hacks needed */
+.headline {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Each line rendered as a display block via MaskedTextReveal */
+.headlineBlock {
+    display: block;
+    font-family: var(--font-phosphate);
+    font-size: clamp(1.8rem, 4.8vw, 5.2rem);
+    color: var(--primary);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+}
+
+/* "BUILD" — SVG outline wrapper; viewBox is already cropped to letter bounds */
+.buildSvgWrapper {
+    display: block;
+    line-height: 0;
+    overflow: visible;
+    margin-top: -1.4rem;
+    margin-bottom: -1.4rem;
+}
+
+.buildSvg {
+    /* Scale with viewport width like the surrounding text — not container
+       width — so BUILD stays proportionate across all screen sizes.
+       33vw tracks LET'S (6.5vw × ~5 letter-widths) visually. */
+    width: clamp(280px, 40vw, 540px);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+    /* Light mode: invert stroke to near-black */
+    :global(.light-mode) & text {
+        stroke: #0a0a0a !important;
+    }
+}
+
+/* Lines 3 & 4 slightly smaller to create convergence */
+.headlineSmall {
+    font-size: clamp(2.3rem, 5.5vw, 7rem);
+    line-height: 0.88;
+}
+
+/* "WHAT COMES NEXT." — matches LET'S exactly so the two text lines
+   read as a matched pair bracketing the large outline BUILD. */
+.headlineBottom {
+    font-size: clamp(1.8rem, 4.8vw, 5.2rem);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* Container for last line (NEXT + orange period inline) */
+.lastLine {
+    display: flex;
+    align-items: baseline;
+    overflow: visible;
+}
+
+/* Inline variant — no display:block so it sits next to the period */
+.headlineInline {
+    font-family: var(--font-phosphate);
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    /* font-size comes from .headlineSmall via composition */
+}
+
+/* The orange period — same metrics as surrounding text */
+.accentPeriod {
+    font-family: var(--font-phosphate);
+    color: var(--accent);
+    letter-spacing: -0.025em;
+    line-height: 0.88;
+    /* font-size comes from .headlineSmall via composition */
+    margin-left: -0.04em; /* tighten gap slightly */
+    display: inline-block;
+}
+
+/* ── Ruled divider ──────────────────────────────────────────── */
+
+.rule {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    transform-origin: left;
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ── Subtext ────────────────────────────────────────────────── */
+
+.subtext {
+    font-family: var(--font-montserrat);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    color: var(--secondary);
+    line-height: 1.8;
+    margin: 0;
+    max-width: 460px;
+}
+
+/* ── CTA row ────────────────────────────────────────────────── */
+
+.ctaRow {
+    display: flex;
+}
+
+/* Primary CTA — solid orange fill (unique on the page) */
+.primaryCta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #050505;
+    text-decoration: none;
+    padding: 1.5rem 2.75rem;
+    background: var(--accent);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+    :global(.light-mode) & {
+        color: #ffffff;
+    }
+
+    /* Expanding white overlay on hover */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #ffffff;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 0;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 48px rgba(225, 105, 34, 0.45);
+
+        &::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .ctaLabel,
+        .ctaArrow {
+            color: var(--accent); /* orange text appears as white bg reveals */
+        }
+
+        .ctaArrow {
+            transform: translateX(6px);
+        }
+    }
+}
+
+.ctaLabel,
+.ctaArrow {
+    position: relative;
+    z-index: 1;
+    transition: color 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Email display ──────────────────────────────────────────── */
+
+.emailDisplay {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.32);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.32);
+    }
+
+    /* Sliding underline */
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover {
+        color: var(--accent);
+
+        &::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+    }
+}
+
+/* ── Dashboard SVG ───────────────────────────────────────────── */
+
+.signalSvg {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    display: block;
+}
+
+/* Blinking cursor in URL bar */
+.cursor {
+    animation: cursorBlink 1.1s step-end infinite;
+}
+
+/* Expanding ring on the active metric card */
+.metricRing {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ringExpand 2.6s ease-out infinite;
+}
+
+/* Expanding ring on the live chart endpoint dot */
+.chartDotRing {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ringExpand 2.0s ease-out infinite 0.8s;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 0.55; }
+    50%       { opacity: 0;    }
+}
+
+@keyframes ringExpand {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(4.5); opacity: 0;   }
+}
+
+/* ── Footer strip ───────────────────────────────────────────── */
+
+.footerStrip {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2.5rem 0 3.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+    }
+
+    :global(.light-mode) & {
+        border-top-color: rgba(0, 0, 0, 0.06);
+    }
+}
+
+.footerItem {
+    font-family: var(--font-montserrat);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.32);
+    }
+}
+
+.footerEmail {
+    font-family: var(--font-montserrat);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.25s ease;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.32);
+    }
+
+    &:hover {
+        color: var(--accent);
+    }
+}
+
+/* Thin vertical rule between footer items */
+.footerRule {
+    display: none;
+
+    @media (min-width: 640px) {
+        display: block;
+        width: 1px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.12);
+        margin: 0 2rem;
+        flex-shrink: 0;
+    }
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.12);
+    }
+}
+
+.footerSocials {
+    display: flex;
+    gap: 1.75rem;
+
+    @media (min-width: 640px) {
+        margin-left: auto;
+    }
+}
+
+.socialLink {
+    font-family: var(--font-montserrat);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    transition: color 0.25s ease;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.32);
+    }
+
+    &:hover {
+        color: var(--primary);
+    }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor,
+    .metricRing,
+    .chartDotRing {
+        animation: none;
+    }
+}

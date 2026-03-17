@@ -1,0 +1,650 @@
+/* ═══════════════════════════════════════════
+   ServicesSection.module.scss
+   ═══════════════════════════════════════════ */
+
+.section {
+    position: relative;
+    padding: 8rem 2rem 6rem;
+    background-color: var(--background);
+    color: var(--foreground);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    :global(.light-mode) & {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+}
+
+.container {
+    max-width: 1336px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+/* ── Header ─────────────────────────────── */
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.eyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    display: block;
+}
+
+.sectionTitle {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 6vw, 6rem);
+    color: var(--primary);
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.sectionIntro {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--secondary);
+    max-width: 460px;
+    line-height: 1.6;
+    margin: 0.25rem 0 0;
+}
+
+/* ── Grid ────────────────────────────────── */
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ── Card base ───────────────────────────── */
+
+.card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition:
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse at 0% 100%,
+            rgba(225, 105, 34, 0.07) 0%,
+            transparent 55%
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }
+
+    &:hover {
+        border-color: rgba(225, 105, 34, 0.3);
+        transform: translateY(-4px);
+        box-shadow:
+            0 24px 60px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba(225, 105, 34, 0.08);
+
+        :global(.light-mode) & {
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(225, 105, 34, 0.12);
+        }
+
+        &::after {
+            opacity: 1;
+        }
+
+        .accentBar {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        .cardNumber {
+            opacity: 0.2;
+            color: var(--accent);
+        }
+    }
+}
+
+/* Span full width on the 2-col grid */
+.cardSpan {
+    @media (min-width: 768px) {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Featured card accent */
+.cardFeatured {
+    background: rgba(225, 105, 34, 0.04);
+    border-color: rgba(225, 105, 34, 0.18);
+
+    &:hover {
+        background: rgba(225, 105, 34, 0.07);
+        border-color: rgba(225, 105, 34, 0.42);
+    }
+
+    .accentBar {
+        transform: scaleX(1);
+        opacity: 0.55;
+        background: linear-gradient(
+            90deg,
+            var(--accent) 0%,
+            rgba(225, 105, 34, 0.4) 60%,
+            transparent 100%
+        );
+    }
+
+    :global(.light-mode) & {
+        background: rgba(225, 105, 34, 0.04);
+    }
+}
+
+/* Accent bar at card top */
+.accentBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        var(--accent) 0%,
+        rgba(225, 105, 34, 0) 80%
+    );
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    transition:
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.4s ease;
+    z-index: 2;
+}
+
+/* ── Standard card inner ─────────────────── */
+
+.standardInner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2.25rem;
+    height: 100%;
+}
+
+/* ── Featured card inner ─────────────────── */
+
+.featuredInner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2.5rem;
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 5rem;
+    }
+}
+
+.featuredLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.featuredRight {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    justify-content: center;
+}
+
+.featuredNote {
+    font-family: var(--font-montserrat);
+    font-size: 0.8rem;
+    color: rgba(225, 105, 34, 0.65);
+    margin: 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(225, 105, 34, 0.15);
+    letter-spacing: 0.02em;
+}
+
+/* ── Card elements ───────────────────────── */
+
+.cardTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cardNumber {
+    font-family: var(--font-phosphate);
+    font-size: 4.5rem;
+    line-height: 1;
+    color: var(--primary);
+    opacity: 0.07;
+    letter-spacing: -0.02em;
+    transition:
+        color 0.4s ease,
+        opacity 0.4s ease;
+    flex-shrink: 0;
+
+    .cardFeatured & {
+        font-size: 5.5rem;
+        opacity: 0.1;
+    }
+}
+
+.badge {
+    font-family: var(--font-montserrat);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+}
+
+.badgeAccent {
+    background: var(--accent);
+    color: #050505;
+}
+
+.badgeMuted {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--secondary);
+
+    :global(.light-mode) & {
+        border-color: rgba(0, 0, 0, 0.15);
+    }
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cardTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: 0.02em;
+
+    .cardFeatured & {
+        font-size: clamp(2rem, 3vw, 2.8rem);
+    }
+}
+
+.cardTagline {
+    font-family: var(--font-space-grotesk);
+    font-size: 0.88rem;
+    color: var(--accent);
+    font-style: italic;
+    margin: 0;
+    opacity: 0.85;
+}
+
+.cardDivider {
+    height: 1px;
+    background: var(--card-border);
+    flex-shrink: 0;
+}
+
+.cardDesc {
+    font-family: var(--font-montserrat);
+    font-size: 0.88rem;
+    color: var(--secondary);
+    line-height: 1.75;
+    margin: 0;
+}
+
+.deliverables {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.deliverableItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-montserrat);
+    font-size: 0.8rem;
+    color: var(--secondary);
+    line-height: 1.4;
+
+    &::before {
+        content: "";
+        width: 18px;
+        height: 1px;
+        background: var(--accent);
+        flex-shrink: 0;
+        opacity: 0.7;
+    }
+}
+
+/* ── Studio Discovery Callout ────────────── */
+
+.discoveryCallout {
+    display: grid;
+    gap: 2rem;
+    padding: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 160px 1fr;
+        gap: 4rem;
+    }
+
+    :global(.light-mode) & {
+        border-color: rgba(0, 0, 0, 0.07);
+    }
+
+    /* Top gradient line */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.18) 30%,
+            rgba(255, 255, 255, 0.18) 70%,
+            transparent
+        );
+
+        :global(.light-mode) & {
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 0, 0, 0.12) 30%,
+                rgba(0, 0, 0, 0.12) 70%,
+                transparent
+            );
+        }
+    }
+}
+
+.discoveryLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.discoveryEyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.28);
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+.discoveryNumber {
+    font-family: var(--font-phosphate);
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--primary);
+    opacity: 0.05;
+    letter-spacing: -0.02em;
+    margin-top: 0.25rem;
+}
+
+.discoveryRight {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.discoveryTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+.discoveryDesc {
+    font-family: var(--font-montserrat);
+    font-size: 0.88rem;
+    color: var(--secondary);
+    line-height: 1.75;
+    margin: 0;
+    max-width: 580px;
+}
+
+.discoveryTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.discoveryTag {
+    font-family: var(--font-montserrat);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--secondary);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    letter-spacing: 0.02em;
+
+    :global(.light-mode) & {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ── Retainer Card ───────────────────────── */
+
+.retainerCard {
+    background: rgba(225, 105, 34, 0.04);
+    border: 1px solid rgba(225, 105, 34, 0.18);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition:
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse at 0% 100%,
+            rgba(225, 105, 34, 0.07) 0%,
+            transparent 55%
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }
+
+    &:hover {
+        border-color: rgba(225, 105, 34, 0.42);
+        transform: translateY(-4px);
+        box-shadow:
+            0 24px 60px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba(225, 105, 34, 0.08);
+
+        :global(.light-mode) & {
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(225, 105, 34, 0.12);
+        }
+
+        &::after {
+            opacity: 1;
+        }
+
+        .accentBar {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+    }
+
+    .accentBar {
+        transform: scaleX(1);
+        opacity: 0.55;
+        background: linear-gradient(
+            90deg,
+            var(--accent) 0%,
+            rgba(225, 105, 34, 0.4) 60%,
+            transparent 100%
+        );
+    }
+
+    :global(.light-mode) & {
+        background: rgba(225, 105, 34, 0.04);
+    }
+}
+
+.retainerInner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2.5rem;
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 5rem;
+    }
+}
+
+.retainerLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.retainerEyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.25);
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.28);
+    }
+}
+
+.retainerTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+.retainerTagline {
+    font-family: var(--font-space-grotesk);
+    font-size: 0.88rem;
+    color: var(--accent);
+    font-style: italic;
+    margin: 0;
+    opacity: 0.85;
+}
+
+.retainerRight {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    justify-content: center;
+}
+
+.retainerDesc {
+    font-family: var(--font-montserrat);
+    font-size: 0.88rem;
+    color: var(--secondary);
+    line-height: 1.75;
+    margin: 0;
+}
+
+.retainerTiers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(225, 105, 34, 0.15);
+}
+
+.retainerTier {
+    font-family: var(--font-montserrat);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(225, 105, 34, 0.8);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(225, 105, 34, 0.25);
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+/* ── GSAP initial state (overridden by JS) ── */
+.gsapCard {
+    opacity: 0;
+}

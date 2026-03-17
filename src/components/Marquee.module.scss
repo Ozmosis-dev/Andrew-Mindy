@@ -1,0 +1,44 @@
+.marqueeContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    z-index: 1;
+    padding: 1rem 0;
+    pointer-events: none;
+    /* Let clicks pass through to nav/hero */
+}
+
+.track {
+    display: flex;
+    white-space: nowrap;
+    gap: 2rem;
+}
+
+.text {
+    font-family: var(--font-space-grotesk), sans-serif;
+    /* Changed to Space Grotesk */
+    font-size: 8rem;
+    /* Much larger as per screenshot */
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+    /* Slightly more transparent */
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    padding-right: 4rem;
+
+    :global(.light-mode) & {
+        -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        font-size: 3rem;
+        -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.4);
+
+        :global(.light-mode) & {
+            -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
+        }
+    }
+}

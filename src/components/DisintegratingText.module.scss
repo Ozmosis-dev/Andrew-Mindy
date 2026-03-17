@@ -1,0 +1,28 @@
+.container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    position: relative;
+    z-index: 10;
+}
+
+.char {
+    display: inline-block;
+    white-space: pre;
+    will-change: transform, opacity;
+    font-family: var(--font-space-grotesk);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #fff;
+
+    :global(.light-mode) & {
+        color: #000;
+    }
+
+    @media (max-width: 600px) {
+        font-size: 1rem;
+    }
+}
