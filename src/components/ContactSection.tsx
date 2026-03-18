@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./ContactSection.module.scss";
 import MaskedTextReveal from "./MaskedTextReveal";
+import CtaPopup from "./CtaPopup";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -27,10 +28,10 @@ function DashboardGraphic() {
     const chartLine = "M 116 218 L 158 204 L 200 210 L 242 192 L 284 196 L 326 177 L 368 181 L 410 162 L 436 150";
     const chartArea = "M 116 218 L 158 204 L 200 210 L 242 192 L 284 196 L 326 177 L 368 181 L 410 162 L 436 150 L 436 230 L 116 230 Z";
 
-    const navYs   = [78, 108, 138, 168, 198, 226];
-    const gridYs  = [152, 168, 184, 200, 216];
-    const cards   = [{ x: 90, accent: true }, { x: 210 }, { x: 330 }];
-    const rows    = [{ y: 262, w: 0.72 }, { y: 294, w: 0.46 }, { y: 326, w: 0.88 }];
+    const navYs = [78, 108, 138, 168, 198, 226];
+    const gridYs = [152, 168, 184, 200, 216];
+    const cards = [{ x: 90, accent: true }, { x: 210 }, { x: 330 }];
+    const rows = [{ y: 262, w: 0.72 }, { y: 294, w: 0.46 }, { y: 326, w: 0.88 }];
 
     return (
         <svg
@@ -43,11 +44,11 @@ function DashboardGraphic() {
         >
             <defs>
                 <linearGradient id="dashArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stopColor="#E16922" stopOpacity="0.18" />
-                    <stop offset="100%" stopColor="#E16922" stopOpacity="0"    />
+                    <stop offset="0%" stopColor="#E16922" stopOpacity="0.18" />
+                    <stop offset="100%" stopColor="#E16922" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="dashBar" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%"   stopColor="#E16922" stopOpacity="0.9" />
+                    <stop offset="0%" stopColor="#E16922" stopOpacity="0.9" />
                     <stop offset="100%" stopColor="#E16922" stopOpacity="0.25" />
                 </linearGradient>
             </defs>
@@ -415,6 +416,8 @@ function BuildOutlineText() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ContactSection() {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
     return (
         <section className={styles.section} id="contact">
             {/* Warm radial glow behind SVG */}
@@ -496,12 +499,12 @@ export default function ContactSection() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.8 }}
                         >
-                            <Link href="/contact" className={styles.primaryCta}>
+                            <button onClick={() => setIsPopupOpen(true)} className={styles.primaryCta}>
                                 <span className={styles.ctaLabel}>
                                     Begin the Conversation
                                 </span>
                                 <span className={styles.ctaArrow}>→</span>
-                            </Link>
+                            </button>
                         </motion.div>
 
                         <motion.a
@@ -541,6 +544,10 @@ export default function ContactSection() {
                     </a>
                 </footer>
             </div>
+
+            <AnimatePresence>
+                {isPopupOpen && <CtaPopup onClose={() => setIsPopupOpen(false)} />}
+            </AnimatePresence>
         </section>
     );
 }

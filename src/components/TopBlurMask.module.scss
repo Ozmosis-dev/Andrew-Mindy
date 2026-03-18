@@ -1,0 +1,60 @@
+/* ─────────────────────────────────────────────────
+   Viewport-edge blur / fade strip
+   ─────────────────────────────────────────────────
+   z-index 999  → above page content, below nav (1000)
+   pointer-events: none — never blocks clicks
+   No background colour — pure backdrop-filter blur
+
+   WHY the split between parent and ::before:
+   Chrome/WebKit have a known compositing bug where
+   backdrop-filter + mask-image on the SAME element
+   silently disables the blur. The fix is to put
+   mask-image on the PARENT so it masks the already-
+   rendered backdrop-filter output from the ::before
+   child — this compositing order is correct and works
+   cross-browser.
+───────────────────────────────────────────────── */
+.mask {
+    position: fixed;
+    top:      0;
+    left:     0;
+    right:    0;
+    height:   120px;
+    z-index:  999;
+
+    pointer-events: none;
+
+    /* Force GPU compositing layer so the backdrop-filter
+       has a proper compositing surface to read from.    */
+    transform: translateZ(0);
+
+    /*
+     * Gradient mask applied to the ENTIRE element,
+     * including the ::before child's blurred output.
+     *   top    → fully opaque  (blur at full strength)
+     *   bottom → fully transparent (blur dissolves)
+     */
+    mask-image:         linear-gradient(to bottom, black 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+}
+
+/* ── Blur surface ──────────────────────────────── */
+.mask::before {
+    content:  '';
+    position: absolute;
+    inset:    0;
+
+    /*
+     * backdrop-filter lives here, separate from mask-image
+     * above, to avoid the Chrome/WebKit compositing bug.
+     */
+    backdrop-filter:         blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+/* ── Mobile: shorter strip ─────────────────────── */
+@media (max-width: 600px) {
+    .mask {
+        height: 88px;
+    }
+}

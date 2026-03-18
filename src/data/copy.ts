@@ -86,9 +86,8 @@ export const siteCopy = {
     },
     about: {
         paragraphs: [
-            "I started as a designer, spent four years on a sales floor closing deals and building training systems, and evolved into someone who can own the full stack—from brand strategy to custom automation.",
-            "That sales floor experience changed how I think about creative work. When you've sold $160K+ per month and watched reps succeed or struggle based on whether the system supported them, you stop designing for awards. You design for conversion. You build systems that remove friction and create predictability.",
-            "Now I work with companies that have outgrown their current tools and processes. The brand that got you to $1M won't get you to $10M. The manual workflows that worked with five people break down with fifty. I help systematize what's working so it scales without you."
+            "Most companies treat brand, marketing, and operations as separate problems with separate owners. The gaps between them is where growth stalls.",
+            "I work at that intersection. Brand informs the marketing. Marketing is built on operations that can actually support it. When all three move together, growth becomes a system — not a sprint."
         ]
     },
     howIWork: {

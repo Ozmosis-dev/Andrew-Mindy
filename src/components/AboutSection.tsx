@@ -1,10 +1,17 @@
 "use client";
 
 import { useRef } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
+import { useScroll, motion } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./AboutSection.module.scss";
 import { siteCopy } from "../data/copy";
 import MaskedTextReveal from "./MaskedTextReveal";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AboutSection() {
     const sectionRef = useRef<HTMLElement>(null);
@@ -13,14 +20,30 @@ export default function AboutSection() {
         offset: ["start end", "end start"],
     });
 
-    // Subtle parallax for a background decorative shape
-    const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    useGSAP(() => {
+        const paragraphs = sectionRef.current?.querySelectorAll(".gsap-about-animate");
+
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" }, // Reduced drop distance and blur for smoother standard entry
+                {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: p,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+    }, { scope: sectionRef });
 
     return (
         <section className={styles.aboutSection} ref={sectionRef} id="about">
-            {/* Background Decorative Element */}
-            <motion.div className={styles.bgBlob} style={{ y: yBg }} />
-
             <div className={styles.container}>
                 <div className={styles.leftCol}>
                     <h2 className={styles.sectionTitle}>
@@ -148,7 +171,7 @@ export default function AboutSection() {
                 <div className={styles.rightCol}>
                     <div className={styles.leadText}>
                         <MaskedTextReveal
-                            text="I bridge brand, marketing, and operations to drive measurable outcomes."
+                            text="Three disciplines. One point of convergence."
                             tag="h3"
                             delay={0.1}
                             triggerPoint="top 80%"
@@ -157,18 +180,15 @@ export default function AboutSection() {
 
                     <div className={styles.paragraphs}>
                         {siteCopy.about.paragraphs.map((text, idx) => (
-                            <motion.p
+                            <p
                                 key={idx}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 0.8, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                                className="gsap-about-animate"
                             >
                                 {text}
-                            </motion.p>
+                            </p>
                         ))}
                     </div>
-                    
+
                     {/* Bottom sticky fade overlay */}
                     <div className={styles.scrollFade} />
                 </div>

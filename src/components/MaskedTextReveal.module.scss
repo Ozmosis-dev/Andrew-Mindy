@@ -7,8 +7,10 @@
     vertical-align: top;
     margin-right: 0.25em;
     /* Space between words */
-    padding-bottom: 0.1em;
-    /* Prevent descenders from being cut off */
+    padding-bottom: 0.5em;
+    /* Prevent descenders and glowing shadows from being cut off */
+    margin-bottom: -0.4em;
+    /* Compensate for the padding so it doesn't affect page layout */
 
     &:last-child {
         margin-right: 0;

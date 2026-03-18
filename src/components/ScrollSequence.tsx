@@ -93,7 +93,7 @@ export default function ScrollSequence({ progress, y, scale }: ScrollSequencePro
     return (
         <motion.div
             className={styles.canvasContainer}
-            style={{ y, rotate: 90, scale }}
+            style={{ ...(y ? { y } : {}), rotate: 90, scale }}
         >
             <canvas ref={canvasRef} />
         </motion.div>

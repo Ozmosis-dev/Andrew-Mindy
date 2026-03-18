@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,7 +12,39 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-const services = [
+/* ═══════════════════════════════════════════
+   Data
+   ═══════════════════════════════════════════ */
+
+interface ServiceItem {
+    id: string;
+    title: string;
+    tagline: string;
+    description: string;
+    deliverables: string[] | null;
+    badge: string | null;
+    badgeVariant: "accent" | "muted" | null;
+    kind: "service" | "discovery" | "retainer";
+}
+
+const services: ServiceItem[] = [
+    {
+        id: "00",
+        title: "Studio Discovery",
+        tagline: "Know exactly what you're committing to.",
+        description:
+            "A structured scoping engagement that produces a Build Brief before any proposal is written — so both sides know exactly what they're committing to. Required before Platform Build or Operations Build.",
+        deliverables: [
+            "Problem definition",
+            "Solution architecture",
+            "Technical requirements",
+            "Scope & timeline",
+            "Go / no-go recommendation",
+        ],
+        badge: "Pre-Engagement",
+        badgeVariant: "muted",
+        kind: "discovery",
+    },
     {
         id: "01",
         title: "Brand System",
@@ -25,9 +57,9 @@ const services = [
             "Color, typography & voice guidelines",
             "Production-ready brand guidelines PDF",
         ],
-        featured: false,
         badge: null,
-        span: false,
+        badgeVariant: null,
+        kind: "service",
     },
     {
         id: "02",
@@ -41,9 +73,9 @@ const services = [
             "SEO foundation & analytics setup",
             "CMS configured & documented",
         ],
-        featured: false,
         badge: null,
-        span: false,
+        badgeVariant: null,
+        kind: "service",
     },
     {
         id: "03",
@@ -51,10 +83,14 @@ const services = [
         tagline: "The integrated entry engagement.",
         description:
             "Brand identity and marketing website built together as one coherent system — designed from the same principles, by the same hands. When built together, every decision is made with both contexts in mind. The result is tighter, faster, and more resolved than anything assembled in pieces.",
-        deliverables: null,
-        featured: true,
+        deliverables: [
+            "Everything in Brand System",
+            "Everything in Marketing Site",
+            "~15% savings vs. purchasing separately",
+        ],
         badge: "Most Common",
-        span: true,
+        badgeVariant: "accent",
+        kind: "service",
     },
     {
         id: "04",
@@ -68,9 +104,9 @@ const services = [
             "Custom CRMs & pipeline systems",
             "Full-stack SaaS products",
         ],
-        featured: false,
         badge: "Requires Discovery",
-        span: false,
+        badgeVariant: "muted",
+        kind: "service",
     },
     {
         id: "05",
@@ -84,95 +120,90 @@ const services = [
             "Revenue operations infrastructure",
             "Internal knowledge systems",
         ],
-        featured: false,
         badge: "Requires Discovery",
-        span: false,
+        badgeVariant: "muted",
+        kind: "service",
+    },
+    {
+        id: "+",
+        title: "Retainer",
+        tagline: "For clients who've shipped a project and want to stay sharp.",
+        description:
+            "Strategic, Active, and Build tiers — from advisory-only to full ongoing build capacity. Available exclusively to clients who have completed a project. 3-month minimum.",
+        deliverables: ["Strategic", "Active", "Build"],
+        badge: "Ongoing",
+        badgeVariant: "muted",
+        kind: "retainer",
     },
 ];
 
-const discoveryItems = [
-    "Problem definition",
-    "Solution architecture",
-    "Technical requirements",
-    "Scope & timeline",
-    "Go / no-go recommendation",
-];
+/* ═══════════════════════════════════════════
+   Expand panel motion variants
+   ═══════════════════════════════════════════ */
+
+const expandVariants: any = {
+    collapsed: {
+        height: 0,
+        opacity: 0,
+        transition: {
+            height: { duration: 0.45, ease: "circOut" },
+            opacity: { duration: 0.25 },
+        },
+    },
+    expanded: {
+        height: "auto",
+        opacity: 1,
+        transition: {
+            height: { duration: 0.55, ease: "circOut" },
+            opacity: { duration: 0.35, delay: 0.15 },
+        },
+    },
+};
+
+/* ═══════════════════════════════════════════
+   Component
+   ═══════════════════════════════════════════ */
 
 export default function ServicesSection() {
     const sectionRef = useRef<HTMLElement>(null);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
+    const toggle = useCallback((id: string) => {
+        setExpandedId((prev) => (prev === id ? null : id));
+    }, []);
+
+    /* ── GSAP scroll-triggered reveals ── */
     useGSAP(
         () => {
-            const cards = sectionRef.current?.querySelectorAll(
-                `.${styles.gsapCard}`
+            const rows = sectionRef.current?.querySelectorAll(
+                `.${styles.gsapRow}`
             );
 
-            cards?.forEach((card) => {
+            rows?.forEach((row, i) => {
                 gsap.fromTo(
-                    card,
-                    { opacity: 0, y: 70, filter: "blur(18px)" },
+                    row,
+                    { opacity: 0, y: 50, filter: "blur(14px)" },
                     {
                         opacity: 1,
                         y: 0,
                         filter: "blur(0px)",
-                        duration: 1.1,
+                        duration: 0.9,
                         ease: "power3.out",
+                        delay: i * 0.04,
                         scrollTrigger: {
-                            trigger: card,
-                            start: "top 88%",
-                            end: "top 55%",
+                            trigger: row,
+                            start: "top 92%",
+                            end: "top 60%",
                             toggleActions: "play none none reverse",
                         },
                     }
                 );
             });
-
-            const discovery = sectionRef.current?.querySelector(
-                `.${styles.discoveryCallout}`
-            );
-            if (discovery) {
-                gsap.fromTo(
-                    discovery,
-                    { opacity: 0, y: 50, filter: "blur(12px)" },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        filter: "blur(0px)",
-                        duration: 1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: discovery,
-                            start: "top 88%",
-                            toggleActions: "play none none reverse",
-                        },
-                    }
-                );
-            }
-
-            const retainer = sectionRef.current?.querySelector(
-                `.${styles.retainerCard}`
-            );
-            if (retainer) {
-                gsap.fromTo(
-                    retainer,
-                    { opacity: 0, y: 50, filter: "blur(12px)" },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        filter: "blur(0px)",
-                        duration: 1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: retainer,
-                            start: "top 95%",
-                            toggleActions: "play none none reverse",
-                        },
-                    }
-                );
-            }
         },
         { scope: sectionRef }
     );
+
+    const isExpanded = (id: string) => expandedId === id;
 
     return (
         <section className={styles.section} ref={sectionRef} id="services">
@@ -204,147 +235,136 @@ export default function ServicesSection() {
                     </motion.p>
                 </div>
 
-                {/* ── Service Grid ── */}
-                <div className={styles.grid}>
-                    {services.map((service) => (
-                        <div
-                            key={service.id}
-                            className={`${styles.gsapCard} ${styles.card} ${
-                                service.featured ? styles.cardFeatured : ""
-                            } ${service.span ? styles.cardSpan : ""}`}
-                        >
-                            <div className={styles.accentBar} />
+                {/* ── Service Rows ── */}
+                <div className={styles.rows}>
+                    {services.map((service) => {
+                        const open = isExpanded(service.id);
+                        const isFeatured = service.badgeVariant === "accent";
 
-                            {service.featured ? (
-                                /* ── Featured card layout ── */
-                                <div className={styles.featuredInner}>
-                                    <div className={styles.featuredLeft}>
-                                        <div className={styles.cardTop}>
-                                            <span className={styles.cardNumber}>
-                                                {service.id}
-                                            </span>
-                                            <span
-                                                className={`${styles.badge} ${styles.badgeAccent}`}
-                                            >
-                                                {service.badge}
-                                            </span>
-                                        </div>
-                                        <h3 className={styles.cardTitle}>
-                                            {service.title}
-                                        </h3>
-                                        <p className={styles.cardTagline}>
-                                            {service.tagline}
-                                        </p>
-                                    </div>
-                                    <div className={styles.featuredRight}>
-                                        <p className={styles.cardDesc}>
-                                            {service.description}
-                                        </p>
-                                        <p className={styles.featuredNote}>
-                                            ~15% savings vs. purchasing separately.
-                                        </p>
-                                    </div>
-                                </div>
-                            ) : (
-                                /* ── Standard card layout ── */
-                                <div className={styles.standardInner}>
-                                    <div className={styles.cardTop}>
-                                        <span className={styles.cardNumber}>
-                                            {service.id}
-                                        </span>
-                                        {service.badge && (
-                                            <span
-                                                className={`${styles.badge} ${
-                                                    service.badge === "Most Common"
+                        return (
+                            <div
+                                key={service.id}
+                                className={`${styles.gsapRow} ${styles.row} ${open ? styles.rowOpen : ""
+                                    } ${isFeatured ? styles.rowFeatured : ""}`}
+                            >
+                                {/* ── Clickable header ── */}
+                                <button
+                                    className={styles.rowHeader}
+                                    onClick={() => toggle(service.id)}
+                                    aria-expanded={open}
+                                    aria-controls={`panel-${service.id}`}
+                                >
+                                    {/* Number or Icon */}
+                                    <span className={styles.rowNumber}>
+                                        {service.id}
+                                    </span>
+
+                                    {/* Title + tagline */}
+                                    <div className={styles.rowInfo}>
+                                        <div className={styles.rowTitleRow}>
+                                            <h3 className={styles.rowTitle}>
+                                                {service.title}
+                                            </h3>
+                                            {service.badge && (
+                                                <span
+                                                    className={`${styles.badge} ${service.badgeVariant === "accent"
                                                         ? styles.badgeAccent
                                                         : styles.badgeMuted
-                                                }`}
-                                            >
-                                                {service.badge}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className={styles.cardBody}>
-                                        <h3 className={styles.cardTitle}>
-                                            {service.title}
-                                        </h3>
-                                        <p className={styles.cardTagline}>
+                                                        }`}
+                                                >
+                                                    {service.badge}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className={styles.rowTagline}>
                                             {service.tagline}
                                         </p>
                                     </div>
-                                    <div className={styles.cardDivider} />
-                                    <p className={styles.cardDesc}>
-                                        {service.description}
-                                    </p>
-                                    {service.deliverables && (
-                                        <ul className={styles.deliverables}>
-                                            {service.deliverables.map((item, i) => (
-                                                <li key={i} className={styles.deliverableItem}>
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
 
-                {/* ── Studio Discovery Callout ── */}
-                <div className={styles.discoveryCallout}>
-                    <div className={styles.discoveryLeft}>
-                        <span className={styles.discoveryEyebrow}>
-                            Pre-Engagement
-                        </span>
-                        <div className={styles.discoveryNumber}>00</div>
-                    </div>
-                    <div className={styles.discoveryRight}>
-                        <h3 className={styles.discoveryTitle}>
-                            Studio Discovery
-                        </h3>
-                        <p className={styles.discoveryDesc}>
-                            A structured scoping engagement that produces a Build
-                            Brief before any proposal is written — so both sides
-                            know exactly what they're committing to. Required before
-                            Platform Build or Operations Build.
-                        </p>
-                        <div className={styles.discoveryTags}>
-                            {discoveryItems.map((item) => (
-                                <span key={item} className={styles.discoveryTag}>
-                                    {item}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── Retainer Card ── */}
-                <div className={styles.retainerCard}>
-                    <div className={styles.accentBar} />
-                    <div className={styles.retainerInner}>
-                        <div className={styles.retainerLeft}>
-                            <span className={styles.retainerEyebrow}>Ongoing</span>
-                            <h3 className={styles.retainerTitle}>Retainer</h3>
-                            <p className={styles.retainerTagline}>
-                                For clients who've shipped a project and want to stay sharp.
-                            </p>
-                        </div>
-                        <div className={styles.retainerRight}>
-                            <p className={styles.retainerDesc}>
-                                Strategic, Active, and Build tiers — from advisory-only
-                                to full ongoing build capacity. Available exclusively to
-                                clients who have completed a project. 3-month minimum.
-                            </p>
-                            <div className={styles.retainerTiers}>
-                                {["Strategic", "Active", "Build"].map((tier) => (
-                                    <span key={tier} className={styles.retainerTier}>
-                                        {tier}
+                                    {/* Toggle icon */}
+                                    <span className={styles.toggleIcon}>
+                                        <motion.svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 20 20"
+                                            fill="none"
+                                            animate={{ rotate: open ? 45 : 0 }}
+                                            transition={{
+                                                duration: 0.35,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            }}
+                                        >
+                                            <line
+                                                x1="10"
+                                                y1="3"
+                                                x2="10"
+                                                y2="17"
+                                                stroke="currentColor"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                            />
+                                            <line
+                                                x1="3"
+                                                y1="10"
+                                                x2="17"
+                                                y2="10"
+                                                stroke="currentColor"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                            />
+                                        </motion.svg>
                                     </span>
-                                ))}
+                                </button>
+
+                                {/* ── Expand panel ── */}
+                                <AnimatePresence initial={false}>
+                                    {open && (
+                                        <motion.div
+                                            key={`panel-${service.id}`}
+                                            id={`panel-${service.id}`}
+                                            className={styles.expandPanel}
+                                            variants={expandVariants}
+                                            initial="collapsed"
+                                            animate="expanded"
+                                            exit="collapsed"
+                                        >
+                                            <div className={styles.expandInner}>
+                                                <p className={styles.expandDesc}>
+                                                    {service.description}
+                                                </p>
+
+                                                {service.deliverables && (
+                                                    <div className={styles.expandDeliverables}>
+                                                        <span className={styles.deliverablesLabel}>
+                                                            {service.kind === "retainer"
+                                                                ? "Tiers"
+                                                                : service.kind === "discovery"
+                                                                    ? "Outputs"
+                                                                    : "Deliverables"}
+                                                        </span>
+                                                        <ul className={styles.deliverablesList}>
+                                                            {service.deliverables.map(
+                                                                (item, i) => (
+                                                                    <li
+                                                                        key={i}
+                                                                        className={
+                                                                            styles.deliverableItem
+                                                                        }
+                                                                    >
+                                                                        {item}
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

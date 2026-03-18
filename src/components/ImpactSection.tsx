@@ -220,7 +220,6 @@ export default function ImpactSection() {
     const animationProgress = useTransform(smoothProgress, [0.15, 0.65], [0, 1]);
 
     // Parallax for the scroll‑sequence background
-    const parallaxY = useTransform(smoothProgress, [0, 1], [-800, 600]);
     const parallaxScale = useTransform(smoothProgress, [0, 1], [0.35, 1.5]);
 
     // Subtle parallax for the stats grid itself
@@ -229,7 +228,7 @@ export default function ImpactSection() {
 
     return (
         <section ref={sectionRef} className={styles.section}>
-            <ScrollSequence progress={animationProgress} y={parallaxY} scale={parallaxScale} />
+            <ScrollSequence progress={animationProgress} scale={parallaxScale} />
             <motion.div
                 className={styles.container}
                 initial="hidden"

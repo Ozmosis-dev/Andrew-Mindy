@@ -6,6 +6,10 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./MaskedTextReveal.module.scss";
 
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
 interface MaskedTextRevealProps {
     text: string;
     className?: string; // To pass in font sizes, colors, etc.
@@ -27,33 +31,21 @@ export default function MaskedTextReveal({ text, className, delay = 0, tag: Tag 
 
         if (!wrappers || wrappers.length === 0) return;
 
-        // Initial state
-        gsap.set(words, { yPercent: 100 });
-
-        ScrollTrigger.batch(Array.from(wrappers), {
-            onEnter: (batch) => {
-                const targets = batch.map(wrapper => wrapper.querySelector(`.${styles.wordVisible}`));
-                gsap.to(targets, {
-                    yPercent: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    stagger: 0.1,
-                    overwrite: true
-                });
-            },
-            onLeaveBack: (batch) => {
-                const targets = batch.map(wrapper => wrapper.querySelector(`.${styles.wordVisible}`));
-                gsap.to(targets, {
-                    yPercent: 100,
-                    duration: 0.8,
-                    ease: "power3.in",
-                    stagger: 0.1,
-                    overwrite: true
-                });
-            },
-            start: triggerPoint,
-            // toggleActions is implied by batch callbacks but useful to be explicit if needed
-        });
+        gsap.fromTo(words,
+            { yPercent: 100 },
+            {
+                yPercent: 0,
+                duration: 0.8,
+                ease: "power3.out",
+                stagger: 0.1,
+                delay: delay,
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: triggerPoint,
+                    toggleActions: "play none none reverse",
+                }
+            }
+        );
     }, { scope: containerRef });
 
     return (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { phosphate, montserrat, spaceGrotesk } from "./fonts";
 import NavBarWrapper from "../components/NavBarWrapper";
+import TopBlurMask from "../components/TopBlurMask";
 import GSAPInit from "../components/GSAPInit";
 import CustomCursor from "../components/CustomCursor";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -22,6 +23,7 @@ export default function RootLayout({
         <ThemeProvider>
           <CustomCursor />
           <GSAPInit />
+          <TopBlurMask />
           <NavBarWrapper />
           {children}
         </ThemeProvider>
