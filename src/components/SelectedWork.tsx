@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import Link from "next/link";
 import styles from "./SelectedWork.module.scss";
 import { projects } from "../data/copy";
 import MaskedTextReveal from "./MaskedTextReveal";
@@ -35,31 +34,31 @@ export default function SelectedWork() {
                 });
 
                 tl.fromTo(wrapper,
-                    { 
-                        opacity: 0, 
-                        y: 80, 
+                    {
+                        opacity: 0,
+                        y: 80,
                         scale: 0.95,
-                        filter: "blur(15px)" 
+                        filter: "blur(15px)"
                     },
-                    { 
-                        opacity: 1, 
-                        y: 0, 
+                    {
+                        opacity: 1,
+                        y: 0,
                         scale: 1,
-                        filter: "blur(0px)", 
-                        duration: 1.2, 
-                        ease: "power3.out" 
+                        filter: "blur(0px)",
+                        duration: 1.2,
+                        ease: "power3.out"
                     }
                 );
 
                 if (elements.length > 0) {
                     tl.fromTo(elements,
                         { opacity: 0, y: 30 },
-                        { 
-                            opacity: 1, 
-                            y: 0, 
-                            duration: 0.8, 
-                            stagger: 0.1, 
-                            ease: "power2.out" 
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.8,
+                            stagger: 0.1,
+                            ease: "power2.out"
                         },
                         "-=0.8"
                     );
@@ -85,8 +84,7 @@ export default function SelectedWork() {
             <div className={styles.container} ref={containerRef}>
                 {projects.map((project, index) => (
                     <div className={styles.projectWrapper} key={project.slug} id={project.slug}>
-                        <Link
-                            href={`/work/${project.slug}`}
+                        <div
                             className={styles.projectRow}
                             style={{
                                 '--project-accent': project.accent,
@@ -140,25 +138,19 @@ export default function SelectedWork() {
                                     </div>
 
 
+                                </div>
                             </div>
+
+                            {/* Expandable Scroll Gallery inline within the card */}
+                            {project.gallery && project.gallery.length > 0 && (
+                                <InlineProjectGallery images={project.gallery} />
+                            )}
+
+                            <div className={styles.mediaBackground} />
+                            <div className={styles.glowingBorder} />
                         </div>
-
-                        {/* Expandable Scroll Gallery inline within the card */}
-                        {project.gallery && project.gallery.length > 0 && (
-                            <InlineProjectGallery images={project.gallery} />
-                        )}
-
-                        <div className={styles.mediaBackground} />
-                        <div className={styles.glowingBorder} />
-                    </Link>
                     </div>
                 ))}
-            </div>
-
-            <div className={styles.footer}>
-                <Link href="/work" className={styles.viewAll}>
-                    View All Projects <span>→</span>
-                </Link>
             </div>
 
         </section>
