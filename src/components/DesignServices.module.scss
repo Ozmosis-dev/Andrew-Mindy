@@ -1,0 +1,318 @@
+.section {
+    padding: 8rem 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+
+.header {
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.eyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+}
+
+.title {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 6vw, 6rem);
+    color: var(--primary);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+.intro {
+    font-family: var(--font-montserrat);
+    font-size: 1.1rem;
+    color: var(--secondary);
+    max-width: 500px;
+    line-height: 1.65;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+
+// ─── Rows ────────────────────────────────────────────────────────────────────
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    :global(.light-mode) & {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+.row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+
+    :global(.light-mode) & {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    &.rowOpen {
+        background: rgba(255, 255, 255, 0.02);
+
+        :global(.light-mode) & {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .rowNum {
+            color: var(--service-accent, var(--accent));
+        }
+
+        .rowTitle {
+            color: var(--service-accent, var(--primary));
+        }
+    }
+
+    &.rowFeatured {
+        .rowHeader {
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: var(--service-accent, var(--accent));
+                border-radius: 0 2px 2px 0;
+            }
+        }
+    }
+}
+
+// ─── Row header ──────────────────────────────────────────────────────────────
+
+.rowHeader {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 1.5rem 2rem 2rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 2.5rem 1fr auto;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.02);
+
+        :global(.light-mode) & {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .toggle {
+            color: var(--service-accent, var(--accent));
+        }
+    }
+}
+
+.rowNum {
+    font-family: var(--font-montserrat);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.3);
+    transition: color 0.3s ease;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+.rowInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.rowTitleLine {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.rowTitle {
+    font-family: var(--font-phosphate);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    color: var(--primary);
+    margin: 0;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.badge {
+    font-family: var(--font-montserrat);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: rgba(225, 105, 34, 0.1);
+    border: 1px solid rgba(225, 105, 34, 0.3);
+    padding: 0.3rem 0.75rem;
+    border-radius: 99px;
+}
+
+.rowTagline {
+    font-family: var(--font-montserrat);
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin: 0;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.55);
+    }
+}
+
+.toggle {
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+// ─── Expand panel ────────────────────────────────────────────────────────────
+
+.panel {
+    overflow: hidden;
+}
+
+.panelInner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 2rem 2.5rem 7rem;
+
+    @media (min-width: 640px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+        padding: 0 1rem 2rem 1rem;
+    }
+}
+
+.panelDesc {
+    font-family: var(--font-montserrat);
+    font-size: 1rem;
+    color: var(--secondary);
+    line-height: 1.7;
+    margin: 0;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+
+.panelDeliverables {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.delLabel {
+    font-family: var(--font-montserrat);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--service-accent, var(--accent));
+}
+
+.delList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.delItem {
+    font-family: var(--font-montserrat);
+    font-size: 0.9rem;
+    color: var(--primary);
+    padding-left: 1.25rem;
+    position: relative;
+
+    :global(.light-mode) & {
+        color: #000;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--service-accent, var(--accent));
+    }
+}
+
+// ─── Footer note ─────────────────────────────────────────────────────────────
+
+.footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    :global(.light-mode) & {
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+}
+
+.footerNote {
+    font-family: var(--font-montserrat);
+    font-size: 1rem;
+    color: var(--secondary);
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.footerLink {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

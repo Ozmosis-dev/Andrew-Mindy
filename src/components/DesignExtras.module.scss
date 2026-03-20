@@ -1,0 +1,287 @@
+// ─── Section ─────────────────────────────────────────────────────────────────
+// No top padding — flows directly from DesignServices as a continuation
+
+.section {
+    padding: 0 2rem 6rem;
+    background: var(--background);
+}
+
+.container {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; // Changed from 2rem to give breathing room for premium feel
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    gap: 4rem; // Premium spacing
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+}
+
+.headerLeft {
+    flex: 1;
+    max-width: 600px;
+}
+
+.headerRight {
+    flex: 0 1 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+
+    @media (max-width: 900px) {
+        max-width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
+.eyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    margin: 0 0 1.25rem 0;
+}
+
+.title {
+    font-family: var(--font-phosphate);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1;
+    color: var(--primary);
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem 0;
+
+    :global(.light-mode) & {
+        color: #000;
+    }
+}
+
+.description {
+    font-family: var(--font-montserrat);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--secondary);
+    margin: 0;
+    font-weight: 400;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.7);
+    }
+}
+
+.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-montserrat);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--background);
+    background: var(--primary);
+    padding: 1.1rem 2rem;
+    border-radius: 3rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+
+    :global(.light-mode) & {
+        background: #000;
+        color: #fff;
+    }
+
+    svg {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.25);
+
+        svg {
+            transform: translateX(4px);
+        }
+    }
+}
+
+// ─── Single Card Container ─────────────────────────────────────────────────────────────
+
+.singleCard {
+    position: relative;
+    background: rgba(255, 255, 255, 0.02);
+    // Subtle inner glowing border
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(255, 255, 255, 0.02), inset 1px 0 0 rgba(255, 255, 255, 0.02), inset -1px 0 0 rgba(255, 255, 255, 0.02);
+    border-radius: 1.5rem;
+    padding: 4rem; // Luxurious padding
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.01);
+        box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.02), inset 1px 0 0 rgba(0, 0, 0, 0.02), inset -1px 0 0 rgba(0, 0, 0, 0.02);
+    }
+
+    // Spotlight pseudo-element tracking mouse
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        // Radial gradient follows the mouse coordinates
+        background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+                rgba(255, 255, 255, 0.04), // Softer glow
+                transparent 40%);
+        z-index: 0;
+        pointer-events: none;
+
+        :global(.light-mode) & {
+            background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+                    rgba(0, 0, 0, 0.03),
+                    transparent 40%);
+        }
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+.categoriesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem; // More breathing room
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+// ─── Category Content ────────────────────────────────────────────────────────
+
+.categoryColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.categoryTitle {
+    font-family: var(--font-montserrat);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin: 0;
+
+    :global(.light-mode) & {
+        color: #000;
+    }
+}
+
+.categoryDivider {
+    height: 2px;
+    width: 2.5rem; // Short accent line
+    background: var(--accent);
+    margin: 1.25rem 0 2rem 0; // More whitespace below
+    border-radius: 2px;
+    flex-shrink: 0;
+
+    :global(.light-mode) & {
+        background: var(--accent);
+    }
+}
+
+.itemList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem; // More gap
+}
+
+// ─── Tags/Pills ──────────────────────────────────────────────────────────
+
+.itemTag {
+    font-family: var(--font-montserrat);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.6rem 1.2rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    cursor: default;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    &:hover {
+        color: var(--primary);
+        border-color: rgba(255, 255, 255, 0.2); // Brighter border on hover
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        :global(.light-mode) & {
+            color: #000;
+            border-color: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    }
+}
+
+// ─── Mobile ───────────────────────────────────────────────────────────────────
+
+@media (max-width: 600px) {
+    .section {
+        padding: 0 1.5rem 5rem;
+    }
+
+    .singleCard {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .categoryTitle {
+        font-size: 0.8rem;
+    }
+
+    .categoryDivider {
+        margin: 1rem 0 1.5rem 0;
+    }
+
+    .itemTag {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+}

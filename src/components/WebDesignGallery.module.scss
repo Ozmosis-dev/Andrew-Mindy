@@ -1,0 +1,297 @@
+.section {
+    padding: 8rem 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.header {
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.labelRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pill {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    background: rgba(225, 105, 34, 0.1);
+    border: 1px solid rgba(225, 105, 34, 0.25);
+    border-radius: 99px;
+    padding: 0.35rem 1rem;
+
+    :global(.light-mode) & {
+        background: rgba(225, 105, 34, 0.08);
+    }
+}
+
+.headingRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.heading {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 7vw, 7rem);
+    color: var(--primary);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+.subtext {
+    font-family: var(--font-montserrat);
+    font-size: 1.1rem;
+    color: var(--secondary);
+    max-width: 480px;
+    line-height: 1.65;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+
+// ─── Gallery ────────────────────────────────────────────────────────────────
+
+.galleryViewport {
+    position: relative;
+    width: 100%;
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 2rem 3rem;
+    width: max-content;
+    will-change: transform;
+    user-select: none;
+}
+
+.card {
+    flex-shrink: 0;
+    width: clamp(300px, 28vw, 440px);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+                    0 0 0 1px rgba(var(--card-accent, 255, 255, 255), 0.15);
+
+        .imageOverlay {
+            opacity: 0.3;
+        }
+
+        .image {
+            transform: scale(1.06);
+            filter: brightness(0.9) saturate(1.15);
+        }
+
+        .cardAccentLine {
+            width: 100%;
+        }
+
+        .cardCategory {
+            color: var(--card-accent, var(--accent));
+        }
+    }
+}
+
+.cardInner {
+    display: flex;
+    flex-direction: column;
+}
+
+.imageWrapper {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.8) saturate(1.1);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.5s ease;
+    display: block;
+}
+
+.imageOverlay {
+    position: absolute;
+    inset: 0;
+    background: var(--card-accent, var(--accent));
+    opacity: 0;
+    mix-blend-mode: color;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.cardInfo {
+    padding: 1.5rem 1.75rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.01)
+    );
+
+    :global(.light-mode) & {
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.02),
+            rgba(0, 0, 0, 0.01)
+        );
+    }
+}
+
+.cardCategory {
+    font-family: var(--font-montserrat);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--secondary);
+    transition: color 0.4s ease;
+}
+
+.cardTitle {
+    font-family: var(--font-phosphate);
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    color: var(--primary);
+    line-height: 1;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.cardAccentLine {
+    height: 2px;
+    width: 2.5rem;
+    background: var(--card-accent, var(--accent));
+    border-radius: 99px;
+    margin-top: 0.5rem;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// ─── Edge fades ─────────────────────────────────────────────────────────────
+
+.fadeLeft,
+.fadeRight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 180px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.fadeLeft {
+    left: 0;
+    background: linear-gradient(to right, var(--background) 0%, transparent 100%);
+}
+
+.fadeRight {
+    right: 0;
+    background: linear-gradient(to left, var(--background) 0%, transparent 100%);
+}
+
+// ─── CTA ────────────────────────────────────────────────────────────────────
+
+.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.25rem;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--primary);
+    font-family: var(--font-montserrat);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    flex-shrink: 0;
+    align-self: flex-end;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.45s ease,
+                border-color 0.45s ease,
+                box-shadow 0.45s ease;
+
+    :global(.light-mode) & {
+        border-color: rgba(0, 0, 0, 0.15);
+        background: rgba(0, 0, 0, 0.03);
+        color: #000;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 0;
+    }
+
+    &:hover {
+        border-color: var(--accent);
+        color: #fff;
+        box-shadow: 0 0 30px rgba(225, 105, 34, 0.35);
+
+        :global(.light-mode) & {
+            color: #fff;
+        }
+
+        &::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .ctaIcon {
+            transform: translateX(4px);
+        }
+    }
+}
+
+.ctaText {
+    position: relative;
+    z-index: 1;
+}
+
+.ctaIcon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}

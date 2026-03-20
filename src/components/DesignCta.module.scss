@@ -1,0 +1,127 @@
+@keyframes pulse {
+    0%, 100% { opacity: 0.12; transform: scale(1); }
+    50%       { opacity: 0.2;  transform: scale(1.1); }
+}
+
+.section {
+    padding: 10rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.inner {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+// ─── Decorative orbs ─────────────────────────────────────────────────────────
+
+.orbLeft,
+.orbRight {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: pulse 8s ease-in-out infinite;
+}
+
+.orbLeft {
+    background: radial-gradient(circle, rgba(225, 105, 34, 0.15) 0%, transparent 70%);
+    left: -200px;
+    top: -100px;
+    animation-delay: 0s;
+}
+
+.orbRight {
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.1) 0%, transparent 70%);
+    right: -200px;
+    bottom: -100px;
+    animation-delay: 4s;
+}
+
+// ─── Content ─────────────────────────────────────────────────────────────────
+
+.label {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+}
+
+.heading {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 7vw, 7rem);
+    color: var(--primary);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.outlined {
+    -webkit-text-stroke: 2px var(--primary);
+    color: transparent;
+
+    :global(.light-mode) & {
+        -webkit-text-stroke: 2px #000;
+    }
+}
+
+.sub {
+    font-family: var(--font-montserrat);
+    font-size: 1.1rem;
+    color: var(--secondary);
+    line-height: 1.7;
+    max-width: 520px;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+
+.actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.primaryBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.1rem 2.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 99px;
+    font-family: var(--font-montserrat);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    svg {
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(225, 105, 34, 0.5);
+
+        svg {
+            transform: translateX(5px);
+        }
+    }
+}

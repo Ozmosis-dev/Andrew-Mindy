@@ -1,88 +1,202 @@
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 0.5rem; // Condensed spacing
-    padding: 2rem;
-    max-width: 1600px;
+.section {
+    padding: 8rem 2rem;
+    max-width: 1400px;
     margin: 0 auto;
+}
 
-    @media (min-width: 540px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
+// ─── Header ──────────────────────────────────────────────────────────────────
 
-    @media (min-width: 960px) {
-        grid-template-columns: repeat(4, 1fr);
+.header {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.eyebrow {
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+}
+
+.title {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 6vw, 6rem);
+    color: var(--primary);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+.intro {
+    font-family: var(--font-montserrat);
+    font-size: 1.1rem;
+    color: var(--secondary);
+    max-width: 500px;
+    line-height: 1.65;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
     }
 }
+
+// ─── Bento grid ──────────────────────────────────────────────────────────────
+//
+//  Desktop (≥1024px) — 3 columns, 4 rows:
+//  ┌─────────────┬─────────────┬──────────┐
+//  │      1      │      1      │    2     │  260px
+//  ├──────────┬──┴──────────┬──┴──────────┤
+//  │    3     │      4      │     5    │  240px
+//  ├──────────┼─────────────┴────────────┤
+//  │    6     │           7              │  260px
+//  ├──────────┴──────────────────────────┤
+//  │               8                     │  280px
+//  └─────────────────────────────────────┘
+
+.grid {
+    display: grid;
+    gap: 10px;
+
+    // Mobile — single column
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "g1" "g2" "g3" "g4" "g5" "g6" "g7" "g8";
+
+    // Tablet — 2 columns
+    @media (min-width: 640px) and (max-width: 1023px) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 220px 220px 220px 240px 220px;
+        grid-template-areas:
+            "g1 g2"
+            "g3 g4"
+            "g5 g6"
+            "g7 g7"
+            "g8 g8";
+    }
+
+    // Desktop — 3 columns, fixed row heights so everything locks together
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 260px 240px 260px 280px;
+        grid-template-areas:
+            "g1 g1 g2"
+            "g3 g4 g5"
+            "g6 g7 g7"
+            "g8 g8 g8";
+    }
+}
+
+// ─── Grid area assignments ────────────────────────────────────────────────────
+
+.g1 { grid-area: g1; }
+.g2 { grid-area: g2; }
+.g3 { grid-area: g3; }
+.g4 { grid-area: g4; }
+.g5 { grid-area: g5; }
+.g6 { grid-area: g6; }
+.g7 { grid-area: g7; }
+.g8 { grid-area: g8; }
+
+// ─── Item ────────────────────────────────────────────────────────────────────
 
 .item {
     position: relative;
-    aspect-ratio: 16/9;
-    border-radius: 8px; // Slightly tighter radius
     overflow: hidden;
+    border-radius: 12px;
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg);
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease, filter 0.4s ease;
-        filter: brightness(0.75) saturate(1.2) contrast(0.85);
+    // Mobile: give items a natural height when not in a fixed-row grid
+    @media (max-width: 639px) {
+        aspect-ratio: 16 / 10;
     }
 
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4); // Lighter overlay since image is already filtered
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        padding: 1rem;
-        text-align: center;
-    }
-
-    h4 {
-        color: #fff;
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    p {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-    }
-
-    // Hover state for the specific item
     &:hover {
-        img {
-            transform: scale(1.05);
-            filter: brightness(1) saturate(1.2) contrast(1); // Brighten on hover
+        .image {
+            transform: scale(1.04);
+            filter: brightness(0.75) saturate(1.2);
         }
 
         .overlay {
-            opacity: 1;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.88) 0%,
+                rgba(0, 0, 0, 0.3) 55%,
+                transparent 100%
+            );
+        }
+
+        .accentLine {
+            width: 100%;
+        }
+
+        .name {
+            transform: translateY(-3px);
         }
     }
 }
 
-// Hover state for the container (affects non-hovered items)
-.gallery:hover .item:not(:hover) {
-    img {
-        filter: brightness(0.5) saturate(0.5) contrast(1.2) blur(5px);
-        transform: scale(1); // Ensure they don't scale
-    }
+// ─── Image — fills the entire cell ───────────────────────────────────────────
 
-    .overlay {
-        opacity: 0; // Hide overlay on non-hovered items if it was somehow visible
-    }
+.image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.85) saturate(1.05);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.4s ease;
+    display: block;
+}
+
+// ─── Overlay — always visible at bottom, deepens on hover ────────────────────
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.15) 45%,
+        transparent 100%
+    );
+    transition: background 0.4s ease;
+}
+
+.cat {
+    font-family: var(--font-montserrat);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--item-accent, var(--accent));
+    margin-bottom: 0.35rem;
+    display: block;
+}
+
+.name {
+    font-family: var(--font-phosphate);
+    font-size: clamp(1.2rem, 2vw, 1.75rem);
+    color: #fff;
+    margin: 0;
+    line-height: 1;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accentLine {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: var(--item-accent, var(--accent));
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 0 2px 0 0;
 }

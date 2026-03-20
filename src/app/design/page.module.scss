@@ -1,24 +1,2 @@
-.page {
-    padding-top: 100px;
-    min-height: 100vh;
-    background-color: var(--background);
-    padding-bottom: 4rem;
-}
-
-.header {
-    text-align: center;
-    padding: 4rem 2rem;
-
-    h1 {
-        font-size: 5rem;
-        margin-bottom: 1rem;
-        color: var(--primary);
-    }
-
-    p {
-        max-width: 600px;
-        margin: 0 auto;
-        color: var(--secondary);
-        font-size: 1.2rem;
-    }
-}
+// Page-level styles for the design page are handled within each component.
+// This file is kept for any future page-level overrides.
