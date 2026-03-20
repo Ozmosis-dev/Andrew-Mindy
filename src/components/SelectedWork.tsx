@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -70,6 +71,15 @@ export default function SelectedWork() {
     return (
         <section className={styles.section} id="work" ref={sectionRef}>
             <div className={styles.header}>
+                <motion.span
+                    className={styles.eyebrow}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Case Studies
+                </motion.span>
                 <MaskedTextReveal
                     text="SELECTED WORK"
                     tag="h2"

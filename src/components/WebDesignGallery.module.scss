@@ -19,21 +19,13 @@
     gap: 1rem;
 }
 
-.pill {
+.eyebrow {
     font-family: var(--font-montserrat);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.25em;
     color: var(--accent);
-    background: rgba(225, 105, 34, 0.1);
-    border: 1px solid rgba(225, 105, 34, 0.25);
-    border-radius: 99px;
-    padding: 0.35rem 1rem;
-
-    :global(.light-mode) & {
-        background: rgba(225, 105, 34, 0.08);
-    }
 }
 
 .headingRow {
@@ -94,12 +86,12 @@
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
         transform: translateY(-10px) scale(1.02);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
-                    0 0 0 1px rgba(var(--card-accent, 255, 255, 255), 0.15);
+            0 0 0 1px rgba(var(--card-accent, 255, 255, 255), 0.15);
 
         .imageOverlay {
             opacity: 0.3;
@@ -137,7 +129,7 @@
     object-fit: cover;
     filter: brightness(0.8) saturate(1.1);
     transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.5s ease;
+        filter 0.5s ease;
     display: block;
 }
 
@@ -156,18 +148,14 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.03),
-        rgba(255, 255, 255, 0.01)
-    );
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.03),
+            rgba(255, 255, 255, 0.01));
 
     :global(.light-mode) & {
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.02),
-            rgba(0, 0, 0, 0.01)
-        );
+        background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0.02),
+                rgba(0, 0, 0, 0.01));
     }
 }
 
@@ -243,8 +231,8 @@
     position: relative;
     overflow: hidden;
     transition: color 0.45s ease,
-                border-color 0.45s ease,
-                box-shadow 0.45s ease;
+        border-color 0.45s ease,
+        box-shadow 0.45s ease;
 
     :global(.light-mode) & {
         border-color: rgba(0, 0, 0, 0.15);
@@ -266,7 +254,7 @@
     &:hover {
         border-color: var(--accent);
         color: #fff;
-        box-shadow: 0 0 30px rgba(225, 105, 34, 0.35);
+        box-shadow: 0 0 30px rgba(98, 175, 239, 0.35);
 
         :global(.light-mode) & {
             color: #fff;

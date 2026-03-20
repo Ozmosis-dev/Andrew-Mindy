@@ -44,11 +44,11 @@
     text-transform: uppercase;
     margin: 0;
 
-    > span {
+    >span {
         display: block; // For MaskedTextReveal
     }
 
-    & > span:nth-child(1) {
+    &>span:nth-child(1) {
         font-size: clamp(1.5rem, 2.5vw, 2.5rem);
         line-height: 1;
         letter-spacing: 0.05em;
@@ -56,14 +56,14 @@
         opacity: 0.8;
     }
 
-    & > span:nth-child(2) {
+    &>span:nth-child(2) {
         font-size: clamp(4rem, 7vw, 6.5rem);
         line-height: 0.75;
         letter-spacing: -0.02em;
         margin-top: -0.08em;
 
-        & > span > span:last-child {
-            background: linear-gradient(135deg, #E16922 0%, #ff8a47 100%);
+        &>span>span:last-child {
+            background: linear-gradient(135deg, #62AFEF 0%, #8CC4F3 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -109,9 +109,9 @@
     left: 0;
     right: 0;
     pointer-events: none; // Let clicks pass down recursively
-    
+
     // Enable interaction only on the card itself
-    & > * {
+    &>* {
         pointer-events: auto;
     }
 }
@@ -121,7 +121,7 @@
 .decorativeLine {
     width: 3.5rem;
     height: 4px;
-    background: linear-gradient(90deg, #E16922 0%, rgba(225, 105, 34, 0) 100%);
+    background: linear-gradient(90deg, #62AFEF 0%, rgba(98, 175, 239, 0) 100%);
     border-radius: 2px;
     margin-top: -1.5rem;
 }
@@ -154,7 +154,7 @@
 
 .progressContainerFull {
     position: sticky;
-    bottom: 40px; 
+    bottom: 40px;
     width: 100vw;
     margin-left: calc(50% - 50vw); // Full bleed hack
     height: 64px; // Gives some padding
@@ -166,10 +166,10 @@
 
 .progressBarFull {
     position: relative;
-    width: 100%; 
+    width: 100%;
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
-    
+
     :global(.light-mode) & {
         background: rgba(0, 0, 0, 0.1);
     }
@@ -184,7 +184,7 @@
     border: 2px solid var(--accent);
     background: var(--background);
     border-radius: 6px; // Optional: soften edges slightly
-    box-shadow: 0 0 15px rgba(225, 105, 34, 0.5);
+    box-shadow: 0 0 15px rgba(98, 175, 239, 0.5);
 }
 
 .label {
@@ -196,10 +196,10 @@
 }
 
 .primaryLabel {
-    fill: #ff8a47;
+    fill: #8CC4F3;
 
     :global(.light-mode) & {
-        fill: #E16922;
+        fill: #62AFEF;
     }
 }
 
@@ -208,20 +208,20 @@
     flex-direction: column;
     align-items: center;
     position: sticky;
-    
+
     // We synchronize height completely across ALL cards so the physics formulas align
     // perfectly when leaving the page regardless of their internal text length!
     height: 480px;
-    
+
     // The exact distance to perfectly overlap the glassmorphic card on the internal divider.
     // 3rem (card top padding) + 2.5rem (40px graphic) + 1.5rem (header bottom padding) + 1px border
-    --stack-offset: 7.1rem; 
+    --stack-offset: 7.1rem;
 
     top: calc(10vh + (var(--card-idx) * var(--stack-offset))); // Mobile stack spacing
 
     @media (min-width: 1024px) {
         top: calc(20vh + (var(--card-idx) * var(--stack-offset))); // Desktop stack spacing matching left col
-        height: 400px; 
+        height: 400px;
     }
 }
 
@@ -230,16 +230,16 @@
     width: 100%;
     height: 100%; // Extends rigidly out of flow
     padding: 3rem 3rem 3rem 3rem;
-    
+
     /* Using an opaque background mapped to the site canvas perfectly hides the underlying text */
     background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, transparent 100%);
     border: 1px solid var(--card-border);
     border-radius: 16px;
-    
+
     /* Fade out the bottom of the card smoothly so stacked cards dissolve completely */
     -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-    
+
     transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 
     :global(.light-mode) & {
@@ -295,12 +295,12 @@
     color: var(--accent);
     padding: 0.5rem 1rem;
     border-radius: 9999px;
-    background: rgba(225, 105, 34, 0.1); // Tinted with accent color
-    border: 1px solid rgba(225, 105, 34, 0.2);
+    background: rgba(98, 175, 239, 0.1); // Tinted with accent color
+    border: 1px solid rgba(98, 175, 239, 0.2);
     letter-spacing: 0.05em;
 
     :global(.light-mode) & {
-        background: rgba(225, 105, 34, 0.05);
+        background: rgba(98, 175, 239, 0.05);
     }
 }
 
@@ -324,7 +324,7 @@
 .glowLine {
     width: 2px;
     height: 6rem;
-    background: linear-gradient(to bottom, rgba(225, 105, 34, 0.5), rgba(225, 105, 34, 0));
+    background: linear-gradient(to bottom, rgba(98, 175, 239, 0.5), rgba(98, 175, 239, 0));
     margin: 1rem 0;
     opacity: 0.6;
 }

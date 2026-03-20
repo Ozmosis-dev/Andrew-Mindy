@@ -65,9 +65,9 @@ export default function HowIWorkSection() {
     });
 
     // Square rotates multiple full turns and moves horizontally from 0 to 100%
-    const squareRotate = useTransform(scrollYProgress, [0, 1], [0, 1080]); 
+    const squareRotate = useTransform(scrollYProgress, [0, 1], [0, 1080]);
     const squareLeft = useTransform(scrollYProgress, [0, 1], ["calc(0% - 0px)", "calc(100% - 32px)"]);
-    
+
     // Fade the whole progress bar in just after scroll starts, and fade out before it ends
     const progressOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
 
@@ -76,14 +76,14 @@ export default function HowIWorkSection() {
 
         wrappers?.forEach((wrapper) => {
             const card = wrapper.querySelector(".gsap-card-animate");
-            
+
             if (!card) return;
 
-            gsap.fromTo(card, 
+            gsap.fromTo(card,
                 { opacity: 0, y: 150, scale: 0.9, filter: "blur(20px)" },
-                { 
-                    opacity: 1, 
-                    y: 0, 
+                {
+                    opacity: 1,
+                    y: 0,
                     scale: 1,
                     filter: "blur(0px)",
                     scrollTrigger: {
@@ -121,8 +121,8 @@ export default function HowIWorkSection() {
                         <svg viewBox="0 0 350 250" className={styles.lineDiagram} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <linearGradient id="optGrad" gradientUnits="userSpaceOnUse" x1="0" y1="200" x2="350" y2="50">
-                                    <stop offset="0%" stopColor="rgba(225, 105, 34, 0.1)" />
-                                    <stop offset="50%" stopColor="rgba(225, 105, 34, 0.8)" />
+                                    <stop offset="0%" stopColor="rgba(98, 175, 239, 0.1)" />
+                                    <stop offset="50%" stopColor="rgba(98, 175, 239, 0.8)" />
                                     <stop offset="100%" stopColor="#ffffff" />
                                 </linearGradient>
 
@@ -145,21 +145,21 @@ export default function HowIWorkSection() {
                             />
 
                             {/* Nodes & Labels */}
-                            <motion.circle cx="30" cy="200" r="4" fill="#E16922" filter="url(#optGlow)"
+                            <motion.circle cx="30" cy="200" r="4" fill="#62AFEF" filter="url(#optGlow)"
                                 initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.1 }} />
                             <motion.text x="30" y="220" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
                                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.2 }}>
                                 DIAGNOSIS
                             </motion.text>
 
-                            <motion.circle cx="130" cy="140" r="4" fill="#E16922" filter="url(#optGlow)"
+                            <motion.circle cx="130" cy="140" r="4" fill="#62AFEF" filter="url(#optGlow)"
                                 initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.4 }} />
                             <motion.text x="130" y="160" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
                                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.5 }}>
                                 BLUEPRINT
                             </motion.text>
 
-                            <motion.circle cx="220" cy="80" r="4" fill="#ff8a47" filter="url(#optGlow)"
+                            <motion.circle cx="220" cy="80" r="4" fill="#8CC4F3" filter="url(#optGlow)"
                                 initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.7 }} />
                             <motion.text x="220" y="100" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
                                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.8 }}>
@@ -185,8 +185,8 @@ export default function HowIWorkSection() {
                         const reverseIdx = siteCopy.howIWork.steps.length - 1 - idx;
 
                         return (
-                            <div 
-                                key={step.id} 
+                            <div
+                                key={step.id}
                                 className={styles.absoluteWrapper}
                                 style={{
                                     top: `calc(${idx * 40}vh)`,
@@ -217,7 +217,7 @@ export default function HowIWorkSection() {
                                         )}
                                     </div>
                                 </div>
-                        </div>
+                            </div>
                         );
                     })}
 
@@ -229,7 +229,7 @@ export default function HowIWorkSection() {
             {/* Scroll Progress Indicator (Full Width) */}
             <motion.div className={styles.progressContainerFull} style={{ opacity: progressOpacity }}>
                 <div className={styles.progressBarFull}>
-                    <motion.div 
+                    <motion.div
                         className={styles.rotatingSquareFull}
                         style={{
                             left: squareLeft,

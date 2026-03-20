@@ -10,14 +10,14 @@ export default function EyeIcon() {
             width="32"
             height="32"
             fill="none"
-            stroke="#E16922" /* Orange Accent */
+            stroke="#62AFEF" /* Orange Accent */
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             style={{ display: 'block' }}
         >
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="none" />
-            <circle cx="12" cy="12" r="3" fill="#E16922" />
+            <circle cx="12" cy="12" r="3" fill="#62AFEF" />
         </svg>
     );
 }

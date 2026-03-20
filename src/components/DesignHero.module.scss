@@ -1,12 +1,31 @@
 @keyframes orbFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33%       { transform: translate(40px, -30px) scale(1.08); }
-    66%       { transform: translate(-20px, 20px) scale(0.95); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(40px, -30px) scale(1.08);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.95);
+    }
 }
 
 @keyframes scrollBounce {
-    0%, 100% { transform: scaleY(1); opacity: 1; }
-    50%       { transform: scaleY(0.4); opacity: 0.4; }
+
+    0%,
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scaleY(0.4);
+        opacity: 0.4;
+    }
 }
 
 .hero {
@@ -39,14 +58,14 @@
     width: 700px;
     height: 700px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(225, 105, 34, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.12) 0%, transparent 70%);
     top: -100px;
     right: -200px;
     pointer-events: none;
     animation: orbFloat 14s ease-in-out infinite;
 
     :global(.light-mode) & {
-        background: radial-gradient(circle, rgba(225, 105, 34, 0.2) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(98, 175, 239, 0.2) 0%, transparent 70%);
     }
 }
 
@@ -144,7 +163,7 @@
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(225, 105, 34, 0.45);
+        box-shadow: 0 12px 30px rgba(98, 175, 239, 0.45);
 
         svg {
             transform: translateX(4px);

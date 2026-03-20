@@ -1,6 +1,15 @@
 @keyframes pulse {
-    0%, 100% { opacity: 0.12; transform: scale(1); }
-    50%       { opacity: 0.2;  transform: scale(1.1); }
+
+    0%,
+    100% {
+        opacity: 0.12;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.2;
+        transform: scale(1.1);
+    }
 }
 
 .section {
@@ -34,7 +43,7 @@
 }
 
 .orbLeft {
-    background: radial-gradient(circle, rgba(225, 105, 34, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.15) 0%, transparent 70%);
     left: -200px;
     top: -100px;
     animation-delay: 0s;
@@ -67,12 +76,23 @@
     margin: 0;
 }
 
-.outlined {
-    -webkit-text-stroke: 2px var(--primary);
-    color: transparent;
+.proudOfSvgWrapper {
+    display: inline-block;
+    line-height: 0;
+    overflow: visible;
+    margin-top: -1rem; // fine-tune alignment with the text above
+    margin-bottom: -1rem;
+}
 
-    :global(.light-mode) & {
-        -webkit-text-stroke: 2px #000;
+.proudOfSvg {
+    width: clamp(300px, 60vw, 800px);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+
+    :global(.light-mode) & text {
+        stroke: #0a0a0a !important;
     }
 }
 
@@ -118,7 +138,7 @@
 
     &:hover {
         transform: translateY(-3px);
-        box-shadow: 0 16px 40px rgba(225, 105, 34, 0.5);
+        box-shadow: 0 16px 40px rgba(98, 175, 239, 0.5);
 
         svg {
             transform: translateX(5px);

@@ -9,14 +9,17 @@ import { useTheme } from '../context/ThemeContext';
 import styles from './NavBar.module.scss';
 
 const NAV_LINKS = [
-    { href: '/',        label: 'Home'    },
-    { href: '/design',  label: 'Design'  },
+    { href: '/', label: 'Home' },
+    { href: '/#work', label: 'Case Studies' },
+    { href: '/#about', label: 'About' },
+    { href: '/#services', label: 'Services' },
+    { href: '/design', label: 'Design' },
     { href: '/contact', label: 'Contact' },
 ];
 
 export default function NavBar() {
     const [visible, setVisible] = useState(false);
-    const pathname              = usePathname();
+    const pathname = usePathname();
     const { theme, toggleTheme } = useTheme();
 
     useEffect(() => {
@@ -44,7 +47,7 @@ export default function NavBar() {
                         className={styles.pill}
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{    opacity: 0, y: -20 }}
+                        exit={{ opacity: 0, y: -20 }}
                         transition={{ type: 'spring', stiffness: 340, damping: 30 }}
                     >
                         {/* ── Logo ── */}
@@ -99,8 +102,8 @@ export default function NavBar() {
                                         key="open"
                                         className={styles.eyeIcon}
                                         initial={{ opacity: 0, rotate: -20, scale: 0.6 }}
-                                        animate={{ opacity: 1, rotate: 0,   scale: 1   }}
-                                        exit={{    opacity: 0, rotate:  20, scale: 0.6 }}
+                                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                                        exit={{ opacity: 0, rotate: 20, scale: 0.6 }}
                                         transition={{ duration: 0.18, ease: 'easeOut' }}
                                     >
                                         <TbEye size={20} strokeWidth={1.4} />
@@ -109,9 +112,9 @@ export default function NavBar() {
                                     <motion.span
                                         key="closed"
                                         className={styles.eyeIcon}
-                                        initial={{ opacity: 0, rotate:  20, scale: 0.6 }}
-                                        animate={{ opacity: 1, rotate:  0,  scale: 1   }}
-                                        exit={{    opacity: 0, rotate: -20, scale: 0.6 }}
+                                        initial={{ opacity: 0, rotate: 20, scale: 0.6 }}
+                                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                                        exit={{ opacity: 0, rotate: -20, scale: 0.6 }}
                                         transition={{ duration: 0.18, ease: 'easeOut' }}
                                     >
                                         <TbEyeClosed size={20} strokeWidth={1.4} />

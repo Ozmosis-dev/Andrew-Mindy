@@ -44,12 +44,12 @@ function DashboardGraphic() {
         >
             <defs>
                 <linearGradient id="dashArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#E16922" stopOpacity="0.18" />
-                    <stop offset="100%" stopColor="#E16922" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#62AFEF" stopOpacity="0.18" />
+                    <stop offset="100%" stopColor="#62AFEF" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="dashBar" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#E16922" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#E16922" stopOpacity="0.25" />
+                    <stop offset="0%" stopColor="#62AFEF" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#62AFEF" stopOpacity="0.25" />
                 </linearGradient>
             </defs>
 
@@ -91,7 +91,7 @@ function DashboardGraphic() {
             />
             {/* Favicon */}
             <motion.rect x="70" y="13" width="10" height="10" rx="2"
-                fill="#E16922" fillOpacity="0.65"
+                fill="#62AFEF" fillOpacity="0.65"
                 initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
                 transition={{ ...spring, delay: 0.55 }}
                 style={{ transformOrigin: "75px 18px" }}
@@ -121,7 +121,7 @@ function DashboardGraphic() {
 
             {/* Active nav indicator */}
             <motion.rect x="0" y="74" width="3" height="26" rx="1.5"
-                fill="#E16922"
+                fill="#62AFEF"
                 initial={{ scaleY: 0 }} animate={inView ? { scaleY: 1 } : {}}
                 transition={{ ...spring, delay: 0.8 }}
                 style={{ transformOrigin: "1.5px 87px" }}
@@ -142,7 +142,7 @@ function DashboardGraphic() {
                     transition={{ duration: 0.35, delay: 0.65 + i * 0.07 }}
                 >
                     <rect x="10" y={y} width="14" height="14" rx="2"
-                        fill={i === 0 ? "#E16922" : "white"}
+                        fill={i === 0 ? "#62AFEF" : "white"}
                         fillOpacity={i === 0 ? 0.22 : 0.06} />
                     <rect x="30" y={y + 3} width={i === 0 ? 40 : 32} height="7" rx="1.5"
                         fill="white" fillOpacity={i === 0 ? 0.22 : 0.07} />
@@ -165,28 +165,28 @@ function DashboardGraphic() {
                     transition={{ duration: 0.5, delay: 0.85 + i * 0.1 }}
                 >
                     <rect x={card.x} y="44" width="112" height="70" rx="4"
-                        stroke={card.accent ? "#E16922" : "white"}
+                        stroke={card.accent ? "#62AFEF" : "white"}
                         strokeWidth="0.75"
                         strokeOpacity={card.accent ? 0.3 : 0.08}
-                        fill={card.accent ? "#E16922" : "white"}
+                        fill={card.accent ? "#62AFEF" : "white"}
                         fillOpacity={card.accent ? 0.045 : 0.02} />
-                    {card.accent && <rect x={card.x} y="44" width="112" height="2" rx="1" fill="#E16922" fillOpacity="0.6" />}
+                    {card.accent && <rect x={card.x} y="44" width="112" height="2" rx="1" fill="#62AFEF" fillOpacity="0.6" />}
                     {/* Label */}
                     <rect x={card.x + 10} y="56" width="54" height="5" rx="1.5" fill="white" fillOpacity="0.14" />
                     {/* Value */}
                     <rect x={card.x + 10} y="68" width={card.accent ? 74 : 58} height="20" rx="2"
-                        fill={card.accent ? "#E16922" : "white"}
+                        fill={card.accent ? "#62AFEF" : "white"}
                         fillOpacity={card.accent ? 0.18 : 0.08} />
                     {/* Trend */}
                     <rect x={card.x + 10} y="98" width="28" height="5" rx="1.5" fill="white" fillOpacity="0.06" />
                     <rect x={card.x + 44} y="98" width="18" height="5" rx="1.5"
-                        fill={card.accent ? "#E16922" : "white"}
+                        fill={card.accent ? "#62AFEF" : "white"}
                         fillOpacity={card.accent ? 0.4 : 0.1} />
                     {/* Live pulse on active card */}
                     {card.accent && <>
-                        <circle cx={card.x + 104} cy="50" r="4" fill="#E16922" fillOpacity="0.7" />
+                        <circle cx={card.x + 104} cy="50" r="4" fill="#62AFEF" fillOpacity="0.7" />
                         <circle cx={card.x + 104} cy="50" r="4"
-                            stroke="#E16922" strokeWidth="1.5" fill="none"
+                            stroke="#62AFEF" strokeWidth="1.5" fill="none"
                             className={styles.metricRing}
                         />
                     </>}
@@ -230,19 +230,19 @@ function DashboardGraphic() {
             />
             {/* Chart line */}
             <motion.path d={chartLine}
-                stroke="#E16922" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                stroke="#62AFEF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={inView ? { pathLength: 1, opacity: 1 } : {}}
                 transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
             />
             {/* Live dot at line end */}
-            <motion.circle cx="436" cy="150" r="4" fill="#E16922"
+            <motion.circle cx="436" cy="150" r="4" fill="#62AFEF"
                 initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
                 transition={{ ...spring, delay: 2.7 }}
                 style={{ transformOrigin: "436px 150px" }}
             />
             <circle cx="436" cy="150" r="5"
-                stroke="#E16922" strokeWidth="1.5" fill="none"
+                stroke="#62AFEF" strokeWidth="1.5" fill="none"
                 className={styles.chartDotRing}
             />
 
@@ -499,24 +499,15 @@ export default function ContactSection() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.8 }}
                         >
-                            <button onClick={() => setIsPopupOpen(true)} className={styles.primaryCta}>
-                                <span className={styles.ctaLabel}>
-                                    Begin the Conversation
-                                </span>
-                                <span className={styles.ctaArrow}>→</span>
+                            <button onClick={() => setIsPopupOpen(true)} className={styles.primaryBtn}>
+                                Begin the Conversation
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                             </button>
                         </motion.div>
 
-                        <motion.a
-                            href="mailto:contact@andrewmindy.com"
-                            className={styles.emailDisplay}
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.95 }}
-                        >
-                            contact@andrewmindy.com
-                        </motion.a>
+
                     </div>
 
                     {/* RIGHT — dashboard graphic */}

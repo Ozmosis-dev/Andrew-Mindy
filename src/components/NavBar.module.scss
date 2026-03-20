@@ -37,7 +37,7 @@
 
     /* Centered */
     margin: 0 auto;
-    width: min(740px, calc(100vw - 24px));
+    width: min(960px, calc(100vw - 24px));
 
     /* Dark (default) */
     background: rgba(8, 8, 8, 0.72);
@@ -78,7 +78,7 @@
 
     &:hover {
         color: var(--accent);
-        text-shadow: 0 0 16px rgba(225, 105, 34, 0.5);
+        text-shadow: 0 0 16px rgba(98, 175, 239, 0.5);
     }
 }
 
@@ -185,9 +185,9 @@
 
     &:hover {
         color: var(--accent);
-        background: rgba(225, 105, 34, 0.12);
-        border-color: rgba(225, 105, 34, 0.45);
-        box-shadow: 0 0 16px rgba(225, 105, 34, 0.28);
+        background: rgba(98, 175, 239, 0.12);
+        border-color: rgba(98, 175, 239, 0.45);
+        box-shadow: 0 0 16px rgba(98, 175, 239, 0.28);
     }
 
     &:focus-visible {

@@ -26,19 +26,19 @@ export default function GravityGrid() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const CELL     = 80;
+        const CELL = 80;
         const STRENGTH = 55;
-        const SIGMA    = 200;
-        const LERP     = 0.04;
-        const COUNT    = 8;
+        const SIGMA = 200;
+        const LERP = 0.04;
+        const COUNT = 8;
 
-        const mouse  = { x: -9999, y: -9999 };
+        const mouse = { x: -9999, y: -9999 };
         const smooth = { x: -9999, y: -9999 };
         let dots: Dot[] = [];
         let raf = 0;
 
-        function maxCol() { return Math.floor(canvas.width  / CELL); }
-        function maxRow() { return Math.floor(canvas.height / CELL); }
+        function maxCol() { return Math.floor(canvas!.width / CELL); }
+        function maxRow() { return Math.floor(canvas!.height / CELL); }
         function ri(min: number, max: number) {
             return min + Math.floor(Math.random() * (max - min + 1));
         }
@@ -65,37 +65,37 @@ export default function GravityGrid() {
             const avail = availableDirs(dot.gx, dot.gy, dot.dx, dot.dy);
             if (avail.length === 0) return;
 
-            const mustTurn      = dot.stepCount >= dot.stepsToTurn;
-            const canContinue   = avail.some(d => d.dx === dot.dx && d.dy === dot.dy);
-            const randomTurn    = Math.random() < 0.4;
+            const mustTurn = dot.stepCount >= dot.stepsToTurn;
+            const canContinue = avail.some(d => d.dx === dot.dx && d.dy === dot.dy);
+            const randomTurn = Math.random() < 0.4;
 
             let chosen: { dx: number; dy: number };
 
             if (mustTurn || !canContinue || randomTurn) {
                 // Prefer turning (exclude straight-ahead)
                 const turns = avail.filter(d => !(d.dx === dot.dx && d.dy === dot.dy));
-                const pool  = turns.length > 0 ? turns : avail;
+                const pool = turns.length > 0 ? turns : avail;
                 chosen = pool[Math.floor(Math.random() * pool.length)];
-                dot.stepCount   = 0;
+                dot.stepCount = 0;
                 dot.stepsToTurn = ri(2, 4);
             } else {
                 // Continue straight
                 chosen = avail.find(d => d.dx === dot.dx && d.dy === dot.dy)!;
             }
 
-            dot.dx      = chosen.dx;
-            dot.dy      = chosen.dy;
+            dot.dx = chosen.dx;
+            dot.dy = chosen.dy;
             dot.targetGx = dot.gx + chosen.dx;
             dot.targetGy = dot.gy + chosen.dy;
         }
 
         function buildDots() {
-            const mc   = maxCol();
-            const mr   = maxRow();
-            const dirs = [{ dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}];
+            const mc = maxCol();
+            const mr = maxRow();
+            const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
             dots = Array.from({ length: COUNT }, () => {
-                const gx  = ri(1, mc - 1);  // start away from edges
-                const gy  = ri(1, mr - 1);
+                const gx = ri(1, mc - 1);  // start away from edges
+                const gy = ri(1, mr - 1);
                 const dir = dirs[Math.floor(Math.random() * dirs.length)];
                 // Ensure first target is in bounds
                 const tgx = Math.max(0, Math.min(mc, gx + dir.dx));
@@ -104,10 +104,10 @@ export default function GravityGrid() {
                     gx, gy,
                     dx: dir.dx, dy: dir.dy,
                     targetGx: tgx, targetGy: tgy,
-                    speed:        0.010 + Math.random() * 0.006,
-                    opacity:      0.35  + Math.random() * 0.45,
-                    stepCount:    0,
-                    stepsToTurn:  ri(2, 4),
+                    speed: 0.010 + Math.random() * 0.006,
+                    opacity: 0.35 + Math.random() * 0.45,
+                    stepCount: 0,
+                    stepsToTurn: ri(2, 4),
                 };
             });
         }
@@ -118,34 +118,35 @@ export default function GravityGrid() {
 
             // Check if we've reached or passed the target
             const hitX = dot.dx > 0 ? dot.gx >= dot.targetGx
-                       : dot.dx < 0 ? dot.gx <= dot.targetGx
-                       : true;
+                : dot.dx < 0 ? dot.gx <= dot.targetGx
+                    : true;
             const hitY = dot.dy > 0 ? dot.gy >= dot.targetGy
-                       : dot.dy < 0 ? dot.gy <= dot.targetGy
-                       : true;
+                : dot.dy < 0 ? dot.gy <= dot.targetGy
+                    : true;
 
             if (hitX && hitY) arrive(dot);
         }
 
         // Mexican-hat wave warp
         function warp(px: number, py: number) {
-            const dx   = px - smooth.x;
-            const dy   = py - smooth.y;
+            const dx = px - smooth.x;
+            const dy = py - smooth.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 0.1) return { x: px, y: py };
-            const t    = dist / SIGMA;
+            const t = dist / SIGMA;
             const wave = (1 - t * t) * Math.exp(-0.5 * t * t);
             const pull = STRENGTH * wave;
             return { x: px - (dx / dist) * pull, y: py - (dy / dist) * pull };
         }
 
         function draw() {
+            if (!canvas || !ctx) return;
             smooth.x += (mouse.x - smooth.x) * LERP;
             smooth.y += (mouse.y - smooth.y) * LERP;
 
             const isLight = document.documentElement.classList.contains("light-mode");
-            const lineColor = isLight ? "rgba(0,0,0,0.1)"  : "rgba(255,255,255,0.05)";
-            const dotRgb    = isLight ? "0,0,0"            : "255,255,255";
+            const lineColor = isLight ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.05)";
+            const dotRgb = isLight ? "0,0,0" : "255,255,255";
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -153,7 +154,7 @@ export default function GravityGrid() {
             const r = maxRow() + 2;
 
             ctx.strokeStyle = lineColor;
-            ctx.lineWidth   = 1;
+            ctx.lineWidth = 1;
 
             for (let row = 0; row < r; row++) {
                 ctx.beginPath();
@@ -176,12 +177,12 @@ export default function GravityGrid() {
             dots.forEach((dot) => {
                 stepDot(dot);
 
-                const pt    = warp(dot.gx * CELL, dot.gy * CELL);
+                const pt = warp(dot.gx * CELL, dot.gy * CELL);
                 const glowR = DOT_RADIUS * 3;
 
                 const grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, glowR);
-                grad.addColorStop(0,  `rgba(${dotRgb},${dot.opacity * 0.35})`);
-                grad.addColorStop(1,  `rgba(${dotRgb},0)`);
+                grad.addColorStop(0, `rgba(${dotRgb},${dot.opacity * 0.35})`);
+                grad.addColorStop(1, `rgba(${dotRgb},0)`);
                 ctx.beginPath();
                 ctx.arc(pt.x, pt.y, glowR, 0, Math.PI * 2);
                 ctx.fillStyle = grad;
@@ -197,40 +198,43 @@ export default function GravityGrid() {
         }
 
         function onMouseMove(e: MouseEvent) {
+            if (!canvas) return;
             const rect = canvas.getBoundingClientRect();
             mouse.x = e.clientX - rect.left;
             mouse.y = e.clientY - rect.top;
         }
         function onMouseLeave() { mouse.x = -9999; mouse.y = -9999; }
         function onTouchMove(e: TouchEvent) {
-            const rect  = canvas.getBoundingClientRect();
+            if (!canvas) return;
+            const rect = canvas.getBoundingClientRect();
             const touch = e.touches[0];
             mouse.x = touch.clientX - rect.left;
             mouse.y = touch.clientY - rect.top;
         }
         function onTouchEnd() { mouse.x = -9999; mouse.y = -9999; }
         function resize() {
-            canvas.width  = canvas.offsetWidth;
+            if (!canvas) return;
+            canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             buildDots();
         }
 
-        window.addEventListener("mousemove",  onMouseMove);
+        window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mouseleave", onMouseLeave);
-        window.addEventListener("touchmove",  onTouchMove, { passive: true });
-        window.addEventListener("touchend",   onTouchEnd);
-        window.addEventListener("resize",     resize);
+        window.addEventListener("touchmove", onTouchMove, { passive: true });
+        window.addEventListener("touchend", onTouchEnd);
+        window.addEventListener("resize", resize);
 
         resize();
         draw();
 
         return () => {
             cancelAnimationFrame(raf);
-            window.removeEventListener("mousemove",  onMouseMove);
+            window.removeEventListener("mousemove", onMouseMove);
             window.removeEventListener("mouseleave", onMouseLeave);
-            window.removeEventListener("touchmove",  onTouchMove);
-            window.removeEventListener("touchend",   onTouchEnd);
-            window.removeEventListener("resize",     resize);
+            window.removeEventListener("touchmove", onTouchMove);
+            window.removeEventListener("touchend", onTouchEnd);
+            window.removeEventListener("resize", resize);
         };
     }, []);
 
@@ -238,12 +242,12 @@ export default function GravityGrid() {
         <canvas
             ref={canvasRef}
             style={{
-                position:      "absolute",
-                inset:         0,
-                width:         "100%",
-                height:        "100%",
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
                 pointerEvents: "none",
-                display:       "block",
+                display: "block",
             }}
         />
     );

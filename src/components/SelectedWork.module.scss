@@ -22,6 +22,15 @@
         align-items: flex-start;
         gap: 1.5rem;
 
+        .eyebrow {
+            font-family: var(--font-montserrat);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--accent);
+        }
+
         .title {
             font-family: var(--font-phosphate);
             font-size: clamp(3rem, 6vw, 6rem);

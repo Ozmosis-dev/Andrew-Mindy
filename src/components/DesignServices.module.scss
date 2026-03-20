@@ -1,18 +1,32 @@
+/* ═══════════════════════════════════════════
+   DesignServices.module.scss — Bento Box Redesign
+   ═══════════════════════════════════════════ */
+
+/* ── Section ─────────────────────────────── */
+
 .section {
-    padding: 8rem 2rem;
     position: relative;
-    z-index: 10;
+    padding: 8rem 2rem 6rem;
+    background-color: var(--background);
+    color: var(--foreground);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    :global(.light-mode) & {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1120px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
 }
 
-// ─── Header ──────────────────────────────────────────────────────────────────
+/* ── Header ─────────────────────────────── */
 
 .header {
-    margin-bottom: 5rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -23,296 +37,355 @@
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.25em;
     color: var(--accent);
+    display: block;
 }
 
-.title {
+.sectionTitle {
     font-family: var(--font-phosphate);
     font-size: clamp(3rem, 6vw, 6rem);
     color: var(--primary);
+    text-transform: uppercase;
     line-height: 0.9;
     letter-spacing: -0.02em;
+    margin: 0;
 }
 
-.intro {
-    font-family: var(--font-montserrat);
-    font-size: 1.1rem;
+.sectionIntro {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
     color: var(--secondary);
-    max-width: 500px;
-    line-height: 1.65;
+    max-width: 460px;
+    line-height: 1.6;
+    margin: 0.25rem 0 0;
+}
 
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.65);
+/* ── Grid container ─────────────────────── */
+
+.bentoGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
     }
 }
 
-// ─── Rows ────────────────────────────────────────────────────────────────────
+/* ── Bento Card ─────────────────────── */
 
-.rows {
+.bentoCard {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 2rem;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 
     :global(.light-mode) & {
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.02);
+        border-color: rgba(0, 0, 0, 0.08);
     }
 }
 
-.row {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    transition: background 0.3s ease;
-
-    :global(.light-mode) & {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    &.rowOpen {
-        background: rgba(255, 255, 255, 0.02);
+.cardHover {
+    &:hover {
+        transform: translateY(-6px);
+        background-color: rgba(255, 255, 255, 0.035);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
 
         :global(.light-mode) & {
-            background: rgba(0, 0, 0, 0.02);
+            background-color: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.15);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.1);
         }
 
-        .rowNum {
-            color: var(--service-accent, var(--accent));
-        }
-
-        .rowTitle {
-            color: var(--service-accent, var(--primary));
-        }
-    }
-
-    &.rowFeatured {
-        .rowHeader {
-            position: relative;
-
-            &::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 3px;
-                background: var(--service-accent, var(--accent));
-                border-radius: 0 2px 2px 0;
-            }
+        .cardNumber {
+            color: var(--accent);
+            opacity: 0.45;
+            transform: translateX(4px);
         }
     }
 }
 
-// ─── Row header ──────────────────────────────────────────────────────────────
+/* ── Wide Card (Brand + Site) ──────────── */
 
-.rowHeader {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3rem 1fr auto;
-    align-items: center;
-    gap: 2rem;
-    padding: 2rem 1.5rem 2rem 2rem;
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.2s ease;
+.cardWide {
+    background-color: rgba(98, 175, 239, 0.03);
+    border-color: rgba(98, 175, 239, 0.1);
 
-    @media (max-width: 640px) {
-        grid-template-columns: 2.5rem 1fr auto;
-        gap: 1rem;
-        padding: 1.5rem 1rem;
+    :global(.light-mode) & {
+        background-color: rgba(98, 175, 239, 0.04);
+        border-color: rgba(98, 175, 239, 0.15);
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--accent) 0%, rgba(98, 175, 239, 0.1) 100%);
+        border-top-left-radius: 24px;
+        border-bottom-left-radius: 24px;
     }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.02);
+        background-color: rgba(98, 175, 239, 0.05);
+        border-color: rgba(98, 175, 239, 0.25);
 
         :global(.light-mode) & {
-            background: rgba(0, 0, 0, 0.02);
+            background-color: rgba(98, 175, 239, 0.06);
+            border-color: rgba(98, 175, 239, 0.3);
+        }
+    }
+
+    @media (min-width: 900px) {
+        grid-column: span 2;
+        padding: 3.5rem;
+
+        /* Layout side by side on desktop */
+        .cardInner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
         }
 
-        .toggle {
-            color: var(--service-accent, var(--accent));
+        .deliverablesWrapper {
+            margin-top: 0;
+            align-self: end;
         }
     }
 }
 
-.rowNum {
-    font-family: var(--font-montserrat);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.3);
-    transition: color 0.3s ease;
-
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.3);
-    }
-}
-
-.rowInfo {
+.cardInner {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 2.5rem;
+    flex: 1;
+    position: relative;
+    z-index: 2;
 }
 
-.rowTitleLine {
+/* ── Content inside Card ──────────────── */
+
+.cardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.cardNumberTitle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cardNumber {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 5vw, 4rem);
+    line-height: 1;
+    color: var(--primary);
+    opacity: 0.08;
+    letter-spacing: -0.02em;
+    transition: color 0.4s ease, opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    display: block;
+}
+
+.cardTitleRow {
     display: flex;
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
 }
 
-.rowTitle {
-    font-family: var(--font-phosphate);
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
+.cardTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-weight: 700;
     color: var(--primary);
+    text-transform: uppercase;
+    line-height: 1.15;
     margin: 0;
-    line-height: 1;
-    transition: color 0.3s ease;
+    letter-spacing: 0.03em;
 }
 
 .badge {
     font-family: var(--font-montserrat);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    background: rgba(225, 105, 34, 0.1);
-    border: 1px solid rgba(225, 105, 34, 0.3);
-    padding: 0.3rem 0.75rem;
-    border-radius: 99px;
+    letter-spacing: 0.18em;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #050505;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(98, 175, 239, 0.3);
 }
 
-.rowTagline {
-    font-family: var(--font-montserrat);
-    font-size: 0.9rem;
+.cardTagline {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     color: var(--secondary);
+    font-style: italic;
     margin: 0;
-
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.55);
-    }
+    opacity: 0.8;
+    line-height: 1.4;
 }
 
-.toggle {
-    color: var(--secondary);
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease;
-
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.4);
-    }
-}
-
-// ─── Expand panel ────────────────────────────────────────────────────────────
-
-.panel {
-    overflow: hidden;
-}
-
-.panelInner {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0 2rem 2.5rem 7rem;
-
-    @media (min-width: 640px) {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    @media (max-width: 640px) {
-        padding: 0 1rem 2rem 1rem;
-    }
-}
-
-.panelDesc {
+.cardDesc {
     font-family: var(--font-montserrat);
     font-size: 1rem;
     color: var(--secondary);
     line-height: 1.7;
-    margin: 0;
-
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.65);
-    }
+    margin: 0.5rem 0 0;
 }
 
-.panelDeliverables {
+/* ── Deliverables ─────────────────────── */
+
+.deliverablesWrapper {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-top: auto;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1.75rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.4s ease, border-color 0.4s ease;
+
+    :global(.light-mode) & {
+        background: rgba(255, 255, 255, 0.6);
+        border-color: rgba(0, 0, 0, 0.06);
+    }
+
+    .bentoCard:hover & {
+        background: rgba(0, 0, 0, 0.35);
+        border-color: rgba(255, 255, 255, 0.08);
+
+        :global(.light-mode) & {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    }
 }
 
-.delLabel {
+.deliverablesLabel {
     font-family: var(--font-montserrat);
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--service-accent, var(--accent));
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    opacity: 0.9;
 }
 
-.delList {
+.deliverablesList {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.85rem;
 }
 
-.delItem {
-    font-family: var(--font-montserrat);
-    font-size: 0.9rem;
+.deliverableItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    font-family: var(--font-space-grotesk);
+    font-size: 0.95rem;
     color: var(--primary);
-    padding-left: 1.25rem;
-    position: relative;
-
-    :global(.light-mode) & {
-        color: #000;
-    }
+    line-height: 1.5;
 
     &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0.55em;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--service-accent, var(--accent));
+        content: "";
+        width: 14px;
+        height: 2px;
+        background: var(--accent);
+        flex-shrink: 0;
+        margin-top: 0.55rem;
+        border-radius: 2px;
+        box-shadow: 0 0 8px var(--accent);
     }
 }
 
-// ─── Footer note ─────────────────────────────────────────────────────────────
-
-.footer {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* ── Glow Effect ──────────────────────── */
+.glowOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 255, 255, 0.06),
+            transparent 40%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
 
     :global(.light-mode) & {
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(0, 0, 0, 0.04),
+                transparent 40%);
+    }
+
+    .bentoCard:hover & {
+        opacity: 1;
     }
 }
 
-.footerNote {
-    font-family: var(--font-montserrat);
-    font-size: 1rem;
-    color: var(--secondary);
-
-    :global(.light-mode) & {
-        color: rgba(0, 0, 0, 0.6);
-    }
-}
-
-.footerLink {
+.graphicIcon {
+    position: absolute;
+    top: 2.5rem;
+    right: 2.5rem;
     color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    transition: opacity 0.2s ease;
+    opacity: 0.35;
+    z-index: 2;
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 
-    &:hover {
-        opacity: 0.8;
+    svg {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
+    .bentoCard:hover & {
+        opacity: 0.8;
+        transform: scale(1.1) translateY(-2px);
+
+        svg {
+            transform: rotate(15deg);
+        }
+    }
+}
+
+.cardWide .graphicIcon {
+    @media (min-width: 900px) {
+        top: 3.5rem;
+        right: 3.5rem;
+    }
+}
+
+.cardWide .glowOverlay {
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(98, 175, 239, 0.08),
+            transparent 45%);
+
+    :global(.light-mode) & {
+        background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(98, 175, 239, 0.06),
+                transparent 45%);
+    }
+}
+
+/* ── GSAP Initial State ───────────────── */
+.gsapCard {
+    opacity: 0;
 }

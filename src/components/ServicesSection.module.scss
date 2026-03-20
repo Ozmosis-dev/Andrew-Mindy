@@ -122,16 +122,16 @@
 
 /* Featured state (Brand + Site with "Most Common") */
 .rowFeatured {
-    background-color: rgba(225, 105, 34, 0.025);
-    border-top-color: rgba(225, 105, 34, 0.12);
+    background-color: rgba(98, 175, 239, 0.025);
+    border-top-color: rgba(98, 175, 239, 0.12);
 
     &:hover {
-        background-color: rgba(225, 105, 34, 0.045);
+        background-color: rgba(98, 175, 239, 0.045);
     }
 
     :global(.light-mode) & {
-        background-color: rgba(225, 105, 34, 0.03);
-        border-top-color: rgba(225, 105, 34, 0.12);
+        background-color: rgba(98, 175, 239, 0.03);
+        border-top-color: rgba(98, 175, 239, 0.12);
     }
 
     /* Accent left edge */
@@ -144,7 +144,7 @@
         height: 100%;
         background: linear-gradient(180deg,
                 var(--accent) 0%,
-                rgba(225, 105, 34, 0.2) 100%);
+                rgba(98, 175, 239, 0.2) 100%);
     }
 }
 
@@ -285,13 +285,13 @@
     }
 
     .row:hover & {
-        border-color: rgba(225, 105, 34, 0.35);
+        border-color: rgba(98, 175, 239, 0.35);
         color: var(--accent);
     }
 
     .rowOpen & {
-        background-color: rgba(225, 105, 34, 0.1);
-        border-color: rgba(225, 105, 34, 0.3);
+        background-color: rgba(98, 175, 239, 0.1);
+        border-color: rgba(98, 175, 239, 0.3);
         color: var(--accent);
     }
 
@@ -390,4 +390,125 @@
 
 .gsapRow {
     opacity: 0;
+}
+
+/* ── Footer Row ──────────────────────────── */
+.footerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5rem 2.25rem;
+    margin-top: 2rem;
+    border-radius: 1.2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+}
+
+.footerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footerIconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.spinningAsterisk {
+    width: 38px;
+    height: 38px;
+    color: var(--accent);
+    transform-origin: center;
+    animation: slowSpin 12s linear infinite;
+}
+
+@keyframes slowSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.footerContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.footerTitle {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+.footerTagline {
+    font-family: var(--font-montserrat);
+    font-size: 0.85rem;
+    color: var(--secondary);
+    line-height: 1.5;
+    margin: 0;
+
+    :global(.light-mode) & {
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+
+.footerLink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: var(--primary);
+    color: var(--background);
+    padding: 0.85rem 1.75rem;
+    border-radius: 99px;
+    font-family: var(--font-montserrat);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+
+    :global(.light-mode) & {
+        background: #000;
+        color: #fff;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+        svg {
+            transform: translateX(4px);
+        }
+    }
+
+    svg {
+        transition: transform 0.3s ease;
+    }
 }

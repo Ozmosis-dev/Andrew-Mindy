@@ -13,14 +13,14 @@ if (typeof window !== "undefined") {
 }
 
 const projects = [
-    { id: 1, title: "Hometrust",          category: "Brand + Web Design", image: "/images/HomeTrust-1024x576.png",          accent: "#E16922" },
-    { id: 2, title: "Hope State Roofing", category: "Brand + Web Design", image: "/images/Hope-State-1024x576.png",         accent: "#c0392b" },
+    { id: 1, title: "Hometrust", category: "Brand + Web Design", image: "/images/HomeTrust-1024x576.png", accent: "#62AFEF" },
+    { id: 2, title: "Hope State Roofing", category: "Brand + Web Design", image: "/images/Hope-State-1024x576.png", accent: "#c0392b" },
     { id: 3, title: "Doughlicious Vegan", category: "Brand + Web Design", image: "/images/Doughlicious-Vegan-1024x576.png", accent: "#f5c842" },
-    { id: 4, title: "KAI",                category: "Brand + Web Design", image: "/images/Kai-1-1024x576.png",              accent: "#87CEEB" },
-    { id: 5, title: "Kharis",             category: "Brand + Web Design", image: "/images/Kharis-1-1024x576.png",           accent: "#9b59b6" },
-    { id: 6, title: "The Resting Place",  category: "Brand + Web Design", image: "/images/Resting-Place-1-1024x576.png",    accent: "#C9B99A" },
-    { id: 7, title: "TST",                category: "Brand + Web Design", image: "/images/TST-1-1024x576.png",              accent: "#2ecc71" },
-    { id: 8, title: "Wise Builders",      category: "Brand + Web Design", image: "/images/Wise-1-1024x576.png",             accent: "#3498db" },
+    { id: 4, title: "KAI", category: "Brand + Web Design", image: "/images/Kai-1-1024x576.png", accent: "#87CEEB" },
+    { id: 5, title: "Kharis", category: "Brand + Web Design", image: "/images/Kharis-1-1024x576.png", accent: "#9b59b6" },
+    { id: 6, title: "The Resting Place", category: "Brand + Web Design", image: "/images/Resting-Place-1-1024x576.png", accent: "#C9B99A" },
+    { id: 7, title: "TST", category: "Brand + Web Design", image: "/images/TST-1-1024x576.png", accent: "#2ecc71" },
+    { id: 8, title: "Wise Builders", category: "Brand + Web Design", image: "/images/Wise-1-1024x576.png", accent: "#3498db" },
 ];
 
 export default function DesignGallery() {

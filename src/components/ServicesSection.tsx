@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -63,7 +64,7 @@ const services: ServiceItem[] = [
     },
     {
         id: "02",
-        title: "Marketing Site",
+        title: "Web Design + Development",
         tagline: "Built to convert, not just to look good.",
         description:
             "Strategy-first design and development that turns visitors into pipeline. Copywriting, design, and engineering done as one coordinated build—not a handoff chain.",
@@ -85,7 +86,7 @@ const services: ServiceItem[] = [
             "Brand identity and marketing website built together as one coherent system — designed from the same principles, by the same hands. When built together, every decision is made with both contexts in mind. The result is tighter, faster, and more resolved than anything assembled in pieces.",
         deliverables: [
             "Everything in Brand System",
-            "Everything in Marketing Site",
+            "Everything in Web Design + Development",
             "~15% savings vs. purchasing separately",
         ],
         badge: "Most Common",
@@ -366,6 +367,33 @@ export default function ServicesSection() {
                         );
                     })}
                 </div>
+
+                {/* ── Footer Link to Design Page ── */}
+                <motion.div
+                    className={styles.footerRow}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                    <div className={styles.footerLeft}>
+                        <div className={styles.footerIconWrapper}>
+                            <svg className={styles.spinningAsterisk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 3v18M5 7.5l14 9M5 16.5l14-9" />
+                            </svg>
+                        </div>
+                        <div className={styles.footerContent}>
+                            <h3 className={styles.footerTitle}>Explore additional design work.</h3>
+                            <p className={styles.footerTagline}>Learn more about my visual design capabilities and brand identity services.</p>
+                        </div>
+                    </div>
+                    <Link href="/design" className={styles.footerLink}>
+                        View Design Work
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </Link>
+                </motion.div>
             </div>
         </section>
     );
