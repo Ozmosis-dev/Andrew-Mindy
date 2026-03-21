@@ -28,7 +28,7 @@ export default function InlineProjectGallery({ images }: InlineProjectGalleryPro
         if (!galleryRef.current || !containerRef.current) return;
 
         const imageCards = gsap.utils.toArray(galleryRef.current.querySelectorAll(`.${styles.imageWrapper}`));
-        
+
         // Create an expanding container effect and rapid image entrance
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -47,16 +47,16 @@ export default function InlineProjectGallery({ images }: InlineProjectGalleryPro
         );
 
         // 2. Parallax/fade effect on the images, happening rapidly
-        tl.fromTo(imageCards, 
+        tl.fromTo(imageCards,
             { y: 60, opacity: 0, scale: 0.95, filter: 'blur(10px)' },
-            { 
-                y: 0, 
-                opacity: 1, 
-                scale: 1, 
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
                 filter: 'blur(0px)',
                 stagger: 0.1, // Slower stagger
                 duration: 0.8, // Slower duration
-                ease: 'power2.out' 
+                ease: 'power2.out'
             },
             "-=0.6" // Start overlap with container expansion
         );
@@ -68,24 +68,28 @@ export default function InlineProjectGallery({ images }: InlineProjectGalleryPro
     return (
         <div className={styles.container} ref={containerRef}>
             <div className={styles.galleryGrid} ref={galleryRef}>
-                {images.map((image, i) => (
-                    <div 
-                        key={i} 
-                        className={styles.imageWrapper}
-                        style={{
-                            // Create a staggering masonry/grid effect by shifting odd/even rows slightly if needed
-                            marginTop: i % 2 !== 0 ? '2rem' : '0' 
-                        }}
-                    >
-                        <Image
-                            src={image.url}
-                            alt={image.alt}
-                            fill
-                            className={styles.image}
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                        />
-                    </div>
-                ))}
+                <div className={styles.galleryTrack}>
+                    {[...images, ...images].map((image, i) => {
+                        const originalIndex = i % images.length;
+                        return (
+                            <div
+                                key={i}
+                                className={styles.imageWrapper}
+                                style={{
+                                    marginTop: originalIndex % 2 !== 0 ? '2rem' : '0'
+                                }}
+                            >
+                                <Image
+                                    src={image.url}
+                                    alt={image.alt}
+                                    fill
+                                    className={styles.image}
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
