@@ -44,6 +44,7 @@ export default function Hero() {
         if (eyeRef.current) {
             gsap.to(eyeRef.current, {
                 scale: 1.3,
+                color: "#62afef",
                 duration: 2,
                 repeat: -1,
                 yoyo: true,

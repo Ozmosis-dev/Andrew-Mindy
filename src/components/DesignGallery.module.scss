@@ -531,10 +531,7 @@
 
 .lightboxContent {
     position: relative;
-    width: 90vmin;
-    height: 90vmin;
-    max-width: 900px;
-    max-height: 900px;
+    width: min(90vw, 85vh, 800px);
     background: #000;
     border-radius: 20px;
     overflow: hidden;
@@ -571,11 +568,11 @@
 }
 
 .lightboxImageWrapper {
-    position: absolute;
-    inset: 0;
+    position: relative;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1 / 1;
     background: #111;
+    flex-shrink: 0;
 }
 
 .lightboxImage {
@@ -586,20 +583,15 @@
 }
 
 .lightboxInfo {
-    position: absolute;
-    bottom: -2px;
-    left: -2px;
-    right: -2px;
-    width: auto;
+    position: relative;
+    width: 100%;
     box-sizing: border-box;
-    padding: 1.25rem 2rem calc(1.25rem + 2px) 2rem;
-    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85), #0a0a0a);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 2rem;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 5;
-    border-radius: 0;
+    flex-shrink: 0;
 }
-
 
 
 

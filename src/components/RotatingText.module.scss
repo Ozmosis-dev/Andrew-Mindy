@@ -10,7 +10,7 @@
 }
 
 .wrapper {
-    height: 2.5rem;
+    height: 5rem;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -21,13 +21,13 @@
     /* Changed from 95vw to none to prevent clipping */
 
     @media (max-width: 600px) {
-        height: 1.6rem;
+        height: 3rem;
     }
 }
 
 .ghost {
     visibility: hidden;
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: 900;
     letter-spacing: 0.5em;
     /* 500 tracking */
@@ -36,7 +36,7 @@
     display: block;
 
     @media (max-width: 600px) {
-        font-size: 1.2rem;
+        font-size: 2rem;
     }
 }
 
@@ -75,7 +75,7 @@
 
 .char {
     display: inline-block;
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: 900;
     /* color: #62afef; replaced by gradient below */
     background: linear-gradient(180deg, #8dcbf9 0%, #62afef 50%, #3584c9 100%);
@@ -90,6 +90,6 @@
     white-space: pre;
 
     @media (max-width: 600px) {
-        font-size: 1.2rem;
+        font-size: 2rem;
     }
 }

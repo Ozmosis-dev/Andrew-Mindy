@@ -12,7 +12,7 @@ import {
 } from "framer-motion";
 import styles from "./ImpactSection.module.scss";
 import MaskedTextReveal from "./MaskedTextReveal";
-import ScrollSequence from "./ScrollSequence";
+import VennDiagram from "./VennDiagram";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { FiTrendingUp, FiTarget, FiShield, FiClock } from "react-icons/fi";
 
@@ -217,7 +217,7 @@ export default function ImpactSection() {
     });
 
     // ScrollSequence animation progress
-    const animationProgress = useTransform(smoothProgress, [0.15, 0.65], [0, 1]);
+    const animationProgress = useTransform(smoothProgress, [0.0, 0.45], [0, 1]);
 
     // Parallax for the scroll‑sequence background
     const parallaxScale = useTransform(smoothProgress, [0, 1], [0.35, 1.5]);
@@ -228,7 +228,7 @@ export default function ImpactSection() {
 
     return (
         <section ref={sectionRef} className={styles.section}>
-            <ScrollSequence progress={animationProgress} scale={parallaxScale} />
+            <VennDiagram progress={animationProgress} scale={parallaxScale} />
             <motion.div
                 className={styles.container}
                 initial="hidden"

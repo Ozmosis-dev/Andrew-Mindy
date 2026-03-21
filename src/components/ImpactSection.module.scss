@@ -44,12 +44,13 @@
         &>span:last-child {
             /* Create a rich, flowing gradient */
             background: linear-gradient(110deg,
-                    #8dcbf9 10%,
-                    #50a7ea 30%,
-                    #b0e0ff 50%,
+                    #8dcbf9 0%,
+                    #50a7ea 20%,
+                    #b0e0ff 40%,
                     /* Bright shimmer point */
-                    #50a7ea 70%,
-                    #3584c9 90%);
+                    #50a7ea 60%,
+                    #3584c9 80%,
+                    #8dcbf9 100%);
             background-size: 200% auto;
 
             -webkit-background-clip: text;
@@ -57,9 +58,7 @@
             background-clip: text;
 
             /* Continuous animations */
-            animation:
-                shimmerFlow 5s linear infinite,
-                glowPulse 3s ease-in-out infinite alternate;
+            animation: shimmerFlow 5s linear infinite;
         }
     }
 }

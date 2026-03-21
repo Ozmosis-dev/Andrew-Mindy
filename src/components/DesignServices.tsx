@@ -15,7 +15,7 @@ if (typeof window !== "undefined") {
 const designServices = [
     {
         id: "01",
-        title: "Brand System",
+        title: "Brand Identity",
         tagline: "For companies that have outgrown how they look.",
         description:
             "A complete visual identity built from strategy — not aesthetics alone. We start with positioning and end with a system that works across every touchpoint. Every mark, color, and type choice is made to communicate precisely who you are.",
@@ -52,7 +52,7 @@ const designServices = [
         description:
             "Brand identity and marketing website built together as one coherent system — designed from the same principles, by the same hands. When built together, every decision is made with both contexts in mind. The result is tighter, faster, and more resolved than anything assembled in pieces.",
         deliverables: [
-            "Everything in Brand System",
+            "Everything in Brand Identity",
             "Everything in Web Design + Development",
             "~15% savings vs. purchasing separately",
         ],
@@ -64,11 +64,35 @@ const designServices = [
 
 function getCardGraphic(id: string) {
     if (id === "01") {
-        // Brand System: Core brand mark/asterisk geometry
+        // Brand Identity: Pencil and Paintbrush crossed, clean line art
         return (
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <path d="M24 8V40M12 16L36 32M12 32L36 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <circle cx="24" cy="24" r="4" fill="var(--background)" stroke="currentColor" strokeWidth="2" />
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                <defs>
+                    <mask id="brush-cutout">
+                        <rect x="0" y="0" width="48" height="48" fill="white" />
+                        <svg x="4" y="4" width="40" height="40" viewBox="0 0 24 24" strokeWidth="4" stroke="black" fill="black">
+                            <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08Z" />
+                            <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+                        </svg>
+                    </mask>
+                </defs>
+
+                {/* Pencil rendered under the mask */}
+                <g mask="url(#brush-cutout)">
+                    <svg x="4" y="4" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.2">
+                        {/* Flipped Pencil */}
+                        <g transform="translate(12, 12) scale(-1, 1) translate(-12, -12)">
+                            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                            <path d="m15 5 4 4" />
+                        </g>
+                    </svg>
+                </g>
+
+                {/* Paintbrush fully rendered on top */}
+                <svg x="4" y="4" width="40" height="40" viewBox="0 0 24 24" strokeWidth="1.2">
+                    <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
+                    <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+                </svg>
             </svg>
         );
     }
@@ -78,17 +102,42 @@ function getCardGraphic(id: string) {
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
                 <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" strokeWidth="2" />
                 <path d="M6 18H42" stroke="currentColor" strokeWidth="2" />
-                <circle cx="12" cy="14" r="2" fill="currentColor" />
-                <circle cx="18" cy="14" r="2" fill="currentColor" />
-                <rect x="12" y="26" width="24" height="6" rx="2" fill="currentColor" fillOpacity="0.4" />
+                <circle cx="12" cy="14" r="2" fill="currentColor" stroke="none" />
+                <circle cx="18" cy="14" r="2" fill="currentColor" stroke="none" />
+                <rect x="12" y="26" width="24" height="6" rx="2" fill="currentColor" fillOpacity="0.4" stroke="none" />
             </svg>
         );
     }
-    // Brand + Site: Intersecting geometry representing integration
+    // Brand + Site: Paintbrush overlapping the Web Design browser window
     return (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <rect x="8" y="8" width="22" height="22" rx="4" stroke="currentColor" strokeWidth="2" />
-            <rect x="18" y="18" width="22" height="22" rx="4" fill="currentColor" fillOpacity="0.4" />
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <defs>
+                <mask id="brush-cutout-2">
+                    <rect x="0" y="0" width="48" height="48" fill="white" />
+                    {/* Paintbrush mask (thick black stroke to create the gap) */}
+                    <svg x="16" y="8" width="32" height="32" viewBox="0 0 24 24" strokeWidth="4" stroke="black" fill="black">
+                        <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08Z" />
+                        <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+                    </svg>
+                </mask>
+            </defs>
+
+            {/* Browser Window rendered under the mask */}
+            <g mask="url(#brush-cutout-2)">
+                <g transform="translate(-4, 0) scale(0.9)">
+                    <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" strokeWidth="2.2" />
+                    <path d="M6 18H42" stroke="currentColor" strokeWidth="2.2" />
+                    <circle cx="12" cy="14" r="2" fill="currentColor" stroke="none" />
+                    <circle cx="18" cy="14" r="2" fill="currentColor" stroke="none" />
+                    <rect x="12" y="26" width="24" height="6" rx="2" fill="currentColor" fillOpacity="0.4" stroke="none" />
+                </g>
+            </g>
+
+            {/* Paintbrush fully rendered on top */}
+            <svg x="16" y="8" width="32" height="32" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="1.5">
+                <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08" />
+                <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z" />
+            </svg>
         </svg>
     );
 }

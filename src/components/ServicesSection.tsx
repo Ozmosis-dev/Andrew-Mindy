@@ -48,7 +48,7 @@ const services: ServiceItem[] = [
     },
     {
         id: "01",
-        title: "Brand System",
+        title: "Brand Identity",
         tagline: "For companies that have outgrown how they look.",
         description:
             "A complete visual identity built from strategy—not aesthetics alone. Every element designed to work across every touchpoint and communicate precisely who you are.",
@@ -85,7 +85,7 @@ const services: ServiceItem[] = [
         description:
             "Brand identity and marketing website built together as one coherent system — designed from the same principles, by the same hands. When built together, every decision is made with both contexts in mind. The result is tighter, faster, and more resolved than anything assembled in pieces.",
         deliverables: [
-            "Everything in Brand System",
+            "Everything in Brand Identity",
             "Everything in Web Design + Development",
             "~15% savings vs. purchasing separately",
         ],
