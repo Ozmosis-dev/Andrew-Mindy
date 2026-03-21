@@ -22,7 +22,7 @@ const categories = [
     },
     {
         label: "Digital",
-        items: ["Websites", "Social Media Graphics", "Email Graphics", "Digital Ads", "Resumes", "Pitch Decks", "Infographics"],
+        items: ["Websites", "Landing Pages", "Social Media Graphics", "Email Graphics", "Digital Ads", "Resumes", "Pitch Decks", "Dashboards", "Infographics"],
     },
 ];
 
@@ -93,7 +93,7 @@ export default function DesignExtras() {
                             For unique needs outside standard packages, I offer specialized design for a variety of applications.
                         </p>
                         <Link href="/contact" className={styles.cta}>
-                            Let&rsquo;s scope it out
+                            Start a conversation
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>

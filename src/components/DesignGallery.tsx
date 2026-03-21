@@ -203,16 +203,34 @@ export default function DesignGallery() {
                     <button
                         className={`${styles.expandButton} ${!isCollapsed ? styles.rotated : ""}`}
                         onClick={() => {
-                            if (isCollapsed) setHasExpanded(true);
+                            if (isCollapsed) {
+                                setHasExpanded(true);
+                            } else {
+                                // Jump back to the top of the section on mobile
+                                if (window.innerWidth <= 768) {
+                                    setTimeout(() => {
+                                        const sectionEl = document.getElementById("work");
+                                        if (sectionEl) {
+                                            const yOffset = sectionEl.getBoundingClientRect().top + window.scrollY - 80;
+                                            window.scrollTo({ top: yOffset, behavior: 'smooth' });
+                                        }
+                                    }, 10);
+                                }
+                            }
                             setIsCollapsed(!isCollapsed);
                         }}
                         aria-label={isCollapsed ? "Expand Gallery" : "Collapse Gallery"}
                         title={isCollapsed ? "Expand Gallery" : "Collapse Gallery"}
                     >
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
+                        <span className={styles.expandText}>
+                            {isCollapsed ? "Expand the gallery" : "Collapse gallery"}
+                        </span>
+                        <div className={styles.expandIcon}>
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </div>
                     </button>
                 </div>
             </div>
