@@ -43,6 +43,17 @@ const QUESTIONS = [
   { c: 5, t: "Overall, how in control do you feel of your growth trajectory?", o: ["Reactive — growth happens to us", "Somewhat in control — some intentional wins", "Mostly in control with clear areas to address", "In control — we have a system and we're executing"] },
 ];
 
+// ─── Priority insights (per category) ───────────────────────────────────────
+
+const PRIORITY_INSIGHTS = [
+  "The highest-ROI fix available to most growth-stage companies is a documented, trainable sales system. A 10-point improvement in close rate — achievable in 90 days with the right process — compounds across every rep you ever hire.",
+  "Brand is the silent variable in every sales conversation. A brand that accurately represents your capability removes objections before they're raised and attracts clients who are already pre-sold on the quality of your work.",
+  "Lead operations are where most companies leak the most invisible revenue. The deals you didn't close because the follow-up didn't happen don't show up in any report — but they're real, and the cost compounds monthly.",
+  "Every process that lives in someone's head is a growth ceiling. Systematizing operations isn't overhead — it's the infrastructure that lets revenue scale without proportionally scaling stress.",
+  "Predictable revenue starts with predictable marketing. The shift from 'doing marketing' to 'running a marketing system' is what separates companies that grow reactively from those that grow by design.",
+  "The best time to build for scale is before you need it. The constraints you're tolerating today will become the crises you're managing at 2x. Addressing them now is the leverage play.",
+];
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type Screen = "questions" | "gate" | "results" | "success";
@@ -313,12 +324,12 @@ export default function AuditPage() {
 
                   {loading && (
                     <p className={styles.loadingNote}>
-                      Scoring your answers and generating your PDF report… this takes a few seconds.
+                      Scoring your answers and generating your Growth Brief… this takes a few seconds.
                     </p>
                   )}
 
                   <p className={styles.gatePrivacy}>
-                    No spam. Your results are emailed once — that's it.
+                    Your Growth Brief is emailed once — no follow-up unless you reach out.
                   </p>
                 </div>
               </div>
@@ -336,7 +347,7 @@ export default function AuditPage() {
             >
               {/* Score hero */}
               <div className={styles.resultsHeader}>
-                <span className={styles.eyebrow}>Your Scale Audit Results</span>
+                <span className={styles.eyebrow}>Your Growth Brief</span>
                 <div className={styles.scoreBig}>
                   <span className={styles.scoreNum}>{result.total_score}</span>
                   <span className={styles.scoreMax}>/96</span>
@@ -367,7 +378,7 @@ export default function AuditPage() {
                   {CATEGORIES[result.priority_idx]?.label}
                 </h3>
                 <p className={styles.priorityText}>
-                  This is where you'll see the most leverage. Fixing the foundations here before scaling further will compound across everything else.
+                  {PRIORITY_INSIGHTS[result.priority_idx]}
                 </p>
                 <a
                   href="https://calendly.com/andrewmindy-info/30min"
@@ -383,9 +394,9 @@ export default function AuditPage() {
               <div className={styles.contactWrap}>
                 <div className={styles.contactCard}>
                   <span className={styles.eyebrow}>Let's Talk</span>
-                  <h3 className={styles.contactTitle}>Want a deeper read on your results?</h3>
+                  <h3 className={styles.contactTitle}>Want to walk through your results together?</h3>
                   <p className={styles.contactSubtext}>
-                    Tell me where you're at and what's top of mind. I'll respond personally.
+                    I do a free 30-minute call for everyone who completes the brief. No pitch — just a clear look at your highest-leverage next move.
                   </p>
                   <form onSubmit={submitContact} className={styles.contactForm}>
                     <div className={styles.inputGroup}>

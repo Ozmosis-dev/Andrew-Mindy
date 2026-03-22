@@ -27,6 +27,21 @@ export async function POST(req: NextRequest) {
       `,
     });
 
+    // Add to Resend Audience/Contacts
+    if (process.env.RESEND_AUDIENCE_ID) {
+      const { error: audienceError } = await resend.contacts.create({
+        email,
+        firstName: name ? name.split(' ')[0] : undefined,
+        lastName: name && name.split(' ').length > 1 ? name.split(' ').slice(1).join(' ') : undefined,
+        unsubscribed: false,
+        audienceId: process.env.RESEND_AUDIENCE_ID,
+      });
+
+      if (audienceError) {
+        console.error('[contact] Resend audience error:', audienceError);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('[contact]', err);

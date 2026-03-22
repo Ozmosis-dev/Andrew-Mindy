@@ -1,7 +1,7 @@
 """
 generate_audit_pdf.py
 ─────────────────────
-Generates a branded PDF report for The Scale Audit.
+Generates a branded PDF report for The Growth Brief.
 
 Usage (from your API route):
     from generate_audit_pdf import generate_audit_pdf, score_audit
@@ -64,19 +64,38 @@ _register_fonts()
 
 # ── Scoring logic ─────────────────────────────────────────────────────────────
 _TIERS = [
-    (72, "Scale-Ready",
-     "Your fundamentals are strong. You're dealing with refinement problems, not foundational ones. "
-     "The highest-leverage work is optimizing what's already working — and protecting your systems as you scale."),
-    (48, "Growth Plateau",
-     "You've built something real, but the cracks are showing. Things that used to work are breaking, "
-     "manual tasks are multiplying, and growth feels harder than it should. "
-     "These are solvable problems — and they have a specific order of operations."),
-    (24, "Operational Drag",
-     "Your business is growing despite your systems, not because of them. "
-     "The foundational work here pays off fast."),
-    (0,  "Foundation First",
-     "Before you scale anything, you need a base. Every dollar you put into growth is partially wasted "
-     "because the systems to capture and convert it aren't in place."),
+    (82, "Optimized",
+     "Your systems are the competitive advantage. Most companies your size are held together by talented "
+     "people working too hard. Yours runs on documented, repeatable processes that compound over time. "
+     "Growth at this stage is a function of execution and opportunity — not firefighting. "
+     "The work now is protecting what's built as you scale team and revenue."),
+    (65, "Scale-Ready",
+     "The foundation is there. Now you push. You've built something that works systematically — not just "
+     "accidentally. Your processes hold up under pressure, your brand reflects who you've become, and your "
+     "pipeline is more predictable than most. There are gaps, but they're refinement problems, not structural "
+     "ones. The ceiling from here is ambition, not operations."),
+    (48, "At the Ceiling",
+     "What got you here is starting to limit you. This is the most common position for companies between "
+     "$1M and $5M. You've grown on the strength of good people and good instincts — but the informal systems "
+     "that worked at smaller scale are now creating drag. You feel it as: inconsistent close rates, manual "
+     "work that never gets automated, a brand that doesn't quite match the business you've built. "
+     "The gap between where you are and where you could be is mostly process."),
+    (32, "Leaking Revenue",
+     "You're generating revenue despite your systems, not because of them. There's real friction in your "
+     "operation — and it's costing you money you can measure. Leads fall through cracks. Manual work consumes "
+     "hours that should go toward selling or building. Every dollar you put into growth right now is working "
+     "against a current. Fixing the leaks isn't overhead — it's the highest-ROI investment available to you."),
+    (16, "Reactive Mode",
+     "The business runs on you, not on systems. Growth is happening, but it's unpredictable — because the "
+     "outcomes depend on who's in the room, not what's on the page. There's no documented sales process, no "
+     "reliable lead system, no brand infrastructure that works without you. This is the natural state of a "
+     "company that grew fast without time to systematize. But it's also a ceiling, a retention risk, and a "
+     "fragility you can't afford to carry into the next stage."),
+    (0,  "Start Here",
+     "Before you scale anything, you need a foundation. Right now, every investment in marketing, sales, or "
+     "growth is working against a leaky bucket. Without documented processes, a brand that converts, and "
+     "systems that capture leads reliably, more growth just creates more chaos. The work here is foundational, "
+     "and the ROI on getting it right is multiplied by everything you build on top of it."),
 ]
 
 _QUESTIONS_PER_CAT = 4   # 6 categories × 4 questions = 24 total
@@ -149,7 +168,7 @@ WAVE_H   = H * 0.40        # wave occupies bottom 40% of every page
 
 CATEGORIES = [
     ("01", "Sales System",            "How predictably does your team close?"),
-    ("02", "Brand Positioning",       "Does your brand match the company you've become?"),
+    ("02", "Brand Positioning",       "Does your brand match who you are today?"),
     ("03", "Lead Operations",         "How much manual work lives between lead and close?"),
     ("04", "Internal Workflows",      "Where is your team's time going that it shouldn't be?"),
     ("05", "Marketing Infrastructure","Is your top-of-funnel predictable or random?"),
@@ -221,6 +240,13 @@ def wp(c, text, x, y, width, font, size, color, leading=None):
     p.drawOn(c, x, y - ph)
     return ph
 
+def text_height(text, width, font, size, leading=None):
+    if leading is None: leading = size * 1.55
+    s = ParagraphStyle('p', fontName=font, fontSize=size, leading=leading)
+    p = Paragraph(text, s)
+    _, ph = p.wrap(width, 1000)
+    return ph
+
 def draw_wave(c):
     """Draw wave image anchored to bottom of current page."""
     c.drawImage(WAVE, 0, 0, width=W, height=WAVE_H, mask='auto')
@@ -237,8 +263,8 @@ def page_base(c, blue_rule=True):
 def footer(c, page_num=None):
     c.setFillColor(MID)
     c.rect(48, 38, W - 96, 0.5, fill=1, stroke=0)
-    dt(c, "ANDREW MINDY — THE SCALE AUDIT", 48, 24, 'SpaceGrotesk', 7, MUTED)
-    dt(c, "andrewmindy.com  ·  contact@andrewmindy.com", W-48, 24, 'SpaceGrotesk', 7, MUTED, 'right')
+    dt(c, "ANDREW MINDY — THE GROWTH BRIEF", 48, 24, 'SpaceGrotesk', 7, MUTED)
+    dt(c, "andrewmindy.com  ·  info@andrewmindy.com", W-48, 24, 'SpaceGrotesk', 7, MUTED, 'right')
     if page_num:
         dt(c, str(page_num), W/2, 24, 'SpaceGrotesk', 7, GHOST, 'center')
 
@@ -288,10 +314,10 @@ def generate_audit_pdf(
     # LEFT COL (x=52, w=268):
     #  752  WM1 "ANDREW MINDY"     (top=760, bot=750)
     #  736  WM2 "andrewmindy.com"
-    #  651  HL1 "THE SCALE" B72    (top=716, bot=629)
-    #  560  HL2 "AUDIT" B72        (top=625, bot=539) | gap=4.6pt ✓
-    #  523  rule
-    #  510→480  intro text 2 lines
+    #  651  HL1 "THE GROWTH" B60    (top=716, bot=629)
+    #  590  HL2 "BRIEF" B60        (top=655, bot=568) | gap=4.6pt ✓
+    #  560  rule
+    #  540→510  intro text 2 lines
     #  415  score B56              (top=465, bot=398) | gap from intro=14.6pt ✓
     #  382  "/ N" label
     #  365  bar y
@@ -312,22 +338,22 @@ def generate_audit_pdf(
     RW = W - RX - M
 
     # ── Wordmark ──────────────────────────────────────────────────
-    dt(c, "ANDREW MINDY",    M, 752, 'SpaceGrotesk-Bold', 8, CREAM)
+    dt(c, "ANDREW MINDY",    M, 752, 'PhosphateSolid', 8, CREAM)
     dt(c, "andrewmindy.com", M, 736, 'SpaceGrotesk',      7, MUTED)
 
     # Vertical spine
     c.saveState()
     c.setFillColor(BLUE); c.setFont('SpaceGrotesk', 7)
     c.translate(W - 16, H / 2); c.rotate(90)
-    c.drawCentredString(0, 0, "THE SCALE AUDIT  —  CONFIDENTIAL RESULTS")
+    c.drawCentredString(0, 0, "THE GROWTH BRIEF  —  CONFIDENTIAL RESULTS")
     c.restoreState()
 
     # ── LEFT COLUMN ───────────────────────────────────────────────
     # Headline — 4.6pt visual gap between lines (tight editorial feel)
-    dt(c, "THE SCALE", M, 651, 'PhosphateSolid', 72, CREAM)
-    dt(c, "AUDIT",     M, 582, 'PhosphateSolid', 72, BLUE)
+    dt(c, "THE GROWTH", M, 651, 'PhosphateSolid', 72, CREAM)
+    dt(c, "BRIEF",     M, 582, 'PhosphateSolid', 72, BLUE)
 
-    # Rule — 14pt below AUDIT bottom (560)
+    # Rule — 14pt below BRIEF bottom (560)
     c.setStrokeColor(MID2); c.setLineWidth(0.5)
     c.line(M, 546, M + LW, 546)
 
@@ -337,8 +363,8 @@ def generate_audit_pdf(
        "Six categories. A clear picture of where to focus.",
        M, 533, LW, 'SpaceGrotesk', 9, MUTED, leading=15)
 
-    # Score — Bebas 56, baseline 415 (top=465, 14.6pt below intro bot 480)
-    dt(c, str(total_score), M, 415, 'BebasNeue', 56, BLUE)
+    # Score — PhosphateSolid 56, baseline 415 (top=465, 14.6pt below intro bot 480)
+    dt(c, str(total_score), M, 415, 'PhosphateSolid', 56, BLUE)
 
     # "/ N" label — baseline 382
     dt(c, f"/ {max_score}", M, 382, 'SpaceGrotesk', 11, MUTED)
@@ -355,7 +381,7 @@ def generate_audit_pdf(
     # CTA bar — y=255..285, single line, lower on page
     rr(c, M, 255, W - M*2, 34, 3, BLUE_DIM)
     rr(c, M, 255, W - M*2, 34, 3, sc=BLUE, sw=0.5)
-    dt(c, "BOOK YOUR FREE 30-MIN AUDIT REVIEW →",
+    dt(c, "BOOK YOUR FREE 30-MIN GROWTH BRIEF REVIEW →",
        M + 14, 267, 'SpaceGrotesk-Bold', 8, BLUE)
 
     # ── RIGHT COLUMN ──────────────────────────────────────────────
@@ -386,9 +412,9 @@ def generate_audit_pdf(
     # Priority box — top=505, h=152, bot=353
     # Internal (verified no overlaps):
     #  488  "PRIORITY FOCUS" label
-    #  460  category name (Bebas 20, top=478, bot=454)
+    #  460  category name (PhosphateSolid 20, top=478, bot=454)
     #  440→412  sub quote (2 lines × 14pt leading)
-    #  381  score (Bebas 26, top=404, bot=373)
+    #  381  score (PhosphateSolid 26, top=404, bot=373)
     #  358  tier label (bot=356) | box bot=353 ✓
     PBOX_BOT = 353
     PBOX_H   = 152
@@ -417,9 +443,9 @@ def generate_audit_pdf(
 
     dt(c, "02 — SCORE BREAKDOWN", 52, H-34,  'SpaceGrotesk-Bold', 7, BLUE)
     dt(c, "YOUR RESULTS",         52, H-86,  'PhosphateSolid', 44, CREAM)
-    dt(c, "AT A GLANCE",          52, H-138, 'PhosphateSolid', 44, BLUE)
+    dt(c, "AT A GLANCE",          52, H-110, 'PhosphateSolid', 44, BLUE)
     c.setStrokeColor(MID); c.setLineWidth(0.5)
-    c.line(52, H-168, W-52, H-168)
+    c.line(52, H-142, W-52, H-142)
 
     cw = (W - 96 - 14) / 2
     ch = 90
@@ -457,7 +483,7 @@ def generate_audit_pdf(
     c.setStrokeColor(MID); c.setLineWidth(0.5)
     c.line(48, 196, W-48, 196)
     dt(c, "OVERALL SCORE", 48, 184, 'SpaceGrotesk', 7, MUTED)
-    dt(c, str(total_score), 48, 150, 'BebasNeue', 32, BLUE)
+    dt(c, str(total_score), 48, 150, 'PhosphateSolid', 32, BLUE)
     dt(c, f"/ {max_score}", 92, 150, 'SpaceGrotesk', 11, MUTED)
     dt(c, tier_label.upper(), 124, 150, 'SpaceGrotesk-Bold', 10, CREAM)
     c.setFillColor(MID); c.roundRect(48, 132, W-96, 5, 2, fill=1, stroke=0)
@@ -470,44 +496,59 @@ def generate_audit_pdf(
     # ═══════════════════════════════════════════════════════════════
     # PAGES 3–8 — CATEGORY DETAIL PAGES
     # ═══════════════════════════════════════════════════════════════
+    top_offset = 30  # Increased top padding
+
     for i, (num, label, sub) in enumerate(CATEGORIES):
         page_base(c)
         ip = (i == priority_idx)
         s  = cat_scores[i]
         detail = CAT_DETAIL[i]
 
+        # Split title if needed
+        if label.upper() == "MARKETING INFRASTRUCTURE":
+            lines_title = ["MARKETING", "INFRASTRUCTURE"]
+        else:
+            lines_title = [label.upper()]
+            
+        title_shift = 44 if len(lines_title) > 1 else 0
+        sh_score = top_offset + title_shift
+
         # Priority badge — inline with title, shifted left clear of score block
         # Score block occupies W-48..W-96 (Bebas52 2-digit). Badge right edge = W-112.
         if ip:
             badge_w2 = 114
             badge_x  = W - 112 - badge_w2   # right edge at W-112, clear of score
-            badge_y2 = H - 70               # vertically centered on title
+            badge_y2 = H - 70 - sh_score    # vertically centered on title
             rr(c, badge_x, badge_y2, badge_w2, 22, 3, BLUE)
             dt(c, "PRIORITY FOCUS", badge_x + badge_w2/2, badge_y2 + 8,
                'SpaceGrotesk-Bold', 7, INK, 'center')
 
         # Header block
-        dt(c, f"{num} — {label.upper()}", 48, H-34, 'SpaceGrotesk-Bold', 7,
+        dt(c, f"{num} — {label.upper()}", 48, H - 34 - top_offset, 'SpaceGrotesk-Bold', 7,
            BLUE if ip else MUTED)
-        dt(c, label.upper(), 48, H-72, 'PhosphateSolid', 44, CREAM)
-        dt(c, f'"{sub}"', 48, H-94, 'SpaceGrotesk', 10, MUTED)
+        
+        y_title_start = H - 72 - top_offset
+        for idx, line in enumerate(lines_title):
+            dt(c, line, 48, y_title_start - (idx * 44), 'PhosphateSolid', 44, CREAM)
+            
+        dt(c, f'"{sub}"', 48, H - 94 - sh_score, 'SpaceGrotesk', 10, MUTED)
 
         c.setStrokeColor(MID); c.setLineWidth(0.5)
-        c.line(48, H-110, W-48, H-110)
+        c.line(48, H - 110 - sh_score, W-48, H - 110 - sh_score)
 
         # Score block — right-aligned, vertically tied to title
-        dt(c, str(s), W-48, H-68, 'PhosphateSolid', 52, BLUE if ip else CREAM, 'right')
-        dt(c, "/16", W-48, H-84, 'SpaceGrotesk', 10, MUTED, 'right')
-        bw3 = 170; brx = W-48-bw3; bys = H-98
+        dt(c, str(s), W-48, H - 68 - sh_score, 'PhosphateSolid', 52, BLUE if ip else CREAM, 'right')
+        dt(c, "/16", W-48, H - 84 - sh_score, 'SpaceGrotesk', 10, MUTED, 'right')
+        bw3 = 170; brx = W-48-bw3; bys = H - 98 - sh_score
         c.setFillColor(MID); c.roundRect(brx, bys, bw3, 4, 2, fill=1, stroke=0)
         c.setFillColor(BLUE if ip else GHOST)
         c.roundRect(brx, bys, bw3*min(s/16,1.0), 4, 2, fill=1, stroke=0)
         ts2 = get_tier_str(s)
         c.setFillColor(CAT_TIER_COLORS[ts2]); c.setFont('SpaceGrotesk-Bold', 7)
-        c.drawRightString(W-48, H-110, ts2.upper())
+        c.drawRightString(W-48, H - 110 - sh_score, ts2.upper())
 
         # Body
-        y = H - 130
+        y = H - 130 - sh_score
 
         dt(c, "WHAT THIS MEANS", 48, y, 'SpaceGrotesk-Bold', 7, BLUE if ip else MUTED)
         y -= 14
@@ -525,7 +566,7 @@ def generate_audit_pdf(
 
         c.setStrokeColor(MID); c.line(48, y+6, W-48, y+6); y -= 6
         dt(c, "FOUR QUICK WINS", 48, y, 'SpaceGrotesk-Bold', 7, BLUE if ip else MUTED)
-        y -= 14
+        y -= 26  # Increased padding beneath the four quick wins header line
         col_w2 = (W - 96 - 14) / 2
         for j, action in enumerate(detail["actions"]):
             col = j % 2
@@ -546,12 +587,16 @@ def generate_audit_pdf(
         y -= 24
 
         # Proof strip — keep above wave, min y=160
-        proof_h = 56
+        ph = text_height(detail["proof"], W-128, 'SpaceGrotesk', 8, leading=13)
+        # Top pad (16) + text start gap from title (12) + 16 (bot pad) = 44
+        proof_h = 44 + ph
+        
         py = max(y - proof_h, 155)
         rr(c, 48, py, W-96, proof_h, 4, BLUE_DIM if ip else SURFACE)
         if ip: rr(c, 48, py, W-96, proof_h, 4, sc=BLUE, sw=0.5)
-        dt(c, "PROOF POINT", 64, py+40, 'SpaceGrotesk-Bold', 7, BLUE)
-        wp(c, detail["proof"], 64, py+28, W-128, 'SpaceGrotesk', 8, DIM, leading=13)
+        
+        dt(c, "PROOF POINT", 64, py + proof_h - 16, 'PhosphateSolid', 7, BLUE)
+        wp(c, detail["proof"], 64, py + proof_h - 28, W-128, 'SpaceGrotesk', 8, DIM, leading=13)
 
         footer(c, i+3)
         c.showPage()
@@ -562,15 +607,15 @@ def generate_audit_pdf(
     page_base(c)
 
     dt(c, "08 — WHAT HAPPENS NOW", 48, H-48, 'SpaceGrotesk-Bold', 7, MUTED)
-    dt(c, "THREE WAYS TO MOVE", 48, H-84, 'PhosphateSolid', 44, CREAM)
-    dt(c, "FROM DIAGNOSIS TO ACTION.", 48, H-120, 'PhosphateSolid', 44, BLUE)
+    dt(c, "THREE WAYS TO MOVE", 48, H-82, 'PhosphateSolid', 38, CREAM)
+    dt(c, "FROM DIAGNOSIS TO ACTION.", 48, H-118, 'PhosphateSolid', 38, BLUE)
     c.setStrokeColor(MID); c.setLineWidth(0.5)
     c.line(48, H-132, W-48, H-132)
 
     steps = [
         ("01","REVIEW YOUR RESULTS",
          "Go through each category in this report. The signs and quick wins are your starting point — pick the one action per section you can execute in the next 30 days."),
-        ("02","BOOK A FREE AUDIT REVIEW",
+        ("02","BOOK A FREE BRIEF REVIEW",
          "I do a free 30-minute call for founders who complete the audit. We walk through your results together and I'll tell you exactly what I'd prioritize. No pitch — just clarity."),
         ("03","START A PROJECT",
          "If you want to go further, every engagement starts with a conversation. Reach out at contact@andrewmindy.com and tell me what's not keeping pace with your growth."),
@@ -592,17 +637,18 @@ def generate_audit_pdf(
         rr(c, STEP_X, box_bot, NUM_W, ROW_H, 4, BLUE_DIM)
         # Number — vertically centered: baseline = box_bot + (ROW_H/2) - 8 = box_bot + 34
         dt(c, sn, STEP_X + NUM_W/2, box_bot + 34, 'PhosphateSolid', 28, BLUE, 'center')
-        # Title — 16pt from top of box
-        dt(c, st, TXT_X, sy3 - 18, 'SpaceGrotesk-Bold', 11, CREAM)
-        # Body — 14pt below title
-        wp(c, sd, TXT_X, sy3 - 32, TXT_W, 'SpaceGrotesk', 9, DIM, leading=14)
+        # Title — increased top padding to better center with body text
+        dt(c, st, TXT_X, sy3 - 26, 'SpaceGrotesk-Bold', 11, CREAM)
+        # Body — preserved gap below title, adjusting bottom padding
+        wp(c, sd, TXT_X, sy3 - 40, TXT_W, 'SpaceGrotesk', 9, DIM, leading=14)
         sy3 -= ROW_H + ROW_GAP
 
     # CTA block — sits just above the wave
-    rr(c, 48, 155, W-96, 52, 4, BLUE)
-    dt(c, "BOOK YOUR FREE 30-MIN REVIEW", W/2, 193, 'SpaceGrotesk-Bold', 10, INK, 'center')
-    dt(c, "calendly.com/andrewmindy-info/30min  ·  contact@andrewmindy.com  ·  330-507-7605",
-       W/2, 175, 'SpaceGrotesk', 8, INK, 'center')
+    cta_h = 76
+    rr(c, 48, 155, W-96, cta_h, 4, BLUE)
+    dt(c, "BOOK YOUR FREE 30-MIN BRIEF REVIEW", W/2, 155 + 46, 'SpaceGrotesk-Bold', 14, INK, 'center')
+    dt(c, "calendly.com/andrewmindy-info/30min  ·  info@andrewmindy.com  ·  330-507-7605",
+       W/2, 155 + 24, 'SpaceGrotesk', 9, INK, 'center')
 
     footer(c, 9)
     c.save()
