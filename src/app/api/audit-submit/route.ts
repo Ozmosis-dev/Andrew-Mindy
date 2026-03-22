@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Send email via Resend with PDF attachment
-    await resend.emails.send({
+    const { error: resendError } = await resend.emails.send({
       from: 'Andrew Mindy <contact@andrewmindy.com>',
       to: email,
       subject: `Your Scale Audit Results — ${total_score}/96 (${tier_label})`,
@@ -122,6 +122,10 @@ export async function POST(req: NextRequest) {
         },
       ],
     });
+
+    if (resendError) {
+      console.error('[audit-submit] Resend error:', resendError);
+    }
 
     return NextResponse.json({
       success: true,
