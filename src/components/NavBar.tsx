@@ -61,6 +61,7 @@ const NAV_LINKS = [
     { href: '/#about', label: 'About' },
     { href: '/#services', label: 'Services' },
     { href: '/design', label: 'Design' },
+    { href: '/audit', label: 'Audit' },
     { href: '/contact', label: 'Contact' },
 ];
 
