@@ -242,6 +242,10 @@
 
     transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 
+    @media (max-width: 768px) {
+        padding: 2rem 1.5rem;
+    }
+
     :global(.light-mode) & {
         background: linear-gradient(to bottom, var(--background) 0%, var(--background) 50%, transparent 100%);
         border-color: rgba(0, 0, 0, 0.05);

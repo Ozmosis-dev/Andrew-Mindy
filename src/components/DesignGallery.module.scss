@@ -24,7 +24,7 @@
 
 .title {
     font-family: var(--font-phosphate);
-    font-size: clamp(3rem, 6vw, 6rem);
+    font-size: clamp(2.2rem, 6vw, 6rem);
     color: var(--primary);
     line-height: 0.9;
     letter-spacing: -0.02em;
@@ -337,7 +337,7 @@
             width: 240px;
             height: 330px;
             bottom: 10px;
-            transform-origin: center 200%;
+            transform-origin: center 180%;
         }
     }
 
@@ -396,6 +396,10 @@
                 font-size: 3.2rem;
                 margin: 0;
                 line-height: 0.9;
+
+                @media (max-width: 768px) {
+                    font-size: 2.2rem;
+                }
             }
 
             p {

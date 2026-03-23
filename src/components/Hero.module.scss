@@ -145,8 +145,8 @@
         }
 
         @media (max-width: 480px) {
-            font-size: 70px;
-            letter-spacing: 2px;
+            font-size: 55px;
+            letter-spacing: 1px;
             line-height: 0.9;
         }
     }
@@ -169,8 +169,9 @@
         }
 
         @media (max-width: 480px) {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
+            transform: translate(-50%, -65%);
         }
     }
 

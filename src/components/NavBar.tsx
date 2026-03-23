@@ -96,6 +96,11 @@ export default function NavBar() {
         }
     }, [mobileMenuOpen]);
 
+    // Hide the entire NavBar on the specific landing page
+    if (pathname === '/audit') {
+        return null;
+    }
+
     return (
         <>
             <header className={styles.header} aria-label="Site navigation">

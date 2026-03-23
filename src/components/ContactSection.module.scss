@@ -6,9 +6,13 @@
 
 .section {
     position: relative;
-    padding: 9rem 2rem 0;
+    padding: 6rem 1.25rem 0;
     background-color: var(--background);
     overflow: hidden;
+
+    @media (min-width: 768px) {
+        padding: 9rem 2rem 0;
+    }
 
     /* Subtle warm tint to distinguish from rest of page */
     &::before {
@@ -55,14 +59,16 @@
     display: flex;
     flex-direction: column;
     gap: 5rem;
-    padding-bottom: 7rem;
+    padding-bottom: 3rem;
 
     @media (min-width: 1024px) {
         flex-direction: row;
         align-items: center;
         gap: 3rem;
+        padding-bottom: 7rem;
     }
 }
+
 
 .leftCol {
     display: flex;
