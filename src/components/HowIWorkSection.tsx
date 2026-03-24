@@ -72,6 +72,19 @@ export default function HowIWorkSection() {
     const progressOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
 
     useGSAP(() => {
+        const paragraphs = containerRef.current?.querySelectorAll(".gsap-p-animate");
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: containerRef.current, start: "top 95%", toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+
         const wrappers = containerRef.current?.querySelectorAll(`.${styles.absoluteWrapper}`);
 
         wrappers?.forEach((wrapper) => {
@@ -88,7 +101,7 @@ export default function HowIWorkSection() {
                     filter: "blur(0px)",
                     scrollTrigger: {
                         trigger: wrapper,
-                        start: "top 85%", // Animation starts when top of wrapper hits 85% of viewport
+                        start: "top 95%", // Animation starts when top of wrapper hits 95% of viewport
                         end: "top 45%",   // Animation completes earlier (45% instead of 30%) for better readability
                         scrub: 1.5,       // Fluid scrubbing lag, makes the entrance slower and tied to scroll
                     }
@@ -102,20 +115,14 @@ export default function HowIWorkSection() {
             <div className={styles.container}>
                 <div className={styles.leftCol}>
                     <h2 className={styles.sectionTitle}>
-                        <MaskedTextReveal text="HOW I" tag="span" delay={0} triggerPoint="top 120%" />
-                        <MaskedTextReveal text="OPERATE" tag="span" delay={0.1} triggerPoint="top 120%" />
+                        <MaskedTextReveal text="HOW I" tag="span" delay={0} triggerPoint="top 95%" triggerRef={containerRef as React.RefObject<HTMLElement>} />
+                        <MaskedTextReveal text="OPERATE" tag="span" delay={0.1} triggerPoint="top 95%" triggerRef={containerRef as React.RefObject<HTMLElement>} />
                     </h2>
                     <div className={styles.decorativeLine} />
 
-                    <motion.p
-                        className={styles.pLead}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "200px" }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                    >
+                    <p className={`${styles.pLead} gsap-p-animate`}>
                         A systematic approach to diagnosing bottlenecks and engineering bespoke, scalable solutions.
-                    </motion.p>
+                    </p>
 
                     <div className={styles.visualElement}>
                         <svg viewBox="0 0 350 250" className={styles.lineDiagram} xmlns="http://www.w3.org/2000/svg">
@@ -201,7 +208,16 @@ export default function HowIWorkSection() {
                                             <div className={styles.cardHeader}>
                                                 <div className={styles.headerLeft}>
                                                     <span className={styles.stepId}>{step.id}</span>
-                                                    <h3 className={styles.cardTitle}>{step.title}</h3>
+                                                    <h3 className={styles.cardTitle}>
+                                                        {step.id === "03" ? (
+                                                            <>
+                                                                <span className={styles.desktopText}>{step.title}</span>
+                                                                <span className={styles.mobileText}>Full-Stack Development</span>
+                                                            </>
+                                                        ) : (
+                                                            step.title
+                                                        )}
+                                                    </h3>
                                                 </div>
                                                 <div className={styles.headerRight}>
                                                     {getStepGraphic(idx)}

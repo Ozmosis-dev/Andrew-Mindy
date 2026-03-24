@@ -60,10 +60,27 @@ export default function GravityParticles({
     const containerRef = useRef<HTMLDivElement>(null);
     // Initial size, will be updated by resize observer
     const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        if (typeof window !== "undefined") {
+            checkMobile();
+            window.addEventListener("resize", checkMobile);
+        }
+        return () => {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("resize", checkMobile);
+            }
+        };
+    }, []);
 
     const initializeParticles = useCallback(
         (width: number, height: number) => {
-            return Array.from({ length: particleCount }, (_, index) => ({
+            const currentCount = isMobile ? Math.min(particleCount, 20) : particleCount;
+            return Array.from({ length: currentCount }, (_, index) => ({
                 x: Math.random() * width,
                 y: Math.random() * height,
                 vx: (Math.random() - 0.5) * movementSpeed,
@@ -75,7 +92,7 @@ export default function GravityParticles({
                 id: index,
             }));
         },
-        [particleCount, particleSize, particleOpacity, movementSpeed]
+        [particleCount, particleSize, particleOpacity, movementSpeed, isMobile]
     );
 
     const redistributeParticles = useCallback((width: number, height: number) => {
@@ -97,12 +114,18 @@ export default function GravityParticles({
 
             particlesRef.current.forEach((particle, index) => {
                 // Calculate distance to mouse
-                const dx = mouse.x - particle.x;
-                const dy = mouse.y - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+                let dx = 0;
+                let dy = 0;
+                let distance = 99999;
+
+                if (!isMobile) {
+                    dx = mouse.x - particle.x;
+                    dy = mouse.y - particle.y;
+                    distance = Math.sqrt(dx * dx + dy * dy);
+                }
 
                 // Mouse influence and gravity
-                if (distance < mouseInfluence && distance > 0) {
+                if (!isMobile && distance < mouseInfluence && distance > 0) {
                     const force = (mouseInfluence - distance) / mouseInfluence;
                     const normalizedDx = dx / distance;
                     const normalizedDy = dy / distance;
@@ -169,21 +192,20 @@ export default function GravityParticles({
                 const visRadius = visibilityRadius || mouseInfluence;
                 let targetOpacity = 0;
 
-                if (distance < visRadius) {
-                    // Smooth feathering
-                    const distFactor = 1 - (distance / visRadius);
-                    targetOpacity = particle.baseOpacity * distFactor;
+                if (isMobile) {
+                    targetOpacity = particle.baseOpacity * 0.4; // Always subtly visible
+                } else {
+                    if (distance < visRadius) {
+                        // Smooth feathering
+                        const distFactor = 1 - (distance / visRadius);
+                        targetOpacity = particle.baseOpacity * distFactor;
+                    }
 
-                    // Boost opacity slightly within physics range if needed? 
-                    // Or stick to simple feathering. 
-                    // The old logic boosted it "force * 0.4".
-                    // Let's rely on the feathering to be cleaner.
-                }
-
-                if (distance < mouseInfluence && distance > 0) {
-                    // Add a little highlight if being interacted with
-                    const force = (mouseInfluence - distance) / mouseInfluence;
-                    targetOpacity = Math.min(1, targetOpacity + force * 0.2);
+                    if (distance < mouseInfluence && distance > 0) {
+                        // Add a little highlight if being interacted with
+                        const force = (mouseInfluence - distance) / mouseInfluence;
+                        targetOpacity = Math.min(1, targetOpacity + force * 0.2);
+                    }
                 }
 
                 // Smooth transition for opacity
@@ -257,12 +279,21 @@ export default function GravityParticles({
                 particle.y += particle.vy;
 
                 // Add subtle random movement
-                particle.vx += (Math.random() - 0.5) * 0.001;
-                particle.vy += (Math.random() - 0.5) * 0.001;
+                const randomForce = isMobile ? 0.01 : 0.001;
+                particle.vx += (Math.random() - 0.5) * randomForce;
+                particle.vy += (Math.random() - 0.5) * randomForce;
 
                 // Damping
                 particle.vx *= 0.999;
                 particle.vy *= 0.999;
+
+                if (isMobile) {
+                    const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                    if (speed > movementSpeed * 0.5) {
+                        particle.vx *= (movementSpeed * 0.5) / speed;
+                        particle.vy *= (movementSpeed * 0.5) / speed;
+                    }
+                }
 
                 // Boundary wrapping
                 if (particle.x < 0) particle.x = rect.width;
@@ -279,6 +310,8 @@ export default function GravityParticles({
             particleInteraction,
             interactionType,
             visibilityRadius,
+            isMobile,
+            movementSpeed,
         ]
     );
 

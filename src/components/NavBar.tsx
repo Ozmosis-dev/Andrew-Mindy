@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { TbEye, TbEyeClosed, TbX } from 'react-icons/tb';
 import { useTheme } from '../context/ThemeContext';
 import styles from './NavBar.module.scss';
@@ -57,13 +57,79 @@ const MobileMenuBackground = () => (
 
 const NAV_LINKS = [
     { href: '/', label: 'Home' },
-    { href: '/#work', label: 'Case Studies' },
-    { href: '/#about', label: 'About' },
-    { href: '/#services', label: 'Services' },
     { href: '/design', label: 'Design' },
     { href: '/audit', label: 'Audit' },
     { href: '/contact', label: 'Contact' },
+    { href: '/work-with-me', label: 'Work With Me' },
 ];
+
+const ScrollProgressCircle = ({ className }: { className?: string }) => {
+    const { scrollYProgress, scrollY } = useScroll();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isAtBottom, setIsAtBottom] = useState(false);
+
+    useEffect(() => {
+        const unsubY = scrollY.on("change", (latest) => {
+            setIsScrolled(latest > 50);
+        });
+        const unsubP = scrollYProgress.on("change", (latest) => {
+            // Considering potential mobile height differences, ~0.95-0.98 is the bottom
+            setIsAtBottom(latest >= 0.96);
+        });
+        return () => {
+            unsubY();
+            unsubP();
+        };
+    }, [scrollY, scrollYProgress]);
+
+    return (
+        <div className={className}>
+            <AnimatePresence>
+                {isScrolled && (
+                    <motion.div
+                        className={styles.scrollProgressInner}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                        <svg viewBox="0 0 100 100" style={{ transform: "rotate(-90deg)", width: "100%", height: "100%", overflow: "visible" }}>
+                            {/* Background circle */}
+                            <circle cx="50" cy="50" r="48" className={styles.progressBg} fill="none" />
+                            {/* Animated progress circle */}
+                            <motion.circle
+                                cx="50"
+                                cy="50"
+                                r="48"
+                                className={styles.progressGlow}
+                                fill="none"
+                                strokeLinecap="round"
+                                style={{ pathLength: scrollYProgress }}
+                            />
+                        </svg>
+
+                        <AnimatePresence>
+                            {isAtBottom && (
+                                <div className={styles.progressTextContainerCentered}>
+                                    <motion.div
+                                        className={styles.progressTextContainerInner}
+                                        initial={{ opacity: 0, scale: 0.5, y: 15 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.8, y: -15 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    >
+                                        <span className={styles.progressText}>All Set?</span>
+                                        <span className={styles.progressTextSub}>Submit Below</span>
+                                    </motion.div>
+                                </div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
 
 export default function NavBar() {
     const [visible, setVisible] = useState(false);
@@ -71,7 +137,14 @@ export default function NavBar() {
     const pathname = usePathname();
     const { theme, toggleTheme } = useTheme();
 
+    const isWorkWithMe = pathname === '/work-with-me';
+
     useEffect(() => {
+        if (isWorkWithMe) {
+            setVisible(true);
+            return;
+        }
+
         function onScroll() {
             // Show pill once user has scrolled past ~85 % of the hero height
             setVisible(window.scrollY > window.innerHeight * 0.85);
@@ -79,12 +152,11 @@ export default function NavBar() {
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
         return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+    }, [isWorkWithMe]);
 
     useEffect(() => {
         if (mobileMenuOpen) {
             document.body.style.overflow = 'hidden';
-            // Also prevent background scroll on iOS Safari
             document.documentElement.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
@@ -96,7 +168,7 @@ export default function NavBar() {
         }
     }, [mobileMenuOpen]);
 
-    // Hide the entire NavBar on the specific landing page
+    // Hide the entire NavBar on the audit landing page
     if (pathname === '/audit') {
         return null;
     }
@@ -104,11 +176,12 @@ export default function NavBar() {
     return (
         <>
             <header className={styles.header} aria-label="Site navigation">
+                {visible && isWorkWithMe && <ScrollProgressCircle className={styles.desktopScrollProgress} />}
                 <AnimatePresence>
                     {visible && (
                         <motion.div
                             className={styles.pill}
-                            initial={{ opacity: 0, y: -20 }}
+                            initial={isWorkWithMe ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ type: 'spring', stiffness: 340, damping: 30 }}
@@ -128,7 +201,7 @@ export default function NavBar() {
                                         <Link
                                             key={href}
                                             href={href}
-                                            className={`${styles.link} ${isActive ? styles.active : ''}`}
+                                            className={`${styles.link} ${isActive ? styles.active : ''} ${href === '/work-with-me' ? styles.ctaLink : ''}`}
                                         >
                                             {label}
                                             {isActive && (
@@ -148,6 +221,7 @@ export default function NavBar() {
                             </nav>
 
                             <div className={styles.actionsGroup}>
+                                {isWorkWithMe && <ScrollProgressCircle className={styles.mobileScrollProgress} />}
                                 <button
                                     className={styles.mobileMenuBtn}
                                     onClick={() => setMobileMenuOpen(true)}
@@ -249,7 +323,7 @@ export default function NavBar() {
                                     >
                                         <Link
                                             href={link.href}
-                                            className={`${styles.mobileMenuLink} ${pathname === link.href ? styles.active : ''}`}
+                                            className={`${styles.mobileMenuLink} ${pathname === link.href ? styles.active : ''} ${link.href === '/work-with-me' ? styles.ctaMobileLink : ''}`}
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {link.label}
@@ -265,11 +339,11 @@ export default function NavBar() {
                                 transition={{ delay: 0.1 + NAV_LINKS.length * 0.05, duration: 0.4, ease: 'easeOut' }}
                             >
                                 <Link
-                                    href="/contact"
+                                    href="/work-with-me"
                                     className={styles.mobileMenuCta}
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    Start a conversation
+                                    Work With Me
                                 </Link>
                             </motion.div>
                         </motion.div>

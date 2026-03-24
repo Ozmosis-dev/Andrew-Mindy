@@ -1,0 +1,88 @@
+/* Shared styles for all conditional section components */
+
+.section {
+  border-top: 1px solid var(--card-border);
+  padding-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionEyebrow {
+  font-family: var(--font-phosphate);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.sectionTitle {
+  font-family: var(--font-phosphate);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+
+  .required {
+    color: var(--accent);
+    margin-left: 3px;
+  }
+}
+
+.input,
+.textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  color: var(--foreground);
+  font-family: var(--font-montserrat);
+  font-size: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+  resize: vertical;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: #f26c5a;
+  }
+}
+
+.textarea {
+  min-height: 96px;
+}
+
+.error {
+  font-size: 11px;
+  color: #f26c5a;
+}

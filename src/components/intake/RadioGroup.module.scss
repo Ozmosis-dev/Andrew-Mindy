@@ -1,0 +1,56 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+  user-select: none;
+
+  &:hover:not(.selected) {
+    border-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  &.selected {
+    border-color: var(--accent);
+    background-color: rgba(98, 175, 239, 0.07);
+  }
+}
+
+.input {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  border-radius: 50%;
+  border: 1.5px solid var(--card-border);
+  background: transparent;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+
+  .selected & {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 3px var(--accent);
+  }
+}
+
+.label {
+  font-size: 13px;
+  color: var(--foreground);
+  line-height: 1.4;
+}
+
+.error {
+  font-size: 11px;
+  color: #f26c5a;
+  margin-top: 2px;
+}

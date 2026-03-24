@@ -43,7 +43,7 @@ const projects = [
 type Project = typeof projects[number];
 
 export default function DesignGallery() {
-    const sectionRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [hasExpanded, setHasExpanded] = useState(false);
@@ -87,8 +87,23 @@ export default function DesignGallery() {
         return () => clearTimeout(timeout);
     }, [isCollapsed]);
 
+    useGSAP(() => {
+        const paragraphs = sectionRef.current?.querySelectorAll(".gsap-p-animate");
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: p, start: "top 85%", toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+    }, { scope: sectionRef });
+
     return (
-        <section className={styles.section} id="work">
+        <section className={styles.section} id="work" ref={sectionRef}>
             <div className={styles.header}>
                 <span className={styles.eyebrow}>Gallery of Work</span>
                 <MaskedTextReveal
@@ -97,13 +112,13 @@ export default function DesignGallery() {
                     className={styles.title}
                     triggerPoint="top 85%"
                 />
-                <p className={styles.intro}>
+                <p className={`${styles.intro} gsap-p-animate`}>
                     A selection of brands and websites built from strategy. Every project
                     starts with positioning and ends with a system that works.
                 </p>
             </div>
 
-            <div className={styles.container} ref={sectionRef}>
+            <div className={styles.container}>
                 <motion.div
                     className={isCollapsed ? styles.collapsedContainer : styles.grid}
                     transition={{ staggerChildren: 0.05, delayChildren: 0.1 }}

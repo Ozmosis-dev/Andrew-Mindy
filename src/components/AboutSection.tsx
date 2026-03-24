@@ -22,6 +22,7 @@ export default function AboutSection() {
 
     useGSAP(() => {
         const paragraphs = sectionRef.current?.querySelectorAll(".gsap-about-animate");
+        const isMobile = window.innerWidth < 768;
 
         paragraphs?.forEach((p) => {
             gsap.fromTo(p,
@@ -34,7 +35,7 @@ export default function AboutSection() {
                     ease: "power3.out",
                     scrollTrigger: {
                         trigger: p,
-                        start: "top 85%",
+                        start: isMobile ? "top 95%" : "top 85%",
                         toggleActions: "play none none reverse",
                     }
                 }
@@ -53,7 +54,7 @@ export default function AboutSection() {
                     <div className={styles.decorativeLine} />
 
                     <div className={styles.visualElement}>
-                        <svg viewBox="0 0 400 300" className={styles.lineDiagram} xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="20 40 350 210" className={styles.lineDiagram} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <linearGradient id="lineGrad" gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="250" y2="0">
                                     <stop offset="0%" stopColor="rgba(141, 203, 249, 0)" />
@@ -82,7 +83,7 @@ export default function AboutSection() {
                                 initial={{ pathLength: 0, opacity: 0 }}
                                 whileInView={{ pathLength: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.1 }}
+                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
                             />
 
                             {/* Convergence to Final Outcome Line */}
@@ -94,7 +95,7 @@ export default function AboutSection() {
                                 initial={{ pathLength: 0, opacity: 0 }}
                                 whileInView={{ pathLength: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.0, ease: "easeInOut", delay: 1.2 }}
+                                transition={{ duration: 1.0, ease: "easeInOut", delay: 1.6 }}
                             />
 
                             {/* Top Curve (Brand) */}
@@ -106,7 +107,7 @@ export default function AboutSection() {
                                 initial={{ pathLength: 0, opacity: 0 }}
                                 whileInView={{ pathLength: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
+                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.6 }}
                             />
 
                             {/* Bottom Curve (Operations) */}
@@ -118,50 +119,50 @@ export default function AboutSection() {
                                 initial={{ pathLength: 0, opacity: 0 }}
                                 whileInView={{ pathLength: 1, opacity: 1 }}
                                 viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.4 }}
+                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.8 }}
                             />
 
                             {/* Starting Nodes */}
                             <motion.circle cx="50" cy="70" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.1 }} />
+                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
                             <motion.circle cx="50" cy="150" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.1 }} />
+                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
                             <motion.circle cx="50" cy="230" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.1 }} />
+                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
 
                             {/* Convergence Node */}
                             <motion.circle cx="250" cy="150" r="4" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.2 }} />
+                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.6 }} />
 
                             {/* Final Output Node */}
                             <motion.circle cx="350" cy="150" r="5" fill="#ffffff" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.5 }} />
+                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.9 }} />
 
                             {/* Output Node Pulse Effect */}
                             <motion.circle cx="350" cy="150" r="5" fill="none" stroke="#ffffff" strokeWidth="1"
-                                initial={{ scale: 1, opacity: 1 }} animate={{ scale: 3, opacity: 0 }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1.5 }} />
+                                initial={{ scale: 1, opacity: 1 }} animate={{ scale: 3, opacity: 0 }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1.9 }} />
 
                             {/* Labels */}
                             <motion.text x="50" y="55" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.3 }}>
+                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
                                 BRAND
                             </motion.text>
                             <motion.text x="50" y="135" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.3 }}>
+                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
                                 MARKETING
                             </motion.text>
                             <motion.text x="50" y="215" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.3 }}>
+                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
                                 OPERATIONS
                             </motion.text>
 
                             {/* Stacked Output Labels */}
                             <motion.text x="350" y="125" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}
-                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 1.6 }}>
+                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 2.0 }}>
                                 MEASURABLE
                             </motion.text>
                             <motion.text x="350" y="140" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}
-                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 1.7 }}>
+                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 2.1 }}>
                                 OUTCOMES
                             </motion.text>
                         </svg>
@@ -174,7 +175,7 @@ export default function AboutSection() {
                             text="Three disciplines. One point of convergence."
                             tag="h3"
                             delay={0.1}
-                            triggerPoint="top 80%"
+                            triggerPoint="top 95%"
                         />
                     </div>
 

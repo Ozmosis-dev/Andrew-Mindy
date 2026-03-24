@@ -7,6 +7,10 @@
     :global(.light-mode) & {
         background-color: var(--background);
     }
+
+    @media (max-width: 768px) {
+        padding: 5rem 1.5rem;
+    }
 }
 
 .container {
@@ -20,6 +24,10 @@
     @media (min-width: 1024px) {
         grid-template-columns: 3.5fr 6.5fr;
         gap: 8rem;
+    }
+
+    @media (max-width: 768px) {
+        padding: 0;
     }
 }
 
@@ -306,6 +314,11 @@
     :global(.light-mode) & {
         background: rgba(98, 175, 239, 0.05);
     }
+
+    @media (max-width: 768px) {
+        font-size: 1.1rem;
+        padding: 0.3rem 0.75rem;
+    }
 }
 
 .cardTitle {
@@ -318,11 +331,32 @@
     margin: 0;
 }
 
+.mobileText {
+    display: none;
+
+    @media (max-width: 768px) {
+        display: inline;
+    }
+}
+
+.desktopText {
+    display: inline;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
 .cardDesc {
     font-size: 1.1rem;
     line-height: 1.6;
     color: var(--secondary);
     margin: 0;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
 }
 
 .glowLine {

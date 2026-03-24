@@ -13,8 +13,15 @@ import {
 import styles from "./ImpactSection.module.scss";
 import MaskedTextReveal from "./MaskedTextReveal";
 import VennDiagram from "./VennDiagram";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { FiTrendingUp, FiTarget, FiShield, FiClock } from "react-icons/fi";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 // ─── Animation Variants ──────────────────────────────
 
@@ -153,6 +160,7 @@ function StatCard({
     inView: boolean;
 }) {
     const cardRef = useRef<HTMLDivElement>(null);
+    const isCenter = useInView(cardRef, { margin: "-35% 0px -35% 0px" });
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         const card = cardRef.current;
@@ -167,7 +175,7 @@ function StatCard({
     return (
         <motion.div
             ref={cardRef}
-            className={styles.statCard}
+            className={`${styles.statCard} ${isCenter ? styles.mobileFocused : ""}`}
             custom={index}
             variants={cardVariants}
             initial="hidden"
@@ -179,17 +187,21 @@ function StatCard({
             }}
             onMouseMove={handleMouseMove}
         >
-            <AnimatedCounter
-                from={stat.fromValue}
-                to={stat.toValue}
-                prefix={stat.prefix}
-                suffix={stat.suffix}
-                fromLabel={stat.fromLabel}
-                inView={inView}
-            />
-            <div className={styles.labelContainer}>
-                <stat.icon className={styles.icon} />
-                <span className={styles.statLabel}>{stat.label}</span>
+            <div className={styles.cardInner}>
+                <div className={styles.iconWrapper}>
+                    <stat.icon className={styles.icon} />
+                </div>
+                <div className={styles.textContent}>
+                    <AnimatedCounter
+                        from={stat.fromValue}
+                        to={stat.toValue}
+                        prefix={stat.prefix}
+                        suffix={stat.suffix}
+                        fromLabel={stat.fromLabel}
+                        inView={inView}
+                    />
+                    <span className={styles.statLabel}>{stat.label}</span>
+                </div>
             </div>
             <span className={styles.cardLine} />
         </motion.div>
@@ -207,6 +219,22 @@ export default function ImpactSection() {
         target: sectionRef,
         offset: ["start end", "end start"],
     });
+
+    useGSAP(() => {
+        const paragraphs = sectionRef.current?.querySelectorAll(".gsap-p-animate");
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out",
+                    delay: 0.3,
+                    scrollTrigger: {
+                        trigger: p, start: "top 95%", toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+    }, { scope: sectionRef });
 
     // Smooth scroll progress
     const smoothProgress = useSpring(scrollYProgress, {
@@ -241,14 +269,14 @@ export default function ImpactSection() {
                         text="BRAND. STRATEGY. SYSTEMS."
                         className={styles.headline}
                         tag="h2"
-                        triggerPoint="top 60%"
+                        triggerPoint="top 95%"
                     />
 
-                    <motion.p className={styles.subtext} variants={itemVariants}>
+                    <p className={`${styles.subtext} gsap-p-animate`}>
                         Three disciplines most companies hire three people to cover. I bring all of
                         them — from brand positioning and creative direction through revenue
                         operations and custom automation. One engagement. End-to-end ownership.
-                    </motion.p>
+                    </p>
                 </motion.div>
 
                 <motion.div

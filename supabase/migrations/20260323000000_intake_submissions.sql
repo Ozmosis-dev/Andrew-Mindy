@@ -1,0 +1,20 @@
+create table intake_submissions (
+  id              uuid        default gen_random_uuid() primary key,
+  created_at      timestamptz default now(),
+  name            text        not null,
+  email           text        not null,
+  company         text,
+  role            text,
+  website         text,
+  services        text[]      not null,
+  situation       text        not null,
+  previous_attempts text,
+  decision_maker  text,
+  budget          text        not null,
+  timeline        text        not null,
+  anything_else   text,
+  brand_data      jsonb,
+  web_data        jsonb,
+  app_data        jsonb,
+  revops_data     jsonb
+);

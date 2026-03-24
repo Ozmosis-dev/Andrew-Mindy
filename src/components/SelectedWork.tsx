@@ -9,6 +9,7 @@ import styles from "./SelectedWork.module.scss";
 import { projects } from "../data/copy";
 import MaskedTextReveal from "./MaskedTextReveal";
 import InlineProjectGallery from "./InlineProjectGallery";
+import SalesSystemIllustration from "./SalesSystemIllustration";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -19,6 +20,19 @@ export default function SelectedWork() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
+        const paragraphs = sectionRef.current?.querySelectorAll(".gsap-p-animate");
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: p, start: "top 85%", toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+
         const wrappers = containerRef.current?.querySelectorAll(`.${styles.projectWrapper}`);
 
         if (wrappers) {
@@ -86,7 +100,7 @@ export default function SelectedWork() {
                     className={styles.title}
                     triggerPoint="top 80%"
                 />
-                <p className={styles.intro}>
+                <p className={`${styles.intro} gsap-p-animate`}>
                     Projects that drove measurable outcomes—from revenue operations to systems automation to full-stack product development.
                 </p>
             </div>
@@ -152,9 +166,11 @@ export default function SelectedWork() {
                             </div>
 
                             {/* Expandable Scroll Gallery inline within the card */}
-                            {project.gallery && project.gallery.length > 0 && (
+                            {project.slug === "atlanta-roofing" ? (
+                                <SalesSystemIllustration />
+                            ) : project.gallery && project.gallery.length > 0 ? (
                                 <InlineProjectGallery images={project.gallery} />
-                            )}
+                            ) : null}
 
                             <div className={styles.mediaBackground} />
                             <div className={styles.glowingBorder} />

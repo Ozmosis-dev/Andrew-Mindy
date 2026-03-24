@@ -82,23 +82,30 @@ export default function WebDesignGallery() {
 
     // Section reveal
     useGSAP(() => {
+        const paragraphs = sectionRef.current?.querySelectorAll(".gsap-p-animate");
+        paragraphs?.forEach((p) => {
+            gsap.fromTo(p,
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: p, start: "top 85%", toggleActions: "play none none reverse",
+                    }
+                }
+            );
+        });
+
         const heading = sectionRef.current?.querySelector(`.${styles.heading}`);
-        const subtext = sectionRef.current?.querySelector(`.${styles.subtext}`);
-        const cta = sectionRef.current?.querySelector(`.${styles.cta}`);
+        const ctas = sectionRef.current?.querySelectorAll(`.${styles.cta}`);
 
-        // Set initial hidden state via GSAP (not CSS) so there's no conflict
-        if (!heading || !subtext || !cta) return;
-        gsap.set([heading, subtext, cta], { opacity: 0 });
-        gsap.set(heading, { y: 50, filter: "blur(12px)" });
-        gsap.set(subtext, { y: 50, filter: "blur(12px)" });
-        gsap.set(cta, { y: 20 });
+        if (!heading || !ctas || ctas.length === 0) return;
+        gsap.set(heading, { opacity: 0, y: 50, filter: "blur(12px)" });
 
-        gsap.to([heading, subtext], {
+        gsap.to(heading, {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
             duration: 1.1,
-            stagger: 0.15,
             ease: "power3.out",
             scrollTrigger: {
                 trigger: sectionRef.current,
@@ -107,17 +114,20 @@ export default function WebDesignGallery() {
             },
         });
 
-        gsap.to(cta, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            delay: 0.3,
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top 80%",
-                toggleActions: "play none none reverse",
-            },
+        ctas.forEach((cta) => {
+            gsap.set(cta, { opacity: 0, y: 20 });
+            gsap.to(cta, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                delay: 0.3,
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse",
+                },
+            });
         });
     }, { scope: sectionRef });
 
@@ -140,7 +150,7 @@ export default function WebDesignGallery() {
                 </div>
                 <div className={styles.headingRow}>
                     <h2 className={styles.heading}>WEB DESIGN</h2>
-                    <Link href="/design" className={styles.cta}>
+                    <Link href="/design" className={`${styles.cta} ${styles.ctaDesktop}`}>
                         <span className={styles.ctaText}>View All Design Work</span>
                         <span className={styles.ctaIcon}>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -149,7 +159,7 @@ export default function WebDesignGallery() {
                         </span>
                     </Link>
                 </div>
-                <p className={styles.subtext}>
+                <p className={`${styles.subtext} gsap-p-animate`}>
                     Crafting digital experiences that are as functional as they are beautiful.
                 </p>
             </div>
@@ -191,9 +201,19 @@ export default function WebDesignGallery() {
                     ))}
                 </div>
 
-                {/* Edge fade masks */}
                 <div className={styles.fadeLeft} />
                 <div className={styles.fadeRight} />
+            </div>
+
+            <div className={styles.mobileCtaWrapper}>
+                <Link href="/design" className={`${styles.cta} ${styles.ctaMobile}`}>
+                    <span className={styles.ctaText}>View All Design Work</span>
+                    <span className={styles.ctaIcon}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </span>
+                </Link>
             </div>
 
         </section>

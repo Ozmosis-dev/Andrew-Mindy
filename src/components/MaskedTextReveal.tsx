@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, ElementType } from "react";
+import { useRef, ElementType, RefObject } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,9 +16,10 @@ interface MaskedTextRevealProps {
     delay?: number;
     tag?: ElementType; // Allow custom tag (e.g., "h1", "h2", "p")
     triggerPoint?: string; // e.g. "top 85%"
+    triggerRef?: RefObject<HTMLElement>; // External trigger element (avoids sticky position miscalculation)
 }
 
-export default function MaskedTextReveal({ text, className, delay = 0, tag: Tag = "div", triggerPoint = "top 85%" }: MaskedTextRevealProps) {
+export default function MaskedTextReveal({ text, className, delay = 0, tag: Tag = "div", triggerPoint = "top 85%", triggerRef }: MaskedTextRevealProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
@@ -40,7 +41,7 @@ export default function MaskedTextReveal({ text, className, delay = 0, tag: Tag 
                 stagger: 0.1,
                 delay: delay,
                 scrollTrigger: {
-                    trigger: containerRef.current,
+                    trigger: triggerRef?.current ?? containerRef.current,
                     start: triggerPoint,
                     toggleActions: "play none none reverse",
                 }

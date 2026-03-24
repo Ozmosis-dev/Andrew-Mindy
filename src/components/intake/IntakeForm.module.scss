@@ -1,0 +1,156 @@
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 4px; // space for progress bar
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+
+.progressTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--card-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+/* ── Honeypot ─────────────────────────────────────────────────────────────── */
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Section wrapper ──────────────────────────────────────────────────────── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionLabel {
+  font-family: var(--font-phosphate);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* ── Field ────────────────────────────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.required {
+  color: var(--accent);
+  margin-left: 3px;
+}
+
+/* ── Inputs ───────────────────────────────────────────────────────────────── */
+
+.input,
+.textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  color: var(--foreground);
+  font-family: var(--font-montserrat);
+  font-size: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: #f26c5a;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+/* ── Grids ────────────────────────────────────────────────────────────────── */
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Budget + timeline side-by-side on wide screens, stacked on narrow
+.grid2Responsive {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Errors ───────────────────────────────────────────────────────────────── */
+
+.error {
+  font-size: 11px;
+  color: #f26c5a;
+}
+
+/* ── Submit area ──────────────────────────────────────────────────────────── */
+
+.submitWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.submitError {
+  font-size: 13px;
+  color: #f26c5a;
+  text-align: center;
+}

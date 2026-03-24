@@ -515,25 +515,6 @@ export default function ContactSection() {
                         <DashboardGraphic />
                     </div>
                 </div>
-
-                {/* ── Footer strip ── */}
-                <footer className={styles.footerStrip}>
-                    <a
-                        href="mailto:contact@andrewmindy.com"
-                        className={styles.footerEmail}
-                    >
-                        contact@andrewmindy.com
-                    </a>
-                    <span className={styles.footerRule} aria-hidden="true" />
-                    <a
-                        href="https://www.linkedin.com/in/andrew-mindy-397aa499"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.socialLink}
-                    >
-                        LinkedIn
-                    </a>
-                </footer>
             </div>
 
             <AnimatePresence>

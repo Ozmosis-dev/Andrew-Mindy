@@ -283,3 +283,31 @@
     align-items: center;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+// ─── Responsive CTA ─────────────────────────────────────────────────────────
+
+.ctaDesktop {
+    @media (max-width: 768px) {
+        display: none !important;
+    }
+}
+
+.mobileCtaWrapper {
+    display: none;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.5rem;
+    margin-top: 3.5rem;
+    position: relative;
+    z-index: 20;
+
+    @media (max-width: 768px) {
+        display: flex;
+    }
+}
+
+.ctaMobile {
+    width: 100%;
+    justify-content: center;
+}

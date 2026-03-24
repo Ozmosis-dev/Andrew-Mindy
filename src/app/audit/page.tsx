@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import type { Metadata } from "next";
 import styles from "./page.module.scss";
-import ExpandableFooter from "../../components/ExpandableFooter";
+import Footer from "../../components/Footer";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -989,7 +989,7 @@ export default function AuditPage() {
       </div>
 
       {/* ─── EXPANDABLE FOOTER ─────────────────────────────────────── */}
-      <ExpandableFooter />
+      <Footer />
     </main>
   );
 }
