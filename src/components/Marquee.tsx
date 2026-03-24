@@ -18,20 +18,25 @@ const marqueeVariants: Variants = {
     },
 };
 
-export default function Marquee() {
+interface MarqueeProps {
+    text?: string;
+    className?: string;
+}
+
+export default function Marquee({
+    text = "ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + ",
+    className = ""
+}: MarqueeProps) {
     return (
-        <div className={styles.marqueeContainer}>
+        <div className={`${styles.marqueeContainer} ${className}`.trim()}>
             <motion.div
                 className={styles.track}
                 variants={marqueeVariants}
                 animate="animate"
             >
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
-                <span className={styles.text}>ARTIST + DESIGNER + BUILDER + SYSTEMS THINKER + </span>
+                {[...Array(6)].map((_, i) => (
+                    <span key={i} className={styles.text}>{text}</span>
+                ))}
             </motion.div>
         </div>
     );

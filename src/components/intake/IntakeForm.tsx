@@ -10,8 +10,8 @@ import AppSection from './AppSection'
 import RevOpsSection from './RevOpsSection'
 import RadioGroup from './RadioGroup'
 import SubmitButton from './SubmitButton'
-import SuccessScreen from './SuccessScreen'
 import styles from './IntakeForm.module.scss'
+import { useRouter } from 'next/navigation'
 
 // ─── State & Reducer ─────────────────────────────────────────────────────────
 
@@ -172,9 +172,10 @@ const DECISION_MAKER_OPTS = [
   { value: 'committee', label: 'Committee / approval process' },
 ]
 
-export default function IntakeForm() {
+export default function IntakeForm({ header }: { header?: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
   const { fields, touched, errors, submitting, submitted, submitError } = state
+  const router = useRouter()
   const brandRef = useRef<HTMLDivElement>(null)
   const webRef = useRef<HTMLDivElement>(null)
   const appRef = useRef<HTMLDivElement>(null)
@@ -275,6 +276,7 @@ export default function IntakeForm() {
         throw new Error(body.error ?? 'Submission failed')
       }
       dispatch({ type: 'SUBMIT_SUCCESS' })
+      router.push('/work-with-me/success')
     } catch (err) {
       dispatch({ type: 'SUBMIT_ERROR', error: err instanceof Error ? err.message : 'Something went wrong.' })
     }
@@ -282,262 +284,263 @@ export default function IntakeForm() {
 
   // ─────────────────────────────────────────────────────────────────────────
 
-  if (submitted) return <SuccessScreen />
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      {/* Progress bar */}
-      <div className={styles.progressTrack} aria-hidden="true">
-        <div className={styles.progressBar} style={{ width: `${progress}%` }} />
-      </div>
-
-      {/* Honeypot — hidden from real users */}
-      <input
-        type="text"
-        name="website_confirm"
-        value={fields.honeypot}
-        onChange={(e) => field('honeypot', e.target.value)}
-        tabIndex={-1}
-        autoComplete="off"
-        className={styles.honeypot}
-        aria-hidden="true"
-      />
-
-      {/* ── Universal fields ─────────────────────────────────────────────── */}
-      <div className={styles.section}>
-        <div className={styles.grid2}>
-          <div className={styles.field}>
-            <label htmlFor="intake-name" className={styles.label}>
-              Name <span className={styles.required}>*</span>
-            </label>
-            <input
-              id="intake-name"
-              type="text"
-              className={styles.input}
-              value={fields.name}
-              onChange={(e) => field('name', e.target.value)}
-              onBlur={() => touch('name')}
-              placeholder="Your full name"
-              aria-required="true"
-              aria-invalid={!!errors.name}
-              aria-describedby={errors.name ? 'name-err' : undefined}
-            />
-            {errors.name && <p id="name-err" className={styles.error} role="alert">{errors.name}</p>}
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="intake-email" className={styles.label}>
-              Email <span className={styles.required}>*</span>
-            </label>
-            <input
-              id="intake-email"
-              type="email"
-              className={styles.input}
-              value={fields.email}
-              onChange={(e) => field('email', e.target.value)}
-              onBlur={() => touch('email')}
-              placeholder="you@company.com"
-              aria-required="true"
-              aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? 'email-err' : undefined}
-            />
-            {errors.email && <p id="email-err" className={styles.error} role="alert">{errors.email}</p>}
-          </div>
+    <>
+      {header}
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {/* Progress bar */}
+        <div className={styles.progressTrack} aria-hidden="true">
+          <div className={styles.progressBar} style={{ width: `${progress}%` }} />
         </div>
 
-        <div className={styles.grid2}>
-          <div className={styles.field}>
-            <label htmlFor="intake-company" className={styles.label}>Company</label>
-            <input
-              id="intake-company"
-              type="text"
-              className={styles.input}
-              value={fields.company}
-              onChange={(e) => field('company', e.target.value)}
-              placeholder="Company name"
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="intake-role" className={styles.label}>Your role</label>
-            <input
-              id="intake-role"
-              type="text"
-              className={styles.input}
-              value={fields.role}
-              onChange={(e) => field('role', e.target.value)}
-              placeholder="CEO, Founder, Head of Marketing…"
-            />
-          </div>
-        </div>
-
-        <div className={styles.field}>
-          <label htmlFor="intake-website" className={styles.label}>Current website</label>
-          <input
-            id="intake-website"
-            type="url"
-            className={styles.input}
-            value={fields.website}
-            onChange={(e) => field('website', e.target.value)}
-            placeholder="https://…"
-          />
-        </div>
-      </div>
-
-      {/* ── Service selection ─────────────────────────────────────────────── */}
-      <div className={styles.section}>
-        <p className={styles.sectionLabel}>What do you need? <span className={styles.required}>*</span></p>
-        <ServiceSelector
-          value={fields.services}
-          onChange={handleServiceChange}
-          error={errors.services}
+        {/* Honeypot — hidden from real users */}
+        <input
+          type="text"
+          name="website_confirm"
+          value={fields.honeypot}
+          onChange={(e) => field('honeypot', e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          className={styles.honeypot}
+          aria-hidden="true"
         />
-      </div>
 
-      {/* ── Situation ────────────────────────────────────────────────────── */}
-      <div className={styles.section}>
-        <div className={styles.field}>
-          <label htmlFor="intake-situation" className={styles.label}>
-            What&apos;s going on — in your own words? <span className={styles.required}>*</span>
-          </label>
-          <textarea
-            id="intake-situation"
-            className={styles.textarea}
-            value={fields.situation}
-            onChange={(e) => field('situation', e.target.value)}
-            onBlur={() => touch('situation')}
-            rows={5}
-            placeholder="Context, urgency, what's not working, what you're trying to change"
-            aria-required="true"
-            aria-invalid={!!errors.situation}
-            aria-describedby={errors.situation ? 'situation-err' : undefined}
-          />
-          {errors.situation && <p id="situation-err" className={styles.error} role="alert">{errors.situation}</p>}
-        </div>
+        {/* ── Universal fields ─────────────────────────────────────────────── */}
+        <div className={styles.section}>
+          <div className={styles.grid2}>
+            <div className={styles.field}>
+              <label htmlFor="intake-name" className={styles.label}>
+                Name <span className={styles.required}>*</span>
+              </label>
+              <input
+                id="intake-name"
+                type="text"
+                className={styles.input}
+                value={fields.name}
+                onChange={(e) => field('name', e.target.value)}
+                onBlur={() => touch('name')}
+                placeholder="Your full name"
+                aria-required="true"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? 'name-err' : undefined}
+              />
+              {errors.name && <p id="name-err" className={styles.error} role="alert">{errors.name}</p>}
+            </div>
 
-        <div className={styles.field}>
-          <label htmlFor="intake-prev" className={styles.label}>What&apos;s been tried before?</label>
-          <textarea
-            id="intake-prev"
-            className={styles.textarea}
-            value={fields.previousAttempts}
-            onChange={(e) => field('previousAttempts', e.target.value)}
-            placeholder="Agencies, freelancers, in-house attempts — what worked, what didn't"
-          />
-        </div>
+            <div className={styles.field}>
+              <label htmlFor="intake-email" className={styles.label}>
+                Email <span className={styles.required}>*</span>
+              </label>
+              <input
+                id="intake-email"
+                type="email"
+                className={styles.input}
+                value={fields.email}
+                onChange={(e) => field('email', e.target.value)}
+                onBlur={() => touch('email')}
+                placeholder="you@company.com"
+                aria-required="true"
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-err' : undefined}
+              />
+              {errors.email && <p id="email-err" className={styles.error} role="alert">{errors.email}</p>}
+            </div>
+          </div>
 
-        <div className={styles.field}>
-          <p className={styles.label}>Who makes the final decision?</p>
-          <RadioGroup
-            name="decisionMaker"
-            options={DECISION_MAKER_OPTS}
-            value={fields.decisionMaker}
-            onChange={(v) => field('decisionMaker', v)}
-          />
-        </div>
-      </div>
+          <div className={styles.grid2}>
+            <div className={styles.field}>
+              <label htmlFor="intake-company" className={styles.label}>Company</label>
+              <input
+                id="intake-company"
+                type="text"
+                className={styles.input}
+                value={fields.company}
+                onChange={(e) => field('company', e.target.value)}
+                placeholder="Company name"
+              />
+            </div>
 
-      {/* ── Conditional sections ─────────────────────────────────────────── */}
-      {fields.services.includes('brand') && (
-        <div ref={brandRef}>
-          <BrandSection
-            data={fields.brand}
-            errors={sectionErrors('brand')}
-            onChange={brandHandlers.onChange}
-            onBlur={brandHandlers.onBlur}
-          />
-        </div>
-      )}
+            <div className={styles.field}>
+              <label htmlFor="intake-role" className={styles.label}>Your role</label>
+              <input
+                id="intake-role"
+                type="text"
+                className={styles.input}
+                value={fields.role}
+                onChange={(e) => field('role', e.target.value)}
+                placeholder="CEO, Founder, Head of Marketing…"
+              />
+            </div>
+          </div>
 
-      {fields.services.includes('web') && (
-        <div ref={webRef}>
-          <WebSection
-            data={fields.web}
-            errors={sectionErrors('web')}
-            onChange={webHandlers.onChange}
-            onBlur={webHandlers.onBlur}
-          />
-        </div>
-      )}
-
-      {fields.services.includes('app') && (
-        <div ref={appRef}>
-          <AppSection
-            data={fields.app}
-            errors={sectionErrors('app')}
-            onChange={appHandlers.onChange}
-            onBlur={appHandlers.onBlur}
-          />
-        </div>
-      )}
-
-      {fields.services.includes('revops') && (
-        <div ref={revopsRef}>
-          <RevOpsSection
-            data={fields.revops}
-            errors={sectionErrors('revops')}
-            onChange={revopsHandlers.onChange}
-            onBlur={revopsHandlers.onBlur}
-          />
-        </div>
-      )}
-
-      {/* ── Budget & Timeline ─────────────────────────────────────────────── */}
-      <div className={styles.section}>
-        <div className={styles.grid2Responsive}>
           <div className={styles.field}>
-            <p className={styles.label}>
-              Budget range <span className={styles.required}>*</span>
-            </p>
-            <RadioGroup
-              name="budget"
-              options={BUDGET_OPTS}
-              value={fields.budget}
-              onChange={(v) => field('budget', v)}
-              onBlur={() => touch('budget')}
-              required
-              error={errors.budget}
+            <label htmlFor="intake-website" className={styles.label}>Current website</label>
+            <input
+              id="intake-website"
+              type="url"
+              className={styles.input}
+              value={fields.website}
+              onChange={(e) => field('website', e.target.value)}
+              placeholder="https://…"
+            />
+          </div>
+        </div>
+
+        {/* ── Service selection ─────────────────────────────────────────────── */}
+        <div className={styles.section}>
+          <p className={styles.sectionLabel}>What do you need? <span className={styles.required}>*</span></p>
+          <ServiceSelector
+            value={fields.services}
+            onChange={handleServiceChange}
+            error={errors.services}
+          />
+        </div>
+
+        {/* ── Situation ────────────────────────────────────────────────────── */}
+        <div className={styles.section}>
+          <div className={styles.field}>
+            <label htmlFor="intake-situation" className={styles.label}>
+              What&apos;s going on — in your own words? <span className={styles.required}>*</span>
+            </label>
+            <textarea
+              id="intake-situation"
+              className={styles.textarea}
+              value={fields.situation}
+              onChange={(e) => field('situation', e.target.value)}
+              onBlur={() => touch('situation')}
+              rows={5}
+              placeholder="Context, urgency, what's not working, what you're trying to change"
+              aria-required="true"
+              aria-invalid={!!errors.situation}
+              aria-describedby={errors.situation ? 'situation-err' : undefined}
+            />
+            {errors.situation && <p id="situation-err" className={styles.error} role="alert">{errors.situation}</p>}
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="intake-prev" className={styles.label}>What&apos;s been tried before?</label>
+            <textarea
+              id="intake-prev"
+              className={styles.textarea}
+              value={fields.previousAttempts}
+              onChange={(e) => field('previousAttempts', e.target.value)}
+              placeholder="Agencies, freelancers, in-house attempts — what worked, what didn't"
             />
           </div>
 
           <div className={styles.field}>
-            <p className={styles.label}>
-              Timeline <span className={styles.required}>*</span>
-            </p>
+            <p className={styles.label}>Who makes the final decision?</p>
             <RadioGroup
-              name="timeline"
-              options={TIMELINE_OPTS}
-              value={fields.timeline}
-              onChange={(v) => field('timeline', v)}
-              onBlur={() => touch('timeline')}
-              required
-              error={errors.timeline}
+              name="decisionMaker"
+              options={DECISION_MAKER_OPTS}
+              value={fields.decisionMaker}
+              onChange={(v) => field('decisionMaker', v)}
             />
           </div>
         </div>
-      </div>
 
-      {/* ── Anything else ────────────────────────────────────────────────── */}
-      <div className={styles.section}>
-        <div className={styles.field}>
-          <label htmlFor="intake-else" className={styles.label}>Anything else I should know?</label>
-          <textarea
-            id="intake-else"
-            className={styles.textarea}
-            value={fields.anythingElse}
-            onChange={(e) => field('anythingElse', e.target.value)}
-            placeholder="Constraints, stakeholders, hard requirements, context I'd find useful"
-          />
-        </div>
-      </div>
-
-      {/* ── Submit ───────────────────────────────────────────────────────── */}
-      <div className={styles.submitWrap}>
-        {submitError && (
-          <p className={styles.submitError} role="alert">{submitError}</p>
+        {/* ── Conditional sections ─────────────────────────────────────────── */}
+        {fields.services.includes('brand') && (
+          <div ref={brandRef}>
+            <BrandSection
+              data={fields.brand}
+              errors={sectionErrors('brand')}
+              onChange={brandHandlers.onChange}
+              onBlur={brandHandlers.onBlur}
+            />
+          </div>
         )}
-        <SubmitButton submitting={submitting} />
-      </div>
-    </form>
+
+        {fields.services.includes('web') && (
+          <div ref={webRef}>
+            <WebSection
+              data={fields.web}
+              errors={sectionErrors('web')}
+              onChange={webHandlers.onChange}
+              onBlur={webHandlers.onBlur}
+            />
+          </div>
+        )}
+
+        {fields.services.includes('app') && (
+          <div ref={appRef}>
+            <AppSection
+              data={fields.app}
+              errors={sectionErrors('app')}
+              onChange={appHandlers.onChange}
+              onBlur={appHandlers.onBlur}
+            />
+          </div>
+        )}
+
+        {fields.services.includes('revops') && (
+          <div ref={revopsRef}>
+            <RevOpsSection
+              data={fields.revops}
+              errors={sectionErrors('revops')}
+              onChange={revopsHandlers.onChange}
+              onBlur={revopsHandlers.onBlur}
+            />
+          </div>
+        )}
+
+        {/* ── Budget & Timeline ─────────────────────────────────────────────── */}
+        <div className={styles.section}>
+          <div className={styles.grid2Responsive}>
+            <div className={styles.field}>
+              <p className={styles.label}>
+                Budget range <span className={styles.required}>*</span>
+              </p>
+              <RadioGroup
+                name="budget"
+                options={BUDGET_OPTS}
+                value={fields.budget}
+                onChange={(v) => field('budget', v)}
+                onBlur={() => touch('budget')}
+                required
+                error={errors.budget}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <p className={styles.label}>
+                Timeline <span className={styles.required}>*</span>
+              </p>
+              <RadioGroup
+                name="timeline"
+                options={TIMELINE_OPTS}
+                value={fields.timeline}
+                onChange={(v) => field('timeline', v)}
+                onBlur={() => touch('timeline')}
+                required
+                error={errors.timeline}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ── Anything else ────────────────────────────────────────────────── */}
+        <div className={styles.section}>
+          <div className={styles.field}>
+            <label htmlFor="intake-else" className={styles.label}>Anything else I should know?</label>
+            <textarea
+              id="intake-else"
+              className={styles.textarea}
+              value={fields.anythingElse}
+              onChange={(e) => field('anythingElse', e.target.value)}
+              placeholder="Constraints, stakeholders, hard requirements, context I'd find useful"
+            />
+          </div>
+        </div>
+
+        {/* ── Submit ───────────────────────────────────────────────────────── */}
+        <div className={styles.submitWrap}>
+          {submitError && (
+            <p className={styles.submitError} role="alert">{submitError}</p>
+          )}
+          <SubmitButton submitting={submitting} />
+        </div>
+      </form>
+    </>
   )
 }

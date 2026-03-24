@@ -23,16 +23,19 @@ export default function WorkWithMePage() {
         />
       </div>
 
-      <div className={styles.header}>
-        <p className={styles.eyebrow}>Let&apos;s Work Together</p>
-        <h1 className={styles.heading}>Tell me what&apos;s going on.</h1>
-        <p className={styles.sub}>
-          The more context you give me, the better I can assess fit — and the faster
-          we can move if it makes sense to work together.
-        </p>
-      </div>
       <div className={styles.formWrap}>
-        <IntakeForm />
+        <IntakeForm
+          header={
+            <div className={styles.header}>
+              <p className={styles.eyebrow}>Let&apos;s Work Together</p>
+              <h1 className={styles.heading}>Tell me what&apos;s going on.</h1>
+              <p className={styles.sub}>
+                The more context you give me, the better I can assess fit — and the faster
+                we can move if it makes sense to work together.
+              </p>
+            </div>
+          }
+        />
       </div>
       <div className={styles.footerWrap}>
         <Footer />
