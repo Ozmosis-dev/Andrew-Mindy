@@ -27,7 +27,7 @@ export default function ServiceSelector({ value, onChange, error }: ServiceSelec
   }
 
   return (
-    <div>
+    <div data-error-field="services" aria-invalid={!!error}>
       <div className={styles.grid}>
         {SERVICES.map((svc) => {
           const selected = value.includes(svc.value)

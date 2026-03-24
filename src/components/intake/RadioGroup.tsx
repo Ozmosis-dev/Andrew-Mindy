@@ -27,7 +27,7 @@ export default function RadioGroup({
   error,
 }: RadioGroupProps) {
   return (
-    <div className={styles.group} role="radiogroup" aria-required={required}>
+    <div className={styles.group} role="radiogroup" aria-required={required} data-error-field={name} aria-invalid={!!error}>
       {options.map((opt) => {
         const id = `${name}-${opt.value}`
         const selected = value === opt.value
