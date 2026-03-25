@@ -20,16 +20,16 @@ function section(title: string, lines: string): string {
 
 function buildEmailBody(data: ReturnType<typeof intakeSchema.parse>): string {
   const universal = [
-    row('Name',             data.name),
-    row('Email',            data.email),
-    row('Company',          data.company),
-    row('Role',             data.role),
-    row('Website',          data.website),
+    row('Name', data.name),
+    row('Email', data.email),
+    row('Company', data.company),
+    row('Role', data.role),
+    row('Website', data.website),
     '',
-    row('Services',         data.services.join(', ')),
-    row('Decision maker',   data.decisionMaker),
-    row('Budget',           data.budget),
-    row('Timeline',         data.timeline),
+    row('Services', data.services.join(', ')),
+    row('Decision maker', data.decisionMaker),
+    row('Budget', data.budget),
+    row('Timeline', data.timeline),
     '',
     'SITUATION',
     data.situation,
@@ -38,53 +38,53 @@ function buildEmailBody(data: ReturnType<typeof intakeSchema.parse>): string {
   ].join('\n')
 
   const brand = section('BRAND', [
-    row('Situation',              data.brand.situation),
-    row('Business description',   data.brand.businessDescription),
-    row('Mission',                data.brand.mission),
-    row('Customer',               data.brand.customerDescription),
-    row('Competitors',            data.brand.competitors),
-    row('Core messages',          data.brand.coreMessages),
-    row('Personality',            data.brand.personality),
-    row('Words yes',              data.brand.wordsYes),
-    row('Words no',               data.brand.wordsNo),
-    row('Brand admired',          data.brand.brandAdmired),
-    row('Existing assets',        data.brand.existingAssets),
-    row('Deliverables',           data.brand.deliverables.join(', ')),
-    row('Agency history',         data.brand.agencyHistory),
+    row('Situation', data.brand.situation),
+    row('Business description', data.brand.businessDescription),
+    row('Mission', data.brand.mission),
+    row('Customer', data.brand.customerDescription),
+    row('Competitors', data.brand.competitors),
+    row('Core messages', data.brand.coreMessages),
+    row('Personality', data.brand.personality),
+    row('Words yes', data.brand.wordsYes),
+    row('Words no', data.brand.wordsNo),
+    row('Brand admired', data.brand.brandAdmired),
+    row('Existing assets', data.brand.existingAssets),
+    row('Deliverables', data.brand.deliverables.join(', ')),
+    row('Agency history', data.brand.agencyHistory),
   ].join(''))
 
   const web = section('WEBSITE', [
-    row('Current site',       data.web.currentSite),
-    row('Primary job',        data.web.primaryJob),
-    row('Broken & cost',      data.web.brokenAndCost),
-    row('Success metrics',    data.web.successMetrics),
+    row('Current site', data.web.currentSite),
+    row('Primary job', data.web.primaryJob),
+    row('Broken & cost', data.web.brokenAndCost),
+    row('Success metrics', data.web.successMetrics),
     row('Must-have features', data.web.mustHaveFeatures),
-    row('Tech preference',    data.web.techPreference),
-    row('Copy status',        data.web.copyStatus),
-    row('Post-launch owner',  data.web.postLaunchOwner),
-    row('Site inspiration',   data.web.siteInspiration),
+    row('Tech preference', data.web.techPreference),
+    row('Copy status', data.web.copyStatus),
+    row('Post-launch owner', data.web.postLaunchOwner),
+    row('Site inspiration', data.web.siteInspiration),
   ].join(''))
 
   const app = section('APP / TOOLING', [
-    row('Core function',      data.app.coreFunction),
-    row('User type',          data.app.userType),
-    row('User volume',        data.app.userVolume),
+    row('Core function', data.app.coreFunction),
+    row('User type', data.app.userType),
+    row('User volume', data.app.userVolume),
     row('System connections', data.app.systemConnections),
-    row('Sensitive data',     data.app.sensitiveData),
-    row('Spec status',        data.app.specStatus),
-    row('Cost of inaction',   data.app.costOfInaction),
-    row('Operational done',   data.app.operationalDone),
-    row('Previous attempts',  data.app.previousAttempts),
+    row('Sensitive data', data.app.sensitiveData),
+    row('Spec status', data.app.specStatus),
+    row('Cost of inaction', data.app.costOfInaction),
+    row('Operational done', data.app.operationalDone),
+    row('Previous attempts', data.app.previousAttempts),
   ].join(''))
 
   const revops = section('REVOPS', [
-    row('Broken process',   data.revops.brokenProcess),
-    row('Problem type',     data.revops.problemType),
-    row('Current stack',    data.revops.currentStack),
-    row('Affected count',   data.revops.affectedCount),
+    row('Broken process', data.revops.brokenProcess),
+    row('Problem type', data.revops.problemType),
+    row('Current stack', data.revops.currentStack),
+    row('Affected count', data.revops.affectedCount),
     row('Adoption history', data.revops.adoptionHistory),
-    row('Success at 90d',   data.revops.successAt90Days),
-    row('Budget status',    data.revops.budgetStatus),
+    row('Success at 90d', data.revops.successAt90Days),
+    row('Budget status', data.revops.budgetStatus),
   ].join(''))
 
   const tail = data.anythingElse
@@ -116,22 +116,22 @@ export async function POST(req: NextRequest) {
     // 3. Insert to Supabase
     const supabase = createServiceClient()
     const { error: dbError } = await supabase.from('intake_submissions').insert({
-      name:             data.name,
-      email:            data.email,
-      company:          data.company || null,
-      role:             data.role || null,
-      website:          data.website || null,
-      services:         data.services,
-      situation:        data.situation,
+      name: data.name,
+      email: data.email,
+      company: data.company || null,
+      role: data.role || null,
+      website: data.website || null,
+      services: data.services,
+      situation: data.situation,
       previous_attempts: data.previousAttempts || null,
-      decision_maker:   data.decisionMaker || null,
-      budget:           data.budget,
-      timeline:         data.timeline,
-      anything_else:    data.anythingElse || null,
-      brand_data:       data.services.includes('brand') ? data.brand : null,
-      web_data:         data.services.includes('web')   ? data.web   : null,
-      app_data:         data.services.includes('app')   ? data.app   : null,
-      revops_data:      data.services.includes('revops')? data.revops: null,
+      decision_maker: data.decisionMaker || null,
+      budget: data.budget,
+      timeline: data.timeline,
+      anything_else: data.anythingElse || null,
+      brand_data: data.services.includes('brand') ? data.brand : null,
+      web_data: data.services.includes('web') ? data.web : null,
+      app_data: data.services.includes('app') ? data.app : null,
+      revops_data: data.services.includes('revops') ? data.revops : null,
     })
 
     if (dbError) {
@@ -144,16 +144,39 @@ export async function POST(req: NextRequest) {
     const emailBody = buildEmailBody(data)
 
     const { error: emailError } = await resend.emails.send({
-      from:    'Andrew Mindy <contact@andrewmindy.com>',
-      to:      'contact@andrewmindy.com',
+      from: 'Andrew Mindy <contact@andrewmindy.com>',
+      to: 'contact@andrewmindy.com',
       replyTo: data.email,
       subject,
-      text:    emailBody,
+      text: emailBody,
     })
 
     if (emailError) {
       console.error('[intake] Resend error:', emailError)
       // Don't fail the request — data is saved; email is best-effort
+    }
+
+    // Add to Resend Project Intake audience with properties for service-based sequences
+    if (process.env.RESEND_AUDIENCE_INTAKE_ID) {
+      const { error: audienceError } = await resend.contacts.create({
+        email: data.email,
+        firstName: data.name ? data.name.split(' ')[0] : undefined,
+        lastName: data.name && data.name.split(' ').length > 1 ? data.name.split(' ').slice(1).join(' ') : undefined,
+        unsubscribed: false,
+        audienceId: process.env.RESEND_AUDIENCE_INTAKE_ID,
+        properties: {
+          services: data.services.join(','),
+          budget: data.budget,
+          timeline: data.timeline,
+          company: data.company ?? '',
+          decision_maker: data.decisionMaker ?? '',
+          intake_date: new Date().toISOString().split('T')[0],
+        },
+      })
+
+      if (audienceError) {
+        console.error('[intake] Resend audience error:', audienceError)
+      }
     }
 
     return NextResponse.json({ success: true })

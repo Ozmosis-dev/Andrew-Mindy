@@ -21,18 +21,51 @@ const CONTACT_PREF_OPTS = [
 ];
 
 export default function ContactForm() {
-    const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+    const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
     const [service, setService] = useState('');
     const [contactPref, setContactPref] = useState('email');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('submitting');
-        setTimeout(() => {
+        setErrorMessage('');
+
+        const form = formRef.current;
+        if (!form) return;
+
+        const fd = new FormData(form);
+        const payload = {
+            name: fd.get('name') as string,
+            email: fd.get('email') as string,
+            phone: fd.get('phone') as string || undefined,
+            subject: fd.get('subject') as string || undefined,
+            service: service || undefined,
+            contactPref: contactPref,
+            message: fd.get('message') as string,
+        };
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                throw new Error(body.error || 'Something went wrong. Please try again.');
+            }
+
             setStatus('success');
-        }, 1500);
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+            setErrorMessage(message);
+            setStatus('error');
+        }
     };
 
     // Close dropdown when clicking outside
@@ -47,6 +80,7 @@ export default function ContactForm() {
     }, []);
 
     const selectedServiceLabel = SERVICE_OPTS.find(opt => opt.value === service)?.label || 'Select a service';
+    const isDisabled = status === 'submitting';
 
     return (
         <div className={styles.formWrapper}>
@@ -74,6 +108,7 @@ export default function ContactForm() {
                 ) : (
                     <motion.form
                         key="form"
+                        ref={formRef}
                         onSubmit={handleSubmit}
                         className={styles.contactForm}
                         initial={{ opacity: 0 }}
@@ -84,25 +119,25 @@ export default function ContactForm() {
                         <div className={styles.inputRow}>
                             <div className={styles.inputGroup}>
                                 <label htmlFor="name">Name <span className={styles.req}>*</span></label>
-                                <input type="text" id="name" required placeholder="Jane Doe" disabled={status === 'submitting'} />
+                                <input type="text" id="name" name="name" required placeholder="Jane Doe" disabled={isDisabled} />
                             </div>
                             <div className={styles.inputGroup}>
                                 <label htmlFor="phone">Phone</label>
-                                <input type="tel" id="phone" placeholder="+1 (555) 000-0000" disabled={status === 'submitting'} />
+                                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" disabled={isDisabled} />
                             </div>
                         </div>
 
                         {/* Email (Full Width, Required) */}
                         <div className={styles.inputGroup}>
                             <label htmlFor="email">Email <span className={styles.req}>*</span></label>
-                            <input type="email" id="email" required placeholder="jane@example.com" disabled={status === 'submitting'} />
+                            <input type="email" id="email" name="email" required placeholder="jane@example.com" disabled={isDisabled} />
                         </div>
 
                         {/* Subject & Custom Dropdown Category Row */}
                         <div className={styles.inputRow}>
                             <div className={styles.inputGroup}>
                                 <label htmlFor="subject">Subject <span className={styles.req}>*</span></label>
-                                <input type="text" id="subject" required placeholder="General inquiry" disabled={status === 'submitting'} />
+                                <input type="text" id="subject" name="subject" required placeholder="General inquiry" disabled={isDisabled} />
                             </div>
                             <div className={styles.inputGroup}>
                                 <label>Category</label>
@@ -110,8 +145,8 @@ export default function ContactForm() {
                                     <button
                                         type="button"
                                         className={`${styles.selectTrigger} ${isDropdownOpen ? styles.active : ''}`}
-                                        onClick={() => !status.includes('submitting') && setIsDropdownOpen(!isDropdownOpen)}
-                                        disabled={status === 'submitting'}
+                                        onClick={() => !isDisabled && setIsDropdownOpen(!isDropdownOpen)}
+                                        disabled={isDisabled}
                                     >
                                         <span>{selectedServiceLabel}</span>
                                         <div className={styles.selectArrow}>
@@ -152,7 +187,7 @@ export default function ContactForm() {
                         {/* Message Textarea */}
                         <div className={styles.inputGroup}>
                             <label htmlFor="message">Message <span className={styles.req}>*</span></label>
-                            <textarea id="message" required placeholder="Tell me what's on your mind..." rows={4} disabled={status === 'submitting'}></textarea>
+                            <textarea id="message" name="message" required placeholder="Tell me what's on your mind..." rows={4} disabled={isDisabled}></textarea>
                         </div>
 
                         {/* Contact Preference Section */}
@@ -167,7 +202,7 @@ export default function ContactForm() {
                                             type="button"
                                             className={`${styles.circularOption} ${isSelected ? styles.selected : ''}`}
                                             onClick={() => setContactPref(opt.value)}
-                                            disabled={status === 'submitting'}
+                                            disabled={isDisabled}
                                         >
                                             <div className={styles.outerCircle}>
                                                 <div className={styles.innerCircle} />
@@ -179,9 +214,20 @@ export default function ContactForm() {
                             </div>
                         </div>
 
-                        <button type="submit" className={styles.primaryBtn} disabled={status === 'submitting'}>
-                            {status === 'submitting' ? 'Sending...' : 'Send Message'}
-                            {!status.includes('submitting') && (
+                        {/* Error message */}
+                        {status === 'error' && (
+                            <motion.p
+                                className={styles.errorMessage}
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                            >
+                                {errorMessage}
+                            </motion.p>
+                        )}
+
+                        <button type="submit" className={styles.primaryBtn} disabled={isDisabled}>
+                            {isDisabled ? 'Sending...' : 'Send Message'}
+                            {!isDisabled && (
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>

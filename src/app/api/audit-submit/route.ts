@@ -184,14 +184,26 @@ export async function POST(req: NextRequest) {
       console.error('[audit-submit] Resend error:', resendError);
     }
 
-    // Add to Resend Audience/Contacts
-    if (process.env.RESEND_AUDIENCE_ID) {
+    // Add to Resend Growth Brief audience with rich properties for email sequences
+    if (process.env.RESEND_AUDIENCE_GROWTH_BRIEF_ID) {
       const { error: audienceError } = await resend.contacts.create({
         email,
         firstName: name ? name.split(' ')[0] : undefined,
         lastName: name && name.split(' ').length > 1 ? name.split(' ').slice(1).join(' ') : undefined,
         unsubscribed: false,
-        audienceId: process.env.RESEND_AUDIENCE_ID,
+        audienceId: process.env.RESEND_AUDIENCE_GROWTH_BRIEF_ID,
+        properties: {
+          score: total_score,
+          tier: tier_label,
+          priority_category: priorityCategory,
+          cat_sales: cat_scores[0] ?? 0,
+          cat_brand: cat_scores[1] ?? 0,
+          cat_leads: cat_scores[2] ?? 0,
+          cat_workflows: cat_scores[3] ?? 0,
+          cat_marketing: cat_scores[4] ?? 0,
+          cat_growth: cat_scores[5] ?? 0,
+          audit_date: new Date().toISOString().split('T')[0],
+        },
       });
 
       if (audienceError) {
