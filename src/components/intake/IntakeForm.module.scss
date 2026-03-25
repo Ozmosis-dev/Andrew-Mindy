@@ -2,8 +2,40 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 32px; // Reduced from 40px since cards have padding
   padding-top: 4px; // space for progress bar
+}
+
+.formCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+    gap: 32px;
+  }
+}
+
+.sectionCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
 }
 
 /* ── Progress bar ─────────────────────────────────────────────────────────── */

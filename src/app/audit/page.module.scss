@@ -270,6 +270,7 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
   overflow: hidden;
+  animation: buttonGlow 3s infinite alternate, pulse 3s infinite;
 
   &::before {
     content: "";
@@ -285,6 +286,7 @@
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(98, 175, 239, 0.3);
+    animation: none; // Stop pulsing on hover
 
     &::before {
       transform: scaleX(1);
@@ -295,6 +297,37 @@
     .btnIcon {
       color: var(--accent);
     }
+  }
+}
+
+@keyframes buttonGlow {
+  0% {
+    box-shadow: 0 4px 20px rgba(98, 175, 239, 0.3);
+    background: var(--accent);
+  }
+
+  50% {
+    box-shadow: 0 8px 45px rgba(255, 255, 255, 0.7);
+    background: #ffffff;
+  }
+
+  100% {
+    box-shadow: 0 4px 20px rgba(98, 175, 239, 0.3);
+    background: var(--accent);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 

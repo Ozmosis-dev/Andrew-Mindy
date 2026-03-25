@@ -1,0 +1,668 @@
+// ─── Page Shell ───────────────────────────────────────────────────────────────
+
+.page {
+    position: relative;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+// ─── Fixed ambient background ─────────────────────────────────────────────────
+
+.pageBackground {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+}
+
+.orb1 {
+    width: 700px;
+    height: 700px;
+    top: -15%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.09) 0%, transparent 65%);
+    filter: blur(80px);
+    animation: orbDrift1 28s ease-in-out infinite;
+}
+
+.orb2 {
+    width: 550px;
+    height: 550px;
+    bottom: 10%;
+    left: -12%;
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.06) 0%, transparent 65%);
+    filter: blur(100px);
+    animation: orbDrift2 36s ease-in-out infinite;
+}
+
+.orb3 {
+    width: 400px;
+    height: 400px;
+    top: 45%;
+    right: 25%;
+    background: radial-gradient(circle, rgba(140, 196, 243, 0.04) 0%, transparent 70%);
+    filter: blur(90px);
+    animation: orbDrift3 22s ease-in-out infinite;
+}
+
+@keyframes orbDrift1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-60px, 80px) scale(1.08);
+    }
+
+    66% {
+        transform: translate(40px, -40px) scale(0.94);
+    }
+}
+
+@keyframes orbDrift2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    40% {
+        transform: translate(80px, -60px) scale(1.1);
+    }
+
+    75% {
+        transform: translate(-30px, 50px) scale(0.92);
+    }
+}
+
+@keyframes orbDrift3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-50px, -70px) scale(1.15);
+    }
+}
+
+// Grain overlay — matches the noise texture on the AnimatedGradientBackground
+.grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("https://framerusercontent.com/images/g0QcWrxr87K0ufOxIUFBakwYA8.png");
+    background-size: 200px;
+    background-repeat: repeat;
+    opacity: 0.025;
+    pointer-events: none;
+}
+
+// ─── Content wrapper (sits above background) ──────────────────────────────────
+
+.content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+
+    @media (min-width: 1440px) {
+        padding: 0 4vw;
+    }
+}
+
+// ─── Page Header ──────────────────────────────────────────────────────────────
+
+.headerSection {
+    padding: 160px 0 5rem;
+    position: relative;
+    overflow: hidden;
+
+    @media (max-width: 768px) {
+        padding: 120px 0 3.5rem;
+    }
+}
+
+.headerInner {
+    position: relative;
+    z-index: 2;
+}
+
+.headerSvgWrap {
+    position: absolute;
+    top: -60px;
+    right: -80px;
+    width: 480px;
+    height: 480px;
+    pointer-events: none;
+    opacity: 1;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+        width: 260px;
+        height: 260px;
+        top: 0;
+        right: -40px;
+        opacity: 0.7;
+    }
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-space-grotesk);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    border: 1px solid rgba(98, 175, 239, 0.25);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 2.5rem;
+
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: eyebrowPulse 2.5s ease-in-out infinite;
+    }
+}
+
+@keyframes eyebrowPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.7);
+    }
+}
+
+.headlineWrapper {
+    font-family: var(--font-phosphate);
+    font-size: clamp(3rem, 7vw, 5rem);
+    line-height: 0.95;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.headlineLine {
+    display: block;
+}
+
+.subhead {
+    font-family: var(--font-montserrat);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: var(--secondary);
+    line-height: 1.7;
+    max-width: 500px;
+    margin-bottom: 3rem;
+}
+
+// Metadata strip under subhead
+.metaStrip {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-space-grotesk);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--secondary);
+    opacity: 0.55;
+    padding: 0 1.5rem 0 0;
+
+    &:first-child {
+        padding-left: 0;
+    }
+
+    svg {
+        opacity: 0.6;
+    }
+}
+
+.metaSep {
+    width: 1px;
+    height: 14px;
+    background: var(--card-border);
+    margin-right: 1.5rem;
+}
+
+.headerDivider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, rgba(98, 175, 239, 0.2), var(--card-border) 40%, transparent);
+    margin-top: 4rem;
+}
+
+// ─── FAQ Sections ─────────────────────────────────────────────────────────────
+
+.faqSection {
+    padding: 1.5rem 0 2rem;
+}
+
+.categoryBlock {
+    margin-bottom: 4rem;
+}
+
+.categoryHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.categoryNumber {
+    font-family: var(--font-space-grotesk);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    opacity: 0.6;
+    text-transform: uppercase;
+}
+
+.categoryTitle {
+    font-family: var(--font-phosphate);
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    flex: 1;
+    white-space: nowrap;
+}
+
+.categoryLine {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--card-border), transparent);
+    min-width: 40px;
+
+    @media (max-width: 480px) {
+        display: none;
+    }
+}
+
+
+// ─── FAQ Card (accordion item) ────────────────────────────────────────────────
+
+.faqCard {
+    position: relative;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    margin-bottom: 0.625rem;
+    background: rgba(255, 255, 255, 0.015);
+    overflow: hidden;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    cursor: pointer;
+
+    @media (hover: hover) and (pointer: fine) {
+        cursor: none !important;
+    }
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.025);
+        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    &.open {
+        border-color: rgba(98, 175, 239, 0.28);
+        background: rgba(98, 175, 239, 0.03);
+        box-shadow: 0 4px 30px rgba(98, 175, 239, 0.06);
+    }
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.02);
+        border-color: rgba(0, 0, 0, 0.08);
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        &.open {
+            background: rgba(98, 175, 239, 0.04);
+            border-color: rgba(98, 175, 239, 0.3);
+        }
+    }
+}
+
+// Left accent bar — CSS transition driven
+.accentBar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.5px;
+    background: linear-gradient(to bottom, var(--accent), rgba(98, 175, 239, 0.3));
+    transform-origin: top center;
+    transform: scaleY(0);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 0 1px 1px 0;
+
+    .open & {
+        transform: scaleY(1);
+    }
+}
+
+.triggerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+
+    @media (max-width: 768px) {
+        gap: 1rem;
+    }
+}
+
+.triggerRight {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        gap: 1rem;
+    }
+}
+
+.faqNumber {
+    font-family: var(--font-phosphate);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--secondary);
+    opacity: 0.25; // Slightly more opaque since it's just an outline
+    transition: opacity 0.4s ease, -webkit-text-stroke-color 0.4s ease;
+
+    /* Prevent the large font from expanding the container's height */
+    line-height: 0;
+    height: 0;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+
+    pointer-events: none;
+    letter-spacing: -0.02em;
+
+    .accordionTrigger:hover & {
+        -webkit-text-stroke-color: var(--accent);
+        opacity: 0.8;
+    }
+
+    .open & {
+        opacity: 0.25; // Keeps it grey/transparent even when open unless hovered
+        -webkit-text-stroke-color: var(--secondary);
+    }
+
+    @media (max-width: 480px) {
+        font-size: clamp(1.8rem, 6vw, 2.5rem);
+    }
+}
+
+.accordionTrigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1.6rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    text-align: left;
+    color: var(--primary);
+
+    @media (hover: hover) and (pointer: fine) {
+        cursor: none !important;
+    }
+
+    @media (max-width: 768px) {
+        padding: 1.3rem 1.25rem;
+        gap: 1rem;
+    }
+}
+
+.questionText {
+    font-family: var(--font-space-grotesk);
+    font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+    font-weight: 600;
+    color: var(--secondary); // A little more grey than white
+    opacity: 0.75;
+    line-height: 1.45;
+    transition: opacity 0.3s ease, color 0.3s ease;
+
+    .accordionTrigger:hover & {
+        color: var(--primary);
+        opacity: 0.95;
+    }
+
+    .open & {
+        opacity: 1;
+        color: var(--primary);
+    }
+}
+
+.toggleWrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    opacity: 0.6;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease, opacity 0.3s ease;
+
+    .accordionTrigger:hover & {
+        transform: rotate(180deg);
+        color: var(--primary);
+        opacity: 1;
+    }
+
+    .open & {
+        color: var(--accent);
+        opacity: 1;
+    }
+}
+
+.accordionBody {
+    overflow: hidden;
+}
+
+.accordionAnswer {
+    padding: 0 2rem 1.75rem 2rem;
+    padding-right: 5rem;
+
+    @media (max-width: 768px) {
+        padding: 0 1.25rem 1.5rem;
+    }
+}
+
+.answerParagraph {
+    font-family: var(--font-montserrat);
+    font-size: clamp(0.9rem, 1.15vw, 1rem);
+    color: var(--secondary);
+    line-height: 1.8;
+    margin-bottom: 0.9rem;
+    white-space: pre-line;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+// ─── CTA Block ────────────────────────────────────────────────────────────────
+
+.ctaSection {
+    padding: 4rem 0 5rem;
+}
+
+.ctaBlock {
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 4rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.015);
+
+    // Radial highlight top-left
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 400px;
+        height: 300px;
+        background: radial-gradient(ellipse at 0% 0%, rgba(98, 175, 239, 0.08) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    @media (max-width: 768px) {
+        padding: 2.5rem 2rem;
+    }
+
+    :global(.light-mode) & {
+        background: rgba(0, 0, 0, 0.02);
+        border-color: rgba(0, 0, 0, 0.08);
+    }
+}
+
+.ctaLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 500px;
+}
+
+.ctaHeadline {
+    font-family: var(--font-phosphate);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    margin: 0;
+}
+
+.ctaBody {
+    font-family: var(--font-montserrat);
+    font-size: 1rem;
+    color: var(--secondary);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.ctaEmail {
+    font-family: var(--font-montserrat);
+    font-size: 0.82rem;
+    color: var(--secondary);
+    opacity: 0.55;
+    margin: 0.25rem 0 0;
+
+    a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+}
+
+.ctaRight {
+    flex-shrink: 0;
+}
+
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--accent);
+    color: #050505;
+    font-family: var(--font-space-grotesk);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 14px 30px;
+    border-radius: 100px;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(98, 175, 239, 0.28);
+    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+        cursor: none !important;
+    }
+
+    &:hover {
+        opacity: 0.88;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(98, 175, 239, 0.4);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// ─── Footer wrap ──────────────────────────────────────────────────────────────
+
+.footerWrap {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}

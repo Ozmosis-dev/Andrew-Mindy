@@ -40,6 +40,14 @@ export default function DesignCta() {
 
     return (
         <section className={styles.section} ref={sectionRef}>
+            <div className={styles.waveContainer}>
+                <img
+                    src="/images/Black-wave.jpg"
+                    alt=""
+                    className={styles.waveImage}
+                />
+            </div>
+
             <div className={styles.inner}>
                 <div className={styles.orbLeft} />
                 <div className={styles.orbRight} />

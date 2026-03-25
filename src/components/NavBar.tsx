@@ -59,6 +59,7 @@ const NAV_LINKS = [
     { href: '/', label: 'Home' },
     { href: '/design', label: 'Design' },
     { href: '/audit', label: 'Audit' },
+    { href: '/faq', label: 'FAQ' },
     { href: '/contact', label: 'Contact' },
     { href: '/work-with-me', label: 'Work With Me' },
 ];
@@ -138,9 +139,11 @@ export default function NavBar() {
     const { theme, toggleTheme } = useTheme();
 
     const isWorkWithMe = pathname === '/work-with-me';
+    const isContact = pathname === '/contact';
+    const isFaq = pathname === '/faq';
 
     useEffect(() => {
-        if (isWorkWithMe) {
+        if (isWorkWithMe || isContact || isFaq) {
             setVisible(true);
             return;
         }
