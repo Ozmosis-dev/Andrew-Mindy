@@ -31,7 +31,7 @@
     height: 700px;
     top: -15%;
     right: -10%;
-    background: radial-gradient(circle, rgba(98, 175, 239, 0.09) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.18) 0%, transparent 65%);
     filter: blur(80px);
     animation: orbDrift1 28s ease-in-out infinite;
 }
@@ -41,7 +41,7 @@
     height: 550px;
     bottom: 10%;
     left: -12%;
-    background: radial-gradient(circle, rgba(98, 175, 239, 0.06) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(98, 175, 239, 0.13) 0%, transparent 65%);
     filter: blur(100px);
     animation: orbDrift2 36s ease-in-out infinite;
 }
@@ -51,7 +51,7 @@
     height: 400px;
     top: 45%;
     right: 25%;
-    background: radial-gradient(circle, rgba(140, 196, 243, 0.04) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(140, 196, 243, 0.09) 0%, transparent 70%);
     filter: blur(90px);
     animation: orbDrift3 22s ease-in-out infinite;
 }

@@ -27,115 +27,83 @@ function PageBackground() {
     );
 }
 
-// ─── Animated header SVG decoration ──────────────────────────────────────────
-// A sparse topography-style radial grid that draws in on load via GSAP
+// ─── Animated header SVG — question marks that rise & disintegrate ────────────
+// Uses GSAP for reliable cross-browser SVG transforms
 
-function HeaderSVG() {
+type GlyphCfg = { x: number; y: number; size: number; delay: number; dur: number; opacity: number };
+const GLYPHS: GlyphCfg[] = [
+    { x: 420, y: 460, size: 200, delay: 0, dur: 7.0, opacity: 0.60 },
+    { x: 110, y: 490, size: 130, delay: 1.4, dur: 6.6, opacity: 0.65 },
+    { x: 320, y: 500, size: 88, delay: 2.8, dur: 6.0, opacity: 0.70 },
+    { x: 490, y: 470, size: 105, delay: 0.8, dur: 7.4, opacity: 0.58 },
+    { x: 195, y: 455, size: 160, delay: 2.1, dur: 6.8, opacity: 0.55 },
+    { x: 370, y: 510, size: 75, delay: 3.6, dur: 5.8, opacity: 0.72 },
+    { x: 245, y: 480, size: 115, delay: 1.9, dur: 6.3, opacity: 0.62 },
+];
+
+
+
+function QuestionMarkAnimation() {
     const svgRef = useRef<SVGSVGElement>(null);
 
     useGSAP(() => {
-        const paths = svgRef.current?.querySelectorAll("circle, path, line");
-        if (!paths || paths.length === 0) return;
+        if (!svgRef.current) return;
 
-        gsap.fromTo(
-            paths,
-            { opacity: 0, scale: 0.85, transformOrigin: "50% 50%" },
-            {
-                opacity: 1,
-                scale: 1,
-                duration: 1.4,
-                ease: "power3.out",
-                stagger: 0.04,
-                delay: 0.5,
-            }
-        );
+        GLYPHS.forEach((cfg, gi) => {
+            const glyph = svgRef.current!.querySelector<SVGTextElement>(`#qm-g-${gi}`);
+            if (!glyph) return;
+
+            const d = cfg.dur;
+
+            const tl = gsap.timeline({ repeat: -1, delay: cfg.delay });
+
+            // Phase 1 — fade in + begin rise
+            tl.fromTo(glyph,
+                { opacity: 0, y: 0 },
+                { opacity: cfg.opacity, y: -70, duration: d * 0.20, ease: "power3.out" }
+            );
+
+            // Phase 2 — float upward steadily
+            tl.to(glyph, { y: -230, duration: d * 0.45, ease: "none" });
+
+            // Phase 3 — dissolve and continue rising
+            tl.to(glyph, { opacity: 0, y: -370, duration: d * 0.35, ease: "power2.in" });
+        });
     }, { scope: svgRef });
 
-    // Concentric rings + radial lines — pure SVG, no external deps
-    const rings = [40, 80, 120, 165, 210, 255];
-    const lineAngles = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-    const cx = 240;
-    const cy = 240;
-
     return (
-        <div className={styles.headerSvgWrap}>
+        <div className={styles.headerSvgWrap} aria-hidden="true">
             <svg
                 ref={svgRef}
-                viewBox="0 0 480 480"
+                viewBox="0 0 560 520"
+                preserveAspectRatio="xMidYMid slice"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", overflow: "visible" }}
             >
-                <defs>
-                    <radialGradient id="faqGridFade" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="rgba(98,175,239,1)" />
-                        <stop offset="70%" stopColor="rgba(98,175,239,0.5)" />
-                        <stop offset="100%" stopColor="rgba(98,175,239,0)" />
-                    </radialGradient>
-                    <mask id="faqGridMask">
-                        <circle cx={cx} cy={cy} r="250" fill="url(#faqGridFade)" />
-                    </mask>
-                </defs>
-
-                <g mask="url(#faqGridMask)">
-                    {/* Radial spoke lines */}
-                    {lineAngles.map((angle) => {
-                        const rad = (angle * Math.PI) / 180;
-                        const x2 = cx + Math.cos(rad) * 255;
-                        const y2 = cy + Math.sin(rad) * 255;
-                        return (
-                            <line
-                                key={angle}
-                                x1={cx}
-                                y1={cy}
-                                x2={x2}
-                                y2={y2}
-                                stroke="rgba(98,175,239,0.25)"
-                                strokeWidth="1"
-                            />
-                        );
-                    })}
-
-                    {/* Concentric rings */}
-                    {rings.map((r) => (
-                        <circle
-                            key={r}
-                            cx={cx}
-                            cy={cy}
-                            r={r}
-                            stroke="rgba(98,175,239,0.3)"
-                            strokeWidth={r === rings[0] ? "2" : "1"}
-                        />
-                    ))}
-
-                    {/* Intersection dots */}
-                    {rings.map((r) =>
-                        lineAngles.map((angle) => {
-                            const rad = (angle * Math.PI) / 180;
-                            const x = cx + Math.cos(rad) * r;
-                            const y = cy + Math.sin(rad) * r;
-                            return (
-                                <circle
-                                    key={`${r}-${angle}`}
-                                    cx={x}
-                                    cy={y}
-                                    r={r <= 80 ? 2.5 : 1.8}
-                                    fill="rgba(98,175,239,0.6)"
-                                />
-                            );
-                        })
-                    )}
-
-                    {/* Center accent dot */}
-                    <circle cx={cx} cy={cy} r="5" fill="rgba(98,175,239,0.9)" />
-                    <circle cx={cx} cy={cy} r="10" stroke="rgba(98,175,239,0.5)" strokeWidth="1.5" />
-                </g>
+                {GLYPHS.map((g, gi) => (
+                    <text
+                        key={gi}
+                        id={`qm-g-${gi}`}
+                        x={g.x}
+                        y={g.y}
+                        fontSize={g.size}
+                        textAnchor="middle"
+                        dominantBaseline="auto"
+                        fontFamily="'Arial Black', 'Impact', sans-serif"
+                        fontWeight="900"
+                        fill="rgba(98,175,239,0.09)"
+                        stroke={`rgba(98,175,239,${g.opacity})`}
+                        strokeWidth="1.8"
+                        style={{ opacity: 0, willChange: "transform, opacity" }}
+                    >
+                        ?
+                    </text>
+                ))}
             </svg>
         </div>
     );
 }
-
 
 
 // ─── FAQ Card (single accordion item) ────────────────────────────────────────
@@ -353,7 +321,7 @@ export default function FAQContent() {
                 <section className={styles.headerSection}>
                     <div className={styles.container}>
                         <div className={styles.headerInner} ref={headerRef}>
-                            <HeaderSVG />
+                            <QuestionMarkAnimation />
 
                             <div className={`${styles.eyebrow} header-animate`}>
                                 FAQ

@@ -155,7 +155,7 @@ export default function NavBar() {
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
         return () => window.removeEventListener('scroll', onScroll);
-    }, [isWorkWithMe]);
+    }, [isWorkWithMe, isContact, isFaq]);
 
     useEffect(() => {
         if (mobileMenuOpen) {
@@ -184,7 +184,7 @@ export default function NavBar() {
                     {visible && (
                         <motion.div
                             className={styles.pill}
-                            initial={isWorkWithMe ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+                            initial={isWorkWithMe || isContact || isFaq ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ type: 'spring', stiffness: 340, damping: 30 }}
