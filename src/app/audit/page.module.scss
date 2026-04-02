@@ -83,6 +83,11 @@
   opacity: 0.8;
   mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 15%, black 45%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 15%, black 45%);
+
+  // Hide the dark wave in light mode — it clashes with a light background
+  :global(.light-mode) & {
+    opacity: 0;
+  }
 }
 
 .svgAnimWrap {
