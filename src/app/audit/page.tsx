@@ -6,7 +6,6 @@ import type { Variants } from "framer-motion";
 import type { Metadata } from "next";
 import styles from "./page.module.scss";
 import Footer from "../../components/Footer";
-import WaveBackground from "../../components/WaveBackground";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -417,8 +416,14 @@ export default function AuditPage() {
       {/* Background glow */}
       <div className={styles.bgGlow} aria-hidden="true" />
 
-      {/* Wave Background — pure SVG, no JPEG artifacts */}
-      <WaveBackground />
+      {/* Wave background image */}
+      <div className={styles.waveContainer}>
+        <img
+          src="/images/Black-wave.jpg"
+          alt=""
+          className={styles.waveImage}
+        />
+      </div>
 
       <div className={styles.container}>
         <AnimatePresence mode="wait">
