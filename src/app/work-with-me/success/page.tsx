@@ -17,7 +17,7 @@ export default function SuccessPage() {
             {/* Wave background image */}
             <div className={styles.waveContainer}>
                 <img
-                    src="/images/Black-wave.jpg"
+                    src="/images/Black-wave-q100.jpg"
                     alt=""
                     className={styles.waveImage}
                 />

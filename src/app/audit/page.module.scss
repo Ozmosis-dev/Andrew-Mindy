@@ -81,6 +81,11 @@
   object-fit: cover;
   object-position: top center;
   opacity: 1;
+  /* Slight blur completely eliminates JPEG quantization banding lines
+     — imperceptible on a wide decorative background */
+  filter: blur(1.5px);
+  /* Scale slightly to avoid blurred edge artifacts at container boundary */
+  transform: scale(1.02);
   /* Smooth, wide fade — many stops to avoid any visible banding line */
   mask-image: linear-gradient(to bottom,
       transparent 0%,
