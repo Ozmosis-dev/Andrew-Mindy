@@ -5,12 +5,13 @@ import { useScroll, motion } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import styles from "./AboutSection.module.scss";
 import { siteCopy } from "../data/copy";
 import MaskedTextReveal from "./MaskedTextReveal";
 
 if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 }
 
 export default function AboutSection() {
@@ -26,7 +27,7 @@ export default function AboutSection() {
 
         paragraphs?.forEach((p) => {
             gsap.fromTo(p,
-                { opacity: 0, y: 50, filter: "blur(10px)" }, // Reduced drop distance and blur for smoother standard entry
+                { opacity: 0, y: 50, filter: "blur(10px)" },
                 {
                     opacity: 1,
                     y: 0,
@@ -41,6 +42,49 @@ export default function AboutSection() {
                 }
             );
         });
+
+        // --- DrawSVG line animations (iOS Safari compatible) ---
+        const svg = sectionRef.current?.querySelector(`.${styles.lineDiagram}`);
+        if (!svg) return;
+
+        const paths = svg.querySelectorAll("path[data-gsap-draw]");
+        const circles = svg.querySelectorAll("circle[data-gsap-fade]");
+        const texts = svg.querySelectorAll("text[data-gsap-fade]");
+
+        // Set initial state: lines invisible via DrawSVG
+        gsap.set(paths, { drawSVG: "0%" });
+        gsap.set(circles, { scale: 0, transformOrigin: "center center" });
+        gsap.set(texts, { opacity: 0, y: 10 });
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: svg,
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+            }
+        });
+
+        // Center main line (Marketing → Convergence), delay 0.5
+        tl.to(svg.querySelector("#line-main"), { drawSVG: "100%", duration: 1.5, ease: "power2.inOut" }, 0.5)
+            // Top curve (Brand), delay 0.6
+            .to(svg.querySelector("#line-brand"), { drawSVG: "100%", duration: 1.5, ease: "power2.inOut" }, 0.6)
+            // Bottom curve (Operations), delay 0.8
+            .to(svg.querySelector("#line-ops"), { drawSVG: "100%", duration: 1.5, ease: "power2.inOut" }, 0.8)
+            // Convergence → Final Outcome, delay 1.6
+            .to(svg.querySelector("#line-outcome"), { drawSVG: "100%", duration: 1.0, ease: "power2.inOut" }, 1.6)
+            // Starting nodes
+            .to([
+                svg.querySelector("#node-brand"),
+                svg.querySelector("#node-marketing"),
+                svg.querySelector("#node-ops"),
+            ], { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 0.5)
+            // Convergence node
+            .to(svg.querySelector("#node-convergence"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 1.6)
+            // Final output node
+            .to(svg.querySelector("#node-final"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 1.9)
+            // Labels
+            .to(svg.querySelectorAll("text[data-gsap-fade]"), { opacity: 1, y: 0, duration: 0.5, stagger: 0.05 }, 0.7);
+
     }, { scope: sectionRef });
 
     return (
@@ -75,96 +119,68 @@ export default function AboutSection() {
                             </defs>
 
                             {/* Center Main Line (Marketing to Convergence) */}
-                            <motion.path
+                            <path
+                                id="line-main"
+                                data-gsap-draw="true"
                                 d="M 50 150 L 250 150"
                                 fill="none"
                                 stroke="url(#lineGrad)"
                                 strokeWidth="1.5"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
                             />
 
                             {/* Convergence to Final Outcome Line */}
-                            <motion.path
+                            <path
+                                id="line-outcome"
+                                data-gsap-draw="true"
                                 d="M 250 150 L 350 150"
                                 fill="none"
                                 stroke="url(#lineGradWhite)"
                                 strokeWidth="1.5"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.0, ease: "easeInOut", delay: 1.6 }}
                             />
 
                             {/* Top Curve (Brand) */}
-                            <motion.path
+                            <path
+                                id="line-brand"
+                                data-gsap-draw="true"
                                 d="M 50 70 C 180 70, 150 150, 250 150"
                                 fill="none"
                                 stroke="url(#lineGrad)"
                                 strokeWidth="1.5"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.6 }}
                             />
 
                             {/* Bottom Curve (Operations) */}
-                            <motion.path
+                            <path
+                                id="line-ops"
+                                data-gsap-draw="true"
                                 d="M 50 230 C 180 230, 150 150, 250 150"
                                 fill="none"
                                 stroke="url(#lineGrad)"
                                 strokeWidth="1.5"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: "-10%" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.8 }}
                             />
 
                             {/* Starting Nodes */}
-                            <motion.circle cx="50" cy="70" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
-                            <motion.circle cx="50" cy="150" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
-                            <motion.circle cx="50" cy="230" r="3" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.5 }} />
+                            <circle id="node-brand" data-gsap-fade="true" cx="50" cy="70" r="3" fill="#8dcbf9" filter="url(#glow)" />
+                            <circle id="node-marketing" data-gsap-fade="true" cx="50" cy="150" r="3" fill="#8dcbf9" filter="url(#glow)" />
+                            <circle id="node-ops" data-gsap-fade="true" cx="50" cy="230" r="3" fill="#8dcbf9" filter="url(#glow)" />
 
                             {/* Convergence Node */}
-                            <motion.circle cx="250" cy="150" r="4" fill="#8dcbf9" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.6 }} />
+                            <circle id="node-convergence" data-gsap-fade="true" cx="250" cy="150" r="4" fill="#8dcbf9" filter="url(#glow)" />
 
                             {/* Final Output Node */}
-                            <motion.circle cx="350" cy="150" r="5" fill="#ffffff" filter="url(#glow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 1.9 }} />
+                            <circle id="node-final" data-gsap-fade="true" cx="350" cy="150" r="5" fill="#ffffff" filter="url(#glow)" />
 
-                            {/* Output Node Pulse Effect */}
+                            {/* Output Node Pulse Effect — uses CSS transform which iOS supports fine */}
                             <motion.circle cx="350" cy="150" r="5" fill="none" stroke="#ffffff" strokeWidth="1"
                                 initial={{ scale: 1, opacity: 1 }} animate={{ scale: 3, opacity: 0 }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1.9 }} />
 
                             {/* Labels */}
-                            <motion.text x="50" y="55" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
-                                BRAND
-                            </motion.text>
-                            <motion.text x="50" y="135" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
-                                MARKETING
-                            </motion.text>
-                            <motion.text x="50" y="215" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.5, delay: 0.7 }}>
-                                OPERATIONS
-                            </motion.text>
+                            <text data-gsap-fade="true" x="50" y="55" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>BRAND</text>
+                            <text data-gsap-fade="true" x="50" y="135" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>MARKETING</text>
+                            <text data-gsap-fade="true" x="50" y="215" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>OPERATIONS</text>
 
                             {/* Stacked Output Labels */}
-                            <motion.text x="350" y="125" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}
-                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 2.0 }}>
-                                MEASURABLE
-                            </motion.text>
-                            <motion.text x="350" y="140" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}
-                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.6, delay: 2.1 }}>
-                                OUTCOMES
-                            </motion.text>
+                            <text data-gsap-fade="true" x="350" y="125" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}>MEASURABLE</text>
+                            <text data-gsap-fade="true" x="350" y="140" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}>OUTCOMES</text>
                         </svg>
                     </div>
                 </div>

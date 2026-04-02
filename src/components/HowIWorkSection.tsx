@@ -5,12 +5,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import styles from "./HowIWorkSection.module.scss";
 import { siteCopy } from "../data/copy";
 import MaskedTextReveal from "./MaskedTextReveal";
 
 if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 }
 
 const getStepGraphic = (idx: number) => {
@@ -101,13 +102,43 @@ export default function HowIWorkSection() {
                     filter: "blur(0px)",
                     scrollTrigger: {
                         trigger: wrapper,
-                        start: "top 95%", // Animation starts when top of wrapper hits 95% of viewport
-                        end: "top 45%",   // Animation completes earlier (45% instead of 30%) for better readability
-                        scrub: 1.5,       // Fluid scrubbing lag, makes the entrance slower and tied to scroll
+                        start: "top 95%",
+                        end: "top 45%",
+                        scrub: 1.5,
                     }
                 }
             );
         });
+
+        // --- DrawSVG line animation for the main diagram (iOS Safari compatible) ---
+        const svg = containerRef.current?.querySelector(`.${styles.lineDiagram}`);
+        if (!svg) return;
+
+        const mainPath = svg.querySelector("#opt-line-main");
+        const nodes = svg.querySelectorAll("circle[data-gsap-fade]");
+        const texts = svg.querySelectorAll("text[data-gsap-fade]");
+
+        // Set initial invisible state
+        gsap.set(mainPath, { drawSVG: "0%" });
+        gsap.set(nodes, { scale: 0, transformOrigin: "center center" });
+        gsap.set(texts, { opacity: 0 });
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: svg,
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+            }
+        });
+
+        tl.to(mainPath, { drawSVG: "100%", duration: 1.5, ease: "power2.inOut" }, 0.1)
+            .to(svg.querySelector("#opt-node-0"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 0.1)
+            .to(svg.querySelector("#opt-node-1"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 0.4)
+            .to(svg.querySelector("#opt-node-2"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 0.7)
+            .to(svg.querySelector("#opt-node-3"), { scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 1.0)
+            .to(nodes, { opacity: 1, duration: 0.01 }, 0.1) // ensure opacity is 1
+            .to(texts, { opacity: 1, duration: 0.4, stagger: 0.15 }, 0.2);
+
     }, { scope: containerRef });
 
     return (
@@ -139,48 +170,30 @@ export default function HowIWorkSection() {
                                 </filter>
                             </defs>
 
-                            {/* Connecting Line */}
-                            <motion.path
+                            {/* Connecting Line — plain path, animated via GSAP DrawSVG */}
+                            <path
+                                id="opt-line-main"
                                 d="M 30 200 C 100 200, 80 140, 130 140 C 180 140, 150 80, 220 80 C 270 80, 250 30, 320 30"
                                 fill="none"
                                 stroke="url(#optGrad)"
                                 strokeWidth="2"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                whileInView={{ pathLength: 1, opacity: 1 }}
-                                viewport={{ once: true, margin: "200px" }}
-                                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.1 }}
                             />
 
                             {/* Nodes & Labels */}
-                            <motion.circle cx="30" cy="200" r="4" fill="#62AFEF" filter="url(#optGlow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.1 }} />
-                            <motion.text x="30" y="220" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.2 }}>
-                                DIAGNOSIS
-                            </motion.text>
+                            <circle id="opt-node-0" data-gsap-fade="true" cx="30" cy="200" r="4" fill="#62AFEF" filter="url(#optGlow)" />
+                            <text data-gsap-fade="true" x="30" y="220" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>DIAGNOSIS</text>
 
-                            <motion.circle cx="130" cy="140" r="4" fill="#62AFEF" filter="url(#optGlow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.4 }} />
-                            <motion.text x="130" y="160" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.5 }}>
-                                BLUEPRINT
-                            </motion.text>
+                            <circle id="opt-node-1" data-gsap-fade="true" cx="130" cy="140" r="4" fill="#62AFEF" filter="url(#optGlow)" />
+                            <text data-gsap-fade="true" x="130" y="160" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>BLUEPRINT</text>
 
-                            <motion.circle cx="220" cy="80" r="4" fill="#8CC4F3" filter="url(#optGlow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.7 }} />
-                            <motion.text x="220" y="100" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}
-                                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 0.8 }}>
-                                ENGINEERING
-                            </motion.text>
+                            <circle id="opt-node-2" data-gsap-fade="true" cx="220" cy="80" r="4" fill="#8CC4F3" filter="url(#optGlow)" />
+                            <text data-gsap-fade="true" x="220" y="100" fill="var(--secondary)" fontSize="10" letterSpacing="1" className={styles.label}>ENGINEERING</text>
 
-                            <motion.circle cx="320" cy="30" r="5" fill="#ffffff" filter="url(#optGlow)"
-                                initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 1 }} />
+                            <circle id="opt-node-3" data-gsap-fade="true" cx="320" cy="30" r="5" fill="#ffffff" filter="url(#optGlow)" />
+                            {/* Pulse ring — uses CSS transform/opacity which iOS supports */}
                             <motion.circle cx="320" cy="30" r="5" fill="none" stroke="#ffffff" strokeWidth="1"
                                 initial={{ scale: 1, opacity: 1 }} animate={{ scale: 3, opacity: 0 }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1 }} />
-                            <motion.text x="320" y="15" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}
-                                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "200px" }} transition={{ duration: 0.5, delay: 1.1 }}>
-                                SCALE
-                            </motion.text>
+                            <text data-gsap-fade="true" x="320" y="15" fill="var(--primary)" fontSize="12" fontWeight="600" letterSpacing="1.5" textAnchor="end" className={styles.primaryLabel}>SCALE</text>
                         </svg>
                     </div>
                 </div>
