@@ -122,6 +122,11 @@
   margin: 0 0 1.25rem;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   white-space: nowrap;
+
+  // No harsh shadow on a light background
+  :global(.light-mode) & {
+    text-shadow: none;
+  }
 }
 
 .blueText {
@@ -138,6 +143,12 @@
   padding: 0 1rem;
   letter-spacing: 0.05em;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+
+  // Remove muddy shadow on light background
+  :global(.light-mode) & {
+    text-shadow: none;
+    color: var(--secondary);
+  }
 }
 
 .landingBenefits {
@@ -151,6 +162,10 @@
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  :global(.light-mode) & {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  }
 
   @media (min-width: 800px) {
     flex-direction: row;
@@ -198,9 +213,17 @@
     -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 
+    :global(.light-mode) & {
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    }
+
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+      :global(.light-mode) & {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
     }
   }
 }
@@ -366,6 +389,11 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+
+  :global(.light-mode) & {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
 }
 
 .onboardingTitle {
@@ -376,6 +404,10 @@
   margin: 0;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   letter-spacing: 0.02em;
+
+  :global(.light-mode) & {
+    text-shadow: none;
+  }
 }
 
 .onboardingText {
@@ -727,6 +759,11 @@
   border: 1px solid var(--card-border);
   border-radius: 16px;
   overflow: hidden;
+
+  :global(.light-mode) & {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .catCardHeader {
@@ -818,7 +855,8 @@
   color: var(--secondary);
 
   :global(.light-mode) & {
-    border-color: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.65);
   }
 
   &:hover {
@@ -857,7 +895,8 @@
 
   :global(.light-mode) & {
     background: rgba(0, 0, 0, 0.06);
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.5);
   }
 }
 
