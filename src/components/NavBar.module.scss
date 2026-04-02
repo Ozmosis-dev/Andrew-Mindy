@@ -362,6 +362,11 @@
     line-height: 1;
     margin-bottom: 6px;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+
+    // No dark shadow on a light background
+    :global(.light-mode) & {
+        text-shadow: none;
+    }
 }
 
 .progressTextSub {
