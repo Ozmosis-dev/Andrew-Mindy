@@ -41,9 +41,32 @@ export const projects = [
         image: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
         accent: "#4db8ff",
         gallery: [
-            { url: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3", alt: "Automated Data Pipeline" },
-            { url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=2034&ixlib=rb-4.0.3", alt: "Server Infrastructure" },
-            { url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3", alt: "Cyber Security Monitoring" }
+            { url: "/images/Southern Water Mockups/SWS Mockup.png", alt: "Southern Water Service Platform" },
+            { url: "/images/Southern Water Mockups/SWS Mockup 2.png", alt: "GloFlo Automation Dashboard" },
+            { url: "/images/Southern Water Mockups/SWS Mockup 3.png", alt: "AI-Powered Lead Pipeline" }
+        ]
+    },
+    {
+        slug: "fulvio",
+        title: "Fulvio",
+        client: "Personal Product",
+        industry: "Agency Operations / SaaS",
+        timeline: "~4 weeks",
+        role: "Founder, Designer, Full-Stack Developer",
+        description: "Designed and built a full-stack agency operating system that replaces Asana, Slack, HoneyBook, and Apollo — in four weeks.",
+        category: "product",
+        metrics: [
+            { value: "4 Weeks", label: "To Prototype" },
+            { value: "6+", label: "Tools Replaced" },
+            { value: "SaaS", label: "Built to License" }
+        ],
+        featured: true,
+        image: "linear-gradient(135deg, #0d0d1a 0%, #1a0d2e 50%, #2d1b4e 100%)",
+        accent: "#4db8ff",
+        gallery: [
+            { url: "/images/Fulvio Mockups/Fulvio 1.jpeg", alt: "Fulvio Agency OS Dashboard" },
+            { url: "/images/Fulvio Mockups/Fulvio 2.jpeg", alt: "Fulvio Project Management Interface" },
+            { url: "/images/Fulvio Mockups/Fulvio 3.jpeg", alt: "Fulvio CRM & Pipeline View" }
         ]
     },
     {
@@ -65,9 +88,9 @@ export const projects = [
         image: "linear-gradient(135deg, #000000 0%, #434343 100%)",
         accent: "#4db8ff",
         gallery: [
-            { url: "https://images.unsplash.com/photo-1618761714954-0b8cd0026356?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3", alt: "SaaS App Interface" },
-            { url: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=2055&ixlib=rb-4.0.3", alt: "Productivity Tool Mockup" },
-            { url: "https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3", alt: "Code and Development Setup" }
+            { url: "/images/Notova Mockups/Gemini_Generated_Image_a6n210a6n210a6n2.png", alt: "Notova App Interface" },
+            { url: "/images/Notova Mockups/Gemini_Generated_Image_oz7c4poz7c4poz7c.png", alt: "Notova Productivity Dashboard" },
+            { url: "/images/Notova Mockups/Gemini_Generated_Image_rtpyrirtpyrirtpy.png", alt: "Notova Note Editor" }
         ]
     }
 ];
