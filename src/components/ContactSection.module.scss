@@ -305,6 +305,17 @@
     max-width: 520px;
     height: auto;
     display: block;
+    /* Ink token: white on dark, a rich slate-blue on light */
+    --svg-ink: #ffffff;
+
+    :global(.light-mode) & {
+        --svg-ink: #1a2a3a;
+    }
+}
+
+/* In light mode, restore full opacity so the graphic is always clear */
+:global(.light-mode) .rightCol {
+    opacity: 1 !important;
 }
 
 /* Blinking cursor in URL bar */

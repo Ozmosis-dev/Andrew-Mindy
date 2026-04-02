@@ -33,6 +33,10 @@ function DashboardGraphic() {
     const cards = [{ x: 90, accent: true }, { x: 210 }, { x: 330 }];
     const rows = [{ y: 262, w: 0.72 }, { y: 294, w: 0.46 }, { y: 326, w: 0.88 }];
 
+    // Theme-aware ink token: white on dark, slate on light
+    const ink = "var(--svg-ink)";
+    const inkA = (o: number) => `color-mix(in srgb, var(--svg-ink) ${Math.round(o * 100)}%, transparent)`;
+
     return (
         <svg
             ref={svgRef}
@@ -44,18 +48,18 @@ function DashboardGraphic() {
         >
             <defs>
                 <linearGradient id="dashArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#62AFEF" stopOpacity="0.18" />
+                    <stop offset="0%" stopColor="#62AFEF" stopOpacity="0.28" />
                     <stop offset="100%" stopColor="#62AFEF" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="dashBar" x1="0" y1="0" x2="1" y2="0">
                     <stop offset="0%" stopColor="#62AFEF" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#62AFEF" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#62AFEF" stopOpacity="0.35" />
                 </linearGradient>
             </defs>
 
             {/* ── Outer browser frame ── */}
             <motion.rect x="0.5" y="0.5" width="459" height="359" rx="6"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.1"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.18"
                 initial={{ opacity: 0 }}
                 animate={inView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.8, delay: 0.1 }}
@@ -63,17 +67,17 @@ function DashboardGraphic() {
 
             {/* Chrome bar fill */}
             <motion.rect x="0.5" y="0.5" width="459" height="35" rx="6"
-                fill="white" fillOpacity="0.025"
+                fill={ink} fillOpacity="0.045"
                 initial={{ opacity: 0 }}
                 animate={inView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.2 }}
             />
-            <line x1="0" y1="36" x2="460" y2="36" stroke="white" strokeOpacity="0.07" strokeWidth="0.75" />
+            <line x1="0" y1="36" x2="460" y2="36" stroke={ink} strokeOpacity="0.12" strokeWidth="0.75" />
 
             {/* Window control dots */}
             {[14, 26, 38].map((cx, i) => (
                 <motion.circle key={cx} cx={cx} cy="18" r="4.5"
-                    fill="white" fillOpacity={0.16 - i * 0.04}
+                    fill={ink} fillOpacity={0.22 - i * 0.05}
                     initial={{ scale: 0 }}
                     animate={inView ? { scale: 1 } : {}}
                     transition={{ ...spring, delay: 0.3 + i * 0.06 }}
@@ -83,41 +87,41 @@ function DashboardGraphic() {
 
             {/* URL bar */}
             <motion.rect x="60" y="10" width="210" height="16" rx="8"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.1"
-                fill="white" fillOpacity="0.04"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.15"
+                fill={ink} fillOpacity="0.06"
                 initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
                 style={{ transformOrigin: "60px 18px" }}
             />
             {/* Favicon */}
             <motion.rect x="70" y="13" width="10" height="10" rx="2"
-                fill="#62AFEF" fillOpacity="0.65"
+                fill="#62AFEF" fillOpacity="0.8"
                 initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
                 transition={{ ...spring, delay: 0.55 }}
                 style={{ transformOrigin: "75px 18px" }}
             />
             {/* URL text */}
             <motion.rect x="86" y="15" width="108" height="4" rx="2"
-                fill="white" fillOpacity="0.14"
+                fill={ink} fillOpacity="0.2"
                 initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
                 transition={{ duration: 0.35, delay: 0.65 }}
                 style={{ transformOrigin: "86px 17px" }}
             />
             {/* Blinking cursor */}
             <rect x="196" y="14" width="1.5" height="8"
-                fill="white" fillOpacity="0.5" className={styles.cursor} />
+                fill={ink} fillOpacity="0.5" className={styles.cursor} />
 
             {/* Toolbar icons */}
             {[298, 318, 338].map((x, i) => (
                 <motion.rect key={x} x={x} y="13" width="10" height="10" rx="2"
-                    stroke="white" strokeWidth="0.75" strokeOpacity="0.14"
+                    stroke={ink} strokeWidth="0.75" strokeOpacity="0.2"
                     initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.3, delay: 0.5 + i * 0.08 }}
                 />
             ))}
 
             {/* ── Sidebar ── */}
-            <line x1="82" y1="36" x2="82" y2="360" stroke="white" strokeOpacity="0.06" strokeWidth="0.75" />
+            <line x1="82" y1="36" x2="82" y2="360" stroke={ink} strokeOpacity="0.1" strokeWidth="0.75" />
 
             {/* Active nav indicator */}
             <motion.rect x="0" y="74" width="3" height="26" rx="1.5"
@@ -129,8 +133,8 @@ function DashboardGraphic() {
 
             {/* Logo placeholder */}
             <motion.rect x="10" y="44" width="62" height="18" rx="2"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.1"
-                fill="white" fillOpacity="0.04"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.15"
+                fill={ink} fillOpacity="0.06"
                 initial={{ opacity: 0, x: -8 }} animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.55 }}
             />
@@ -142,17 +146,17 @@ function DashboardGraphic() {
                     transition={{ duration: 0.35, delay: 0.65 + i * 0.07 }}
                 >
                     <rect x="10" y={y} width="14" height="14" rx="2"
-                        fill={i === 0 ? "#62AFEF" : "white"}
-                        fillOpacity={i === 0 ? 0.22 : 0.06} />
+                        fill={i === 0 ? "#62AFEF" : ink}
+                        fillOpacity={i === 0 ? 0.28 : 0.09} />
                     <rect x="30" y={y + 3} width={i === 0 ? 40 : 32} height="7" rx="1.5"
-                        fill="white" fillOpacity={i === 0 ? 0.22 : 0.07} />
+                        fill={ink} fillOpacity={i === 0 ? 0.28 : 0.1} />
                 </motion.g>
             ))}
 
             {/* Sidebar avatar */}
             <motion.circle cx="41" cy="344" r="12"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.12"
-                fill="white" fillOpacity="0.04"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.18"
+                fill={ink} fillOpacity="0.05"
                 initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
                 transition={{ ...spring, delay: 1.1 }}
                 style={{ transformOrigin: "41px 344px" }}
@@ -165,26 +169,26 @@ function DashboardGraphic() {
                     transition={{ duration: 0.5, delay: 0.85 + i * 0.1 }}
                 >
                     <rect x={card.x} y="44" width="112" height="70" rx="4"
-                        stroke={card.accent ? "#62AFEF" : "white"}
+                        stroke={card.accent ? "#62AFEF" : ink}
                         strokeWidth="0.75"
-                        strokeOpacity={card.accent ? 0.3 : 0.08}
-                        fill={card.accent ? "#62AFEF" : "white"}
-                        fillOpacity={card.accent ? 0.045 : 0.02} />
-                    {card.accent && <rect x={card.x} y="44" width="112" height="2" rx="1" fill="#62AFEF" fillOpacity="0.6" />}
+                        strokeOpacity={card.accent ? 0.45 : 0.14}
+                        fill={card.accent ? "#62AFEF" : ink}
+                        fillOpacity={card.accent ? 0.07 : 0.03} />
+                    {card.accent && <rect x={card.x} y="44" width="112" height="2" rx="1" fill="#62AFEF" fillOpacity="0.75" />}
                     {/* Label */}
-                    <rect x={card.x + 10} y="56" width="54" height="5" rx="1.5" fill="white" fillOpacity="0.14" />
+                    <rect x={card.x + 10} y="56" width="54" height="5" rx="1.5" fill={ink} fillOpacity="0.2" />
                     {/* Value */}
                     <rect x={card.x + 10} y="68" width={card.accent ? 74 : 58} height="20" rx="2"
-                        fill={card.accent ? "#62AFEF" : "white"}
-                        fillOpacity={card.accent ? 0.18 : 0.08} />
+                        fill={card.accent ? "#62AFEF" : ink}
+                        fillOpacity={card.accent ? 0.22 : 0.1} />
                     {/* Trend */}
-                    <rect x={card.x + 10} y="98" width="28" height="5" rx="1.5" fill="white" fillOpacity="0.06" />
+                    <rect x={card.x + 10} y="98" width="28" height="5" rx="1.5" fill={ink} fillOpacity="0.09" />
                     <rect x={card.x + 44} y="98" width="18" height="5" rx="1.5"
-                        fill={card.accent ? "#62AFEF" : "white"}
-                        fillOpacity={card.accent ? 0.4 : 0.1} />
+                        fill={card.accent ? "#62AFEF" : ink}
+                        fillOpacity={card.accent ? 0.5 : 0.12} />
                     {/* Live pulse on active card */}
                     {card.accent && <>
-                        <circle cx={card.x + 104} cy="50" r="4" fill="#62AFEF" fillOpacity="0.7" />
+                        <circle cx={card.x + 104} cy="50" r="4" fill="#62AFEF" fillOpacity="0.85" />
                         <circle cx={card.x + 104} cy="50" r="4"
                             stroke="#62AFEF" strokeWidth="1.5" fill="none"
                             className={styles.metricRing}
@@ -196,21 +200,21 @@ function DashboardGraphic() {
             {/* ── Chart section ── */}
             {/* Section label */}
             <motion.rect x="90" y="122" width="72" height="6" rx="2"
-                fill="white" fillOpacity="0.12"
+                fill={ink} fillOpacity="0.18"
                 initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
                 transition={{ duration: 0.4, delay: 1.05 }}
                 style={{ transformOrigin: "90px 125px" }}
             />
             {/* Chart frame */}
             <motion.rect x="90" y="132" width="354" height="104" rx="4"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.08"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.14"
                 initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.5, delay: 1.05 }}
             />
             {/* Y-axis label stubs */}
             {[0, 1, 2, 3].map(i => (
                 <motion.rect key={i} x="92" y={140 + i * 24} width="16" height="3" rx="1"
-                    fill="white" fillOpacity="0.07"
+                    fill={ink} fillOpacity="0.12"
                     initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.3, delay: 1.15 + i * 0.04 }}
                 />
@@ -218,7 +222,7 @@ function DashboardGraphic() {
             {/* Grid lines */}
             {gridYs.map((y, i) => (
                 <motion.line key={y} x1="116" y1={y} x2="436" y2={y}
-                    stroke="white" strokeWidth="0.5" strokeOpacity="0.05"
+                    stroke={ink} strokeWidth="0.5" strokeOpacity="0.08"
                     initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.3, delay: 1.15 + i * 0.05 }}
                 />
@@ -230,18 +234,18 @@ function DashboardGraphic() {
             />
             {/* Chart line */}
             <motion.path d={chartLine}
-                stroke="#62AFEF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                stroke="#62AFEF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={inView ? { pathLength: 1, opacity: 1 } : {}}
                 transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
             />
             {/* Live dot at line end */}
-            <motion.circle cx="436" cy="150" r="4" fill="#62AFEF"
+            <motion.circle cx="436" cy="150" r="4.5" fill="#62AFEF"
                 initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
                 transition={{ ...spring, delay: 2.7 }}
                 style={{ transformOrigin: "436px 150px" }}
             />
-            <circle cx="436" cy="150" r="5"
+            <circle cx="436" cy="150" r="5.5"
                 stroke="#62AFEF" strokeWidth="1.5" fill="none"
                 className={styles.chartDotRing}
             />
@@ -249,14 +253,14 @@ function DashboardGraphic() {
             {/* ── Table / list rows ── */}
             {/* Section label */}
             <motion.rect x="90" y="236" width="80" height="6" rx="2"
-                fill="white" fillOpacity="0.12"
+                fill={ink} fillOpacity="0.18"
                 initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
                 transition={{ duration: 0.35, delay: 1.35 }}
                 style={{ transformOrigin: "90px 239px" }}
             />
             {/* Table frame */}
             <motion.rect x="90" y="246" width="354" height="106" rx="4"
-                stroke="white" strokeWidth="0.75" strokeOpacity="0.08"
+                stroke={ink} strokeWidth="0.75" strokeOpacity="0.14"
                 initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
                 transition={{ duration: 0.5, delay: 1.35 }}
             />
@@ -266,20 +270,20 @@ function DashboardGraphic() {
                     transition={{ duration: 0.4, delay: 1.5 + i * 0.1 }}
                 >
                     {i > 0 && <line x1="90" y1={row.y - 4} x2="444" y2={row.y - 4}
-                        stroke="white" strokeWidth="0.5" strokeOpacity="0.05" />}
+                        stroke={ink} strokeWidth="0.5" strokeOpacity="0.08" />}
                     {/* Avatar */}
                     <circle cx="106" cy={row.y + 8} r="9"
-                        fill="white" fillOpacity="0.05"
-                        stroke="white" strokeWidth="0.5" strokeOpacity="0.1" />
+                        fill={ink} fillOpacity="0.07"
+                        stroke={ink} strokeWidth="0.5" strokeOpacity="0.15" />
                     {/* Name / sub-label */}
-                    <rect x="122" y={row.y + 4} width="72" height="6" rx="1.5" fill="white" fillOpacity="0.12" />
-                    <rect x="122" y={row.y + 14} width="44" height="4" rx="1" fill="white" fillOpacity="0.06" />
+                    <rect x="122" y={row.y + 4} width="72" height="6" rx="1.5" fill={ink} fillOpacity="0.18" />
+                    <rect x="122" y={row.y + 14} width="44" height="4" rx="1" fill={ink} fillOpacity="0.09" />
                     {/* Progress track */}
-                    <rect x="214" y={row.y + 7} width="188" height="6" rx="3" fill="white" fillOpacity="0.05" />
+                    <rect x="214" y={row.y + 7} width="188" height="6" rx="3" fill={ink} fillOpacity="0.08" />
                     {/* Progress fill */}
                     <rect x="214" y={row.y + 7} width={188 * row.w} height="6" rx="3" fill="url(#dashBar)" />
                     {/* Value */}
-                    <rect x="412" y={row.y + 5} width="28" height="8" rx="2" fill="white" fillOpacity="0.08" />
+                    <rect x="412" y={row.y + 5} width="28" height="8" rx="2" fill={ink} fillOpacity="0.12" />
                 </motion.g>
             ))}
         </svg>
