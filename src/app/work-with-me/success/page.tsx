@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import SuccessScreen from '../../../components/intake/SuccessScreen'
 import Footer from '../../../components/Footer'
+import WaveBackground from '../../../components/WaveBackground'
 import styles from '../page.module.scss'
 
 export const metadata: Metadata = {
@@ -14,14 +15,8 @@ export default function SuccessPage() {
             {/* Background glow */}
             <div className={styles.bgGlow} aria-hidden="true" />
 
-            {/* Persistent Backgrounds */}
-            <div className={styles.waveContainer}>
-                <img
-                    src="/images/Black-wave.jpg"
-                    alt=""
-                    className={styles.waveImage}
-                />
-            </div>
+            {/* Wave Background — pure SVG, no JPEG artifacts */}
+            <WaveBackground />
 
             <div className={styles.formWrap}>
                 <SuccessScreen />
