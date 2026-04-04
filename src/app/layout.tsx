@@ -5,6 +5,7 @@ import TopBlurMask from "../components/TopBlurMask";
 import GSAPInit from "../components/GSAPInit";
 import CustomCursor from "../components/CustomCursor";
 import { ThemeProvider } from "../context/ThemeContext";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleAnalytics gaId="G-HPSDL0Q5Y5" />
       <body className={`${phosphate.variable} ${montserrat.variable} ${spaceGrotesk.variable}`}>
         <ThemeProvider>
           <CustomCursor />
