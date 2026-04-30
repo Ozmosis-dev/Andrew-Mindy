@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition, FormEvent, useRef } from 'react'
+import { useState, useEffect, useRef, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   createClient,
@@ -41,13 +41,16 @@ export default function ClientForm({ client }: { client?: Client }) {
   const [uploadMsg, setUploadMsg] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
-  // Auto-generate slug from name (new clients only)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [submitHovered, setSubmitHovered] = useState(false)
+  const [cancelHovered, setCancelHovered] = useState(false)
+  const [uploadHovered, setUploadHovered] = useState(false)
+
   useEffect(() => {
     if (isEdit || !name) return
     generateSlug(name).then(s => setSlug(s))
   }, [name, isEdit])
 
-  // Debounced slug availability check
   useEffect(() => {
     if (!slug) { setSlugAvailable(null); return }
     if (isEdit && slug === client?.slug) { setSlugAvailable(true); return }
@@ -101,7 +104,6 @@ export default function ClientForm({ client }: { client?: Client }) {
     setUploadProgress(0)
     setUploadMsg('')
 
-    // Step 1: get signed upload URL from server (bypasses Next.js body limit)
     const urlResult = await getSignedUploadUrl(client.slug)
     if (urlResult.error || !urlResult.signedUrl) {
       setUploadMsg(`Error: ${urlResult.error ?? 'Failed to get upload URL'}`)
@@ -109,7 +111,6 @@ export default function ClientForm({ client }: { client?: Client }) {
       return
     }
 
-    // Step 2: PUT file directly to Supabase Storage with progress tracking
     try {
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest()
@@ -134,7 +135,6 @@ export default function ClientForm({ client }: { client?: Client }) {
       return
     }
 
-    // Step 3: update DB with storage path
     const confirmResult = await confirmHtmlUpload(client.id, urlResult.path!)
     setUploading(false)
     setUploadProgress(0)
@@ -158,126 +158,186 @@ export default function ClientForm({ client }: { client?: Client }) {
       : 'idle'
     : 'idle'
 
+  const inputStyle = (field: string): React.CSSProperties => ({
+    padding: '9px 12px',
+    fontSize: 14,
+    border: '1px solid',
+    borderColor: focusedField === field ? '#1a1a1a' : '#d0d0d0',
+    borderRadius: 8,
+    fontFamily: 'system-ui, sans-serif',
+    color: '#1a1a1a',
+    outline: 'none',
+    background: '#fff',
+    boxShadow: focusedField === field ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+  })
+
   return (
-    <div style={formWrap}>
-      {isEdit && client && (
-        <div style={sectionStyle}>
-          <h2 style={sectionTitle}>Brand HTML File</h2>
-          <p style={fileStatus}>
-            {client.html_storage_path
-              ? `✓ ${client.html_storage_path.split('/').pop()} — uploaded`
-              : 'No file uploaded yet'}
-          </p>
-          <label style={uploadLabel}>
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".html"
-              onChange={handleFileUpload}
-              disabled={uploading}
-              style={{ display: 'none' }}
-            />
-            <span style={uploadBtn}>{uploading ? `Uploading… ${uploadProgress}%` : 'Upload HTML file'}</span>
-          </label>
-          {uploading && (
-            <div style={progressTrack}>
-              <div style={{ ...progressBar, width: `${uploadProgress}%` }} />
-            </div>
-          )}
-          {uploadMsg && (
-            <p style={{ fontSize: 12, margin: '8px 0 0', color: uploadMsg.startsWith('Error') ? '#ef4444' : '#22c55e' }}>
-              {uploadMsg}
+    <>
+      <style>{`
+        .upload-btn-wrap { transition: opacity 0.15s ease; }
+        .upload-btn-wrap:hover { opacity: 0.75; }
+        .delete-btn { transition: color 0.15s ease, border-color 0.15s ease; }
+        .delete-btn:hover { color: #ef4444 !important; border-color: #ef4444 !important; }
+      `}</style>
+
+      <div style={formWrap}>
+        {isEdit && client && (
+          <div style={sectionStyle}>
+            <h2 style={sectionTitle}>Brand HTML File</h2>
+            <p style={fileStatus}>
+              {client.html_storage_path
+                ? <><span style={{ color: '#22c55e' }}>✓</span> {client.html_storage_path.split('/').pop()} — uploaded</>
+                : 'No file uploaded yet'}
             </p>
-          )}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <h2 style={sectionTitle}>{isEdit ? 'Client Details' : 'New Client'}</h2>
-
-        <Field label="Client Name">
-          <input
-            style={inputStyle}
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Acme Corp"
-            required
-          />
-        </Field>
-
-        <Field label="Slug">
-          <input
-            style={inputStyle}
-            value={slug}
-            onChange={e => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-            placeholder="acme-corp"
-            pattern="^[a-z0-9-]+$"
-            required
-          />
-          <div style={{ fontSize: 12, marginTop: 4, display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: '#999' }}>
-              andrewmindy.com/portal/{slug || '…'}
-            </span>
-            <span style={{
-              color: slugState === 'available' ? '#22c55e'
-                : slugState === 'taken' ? '#ef4444'
-                : '#aaa'
-            }}>
-              {slugState === 'checking' ? 'checking…'
-                : slugState === 'available' ? '✓ available'
-                : slugState === 'taken' ? '✗ taken'
-                : ''}
-            </span>
+            <label style={uploadLabel} className="upload-btn-wrap">
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".html"
+                onChange={handleFileUpload}
+                disabled={uploading}
+                style={{ display: 'none' }}
+              />
+              <span style={{
+                ...uploadBtn,
+                background: uploadHovered && !uploading ? '#ebebeb' : '#f5f5f5',
+                cursor: uploading ? 'default' : 'pointer',
+              }}
+                onMouseEnter={() => setUploadHovered(true)}
+                onMouseLeave={() => setUploadHovered(false)}
+              >
+                {uploading ? `Uploading… ${uploadProgress}%` : 'Upload HTML file'}
+              </span>
+            </label>
+            {uploading && (
+              <div style={progressTrack}>
+                <div style={{ ...progressBar, width: `${uploadProgress}%` }} />
+              </div>
+            )}
+            {uploadMsg && (
+              <p style={{
+                fontSize: 12, margin: '8px 0 0',
+                color: uploadMsg.startsWith('Error') ? '#ef4444' : '#22c55e',
+              }}>
+                {uploadMsg}
+              </p>
+            )}
           </div>
-        </Field>
+        )}
 
-        <Field label="Client Email">
-          <input
-            style={inputStyle}
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="client@company.com"
-            required
-          />
-        </Field>
+        <form onSubmit={handleSubmit} style={formStyle}>
+          <h2 style={sectionTitle}>{isEdit ? 'Client Details' : 'New Client'}</h2>
 
-        <Field label="Google Drive Folder URL">
-          <input
-            style={inputStyle}
-            type="url"
-            value={driveUrl}
-            onChange={e => setDriveUrl(e.target.value)}
-            placeholder="https://drive.google.com/drive/folders/…"
-          />
-        </Field>
-
-        <Field label="Status">
-          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: 14 }}>
+          <Field label="Client Name">
             <input
-              type="checkbox"
-              checked={active}
-              onChange={e => setActive(e.target.checked)}
-              style={{ width: 16, height: 16 }}
+              style={inputStyle('name')}
+              value={name}
+              onChange={e => setName(e.target.value)}
+              onFocus={() => setFocusedField('name')}
+              onBlur={() => setFocusedField(null)}
+              placeholder="Acme Corp"
+              required
             />
-            <span style={{ color: '#333' }}>Active (portal accessible to client)</span>
-          </label>
-        </Field>
+          </Field>
 
-        {error && <p style={errorStyle}>{error}</p>}
+          <Field label="Slug">
+            <input
+              style={inputStyle('slug')}
+              value={slug}
+              onChange={e => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+              onFocus={() => setFocusedField('slug')}
+              onBlur={() => setFocusedField(null)}
+              placeholder="acme-corp"
+              pattern="^[a-z0-9-]+$"
+              required
+            />
+            <div style={{ fontSize: 12, marginTop: 4, display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: '#999' }}>
+                andrewmindy.com/portal/{slug || '…'}
+              </span>
+              <span style={{
+                color: slugState === 'available' ? '#22c55e'
+                  : slugState === 'taken' ? '#ef4444'
+                  : '#aaa',
+              }}>
+                {slugState === 'checking' ? 'checking…'
+                  : slugState === 'available' ? '✓ available'
+                  : slugState === 'taken' ? '✗ taken'
+                  : ''}
+              </span>
+            </div>
+          </Field>
 
-        <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
-          <button
-            type="submit"
-            disabled={saving || slugState === 'taken' || slugState === 'checking'}
-            style={submitBtn}
-          >
-            {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Client'}
-          </button>
-          <a href="/portal/admin" style={cancelLink}>Cancel</a>
-        </div>
-      </form>
-    </div>
+          <Field label="Client Email">
+            <input
+              style={inputStyle('email')}
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onFocus={() => setFocusedField('email')}
+              onBlur={() => setFocusedField(null)}
+              placeholder="client@company.com"
+              required
+            />
+          </Field>
+
+          <Field label="Google Drive Folder URL">
+            <input
+              style={inputStyle('drive')}
+              type="url"
+              value={driveUrl}
+              onChange={e => setDriveUrl(e.target.value)}
+              onFocus={() => setFocusedField('drive')}
+              onBlur={() => setFocusedField(null)}
+              placeholder="https://drive.google.com/drive/folders/…"
+            />
+          </Field>
+
+          <Field label="Status">
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: 14 }}>
+              <input
+                type="checkbox"
+                checked={active}
+                onChange={e => setActive(e.target.checked)}
+                style={{ width: 16, height: 16, accentColor: '#1a1a1a', cursor: 'pointer' }}
+              />
+              <span style={{ color: '#333' }}>Active (portal accessible to client)</span>
+            </label>
+          </Field>
+
+          {error && <p style={errorStyle}>{error}</p>}
+
+          <div style={{ display: 'flex', gap: 10, marginTop: 8, alignItems: 'center' }}>
+            <button
+              type="submit"
+              disabled={saving || slugState === 'taken' || slugState === 'checking'}
+              onMouseEnter={() => setSubmitHovered(true)}
+              onMouseLeave={() => setSubmitHovered(false)}
+              style={{
+                ...submitBtn,
+                background: saving ? '#555' : submitHovered ? '#333' : '#1a1a1a',
+                opacity: (saving || slugState === 'taken' || slugState === 'checking') ? 0.6 : 1,
+              }}
+            >
+              {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Client'}
+            </button>
+            <a
+              href="/portal/admin"
+              onMouseEnter={() => setCancelHovered(true)}
+              onMouseLeave={() => setCancelHovered(false)}
+              style={{
+                ...cancelLink,
+                color: cancelHovered ? '#333' : '#777',
+                borderColor: cancelHovered ? '#bbb' : '#e0e0e0',
+              }}
+            >
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
 
@@ -302,17 +362,19 @@ const formStyle: React.CSSProperties = {
   gap: 20,
   background: '#fff',
   border: '1px solid #e5e5e5',
-  borderRadius: 10,
+  borderRadius: 12,
   padding: 28,
   maxWidth: 520,
+  boxShadow: '0 1px 8px rgba(0,0,0,0.03)',
 }
 
 const sectionStyle: React.CSSProperties = {
   background: '#fff',
   border: '1px solid #e5e5e5',
-  borderRadius: 10,
+  borderRadius: 12,
   padding: 28,
   maxWidth: 520,
+  boxShadow: '0 1px 8px rgba(0,0,0,0.03)',
 }
 
 const sectionTitle: React.CSSProperties = {
@@ -327,16 +389,6 @@ const labelStyle: React.CSSProperties = {
   fontSize: 13,
   fontWeight: 500,
   color: '#555',
-}
-
-const inputStyle: React.CSSProperties = {
-  padding: '9px 12px',
-  fontSize: 14,
-  border: '1px solid #d0d0d0',
-  borderRadius: 8,
-  fontFamily: 'system-ui, sans-serif',
-  color: '#1a1a1a',
-  outline: 'none',
 }
 
 const errorStyle: React.CSSProperties = {
@@ -358,6 +410,7 @@ const submitBtn: React.CSSProperties = {
   fontWeight: 500,
   cursor: 'pointer',
   fontFamily: 'system-ui, sans-serif',
+  transition: 'background 0.15s ease, opacity 0.15s ease',
 }
 
 const cancelLink: React.CSSProperties = {
@@ -367,6 +420,7 @@ const cancelLink: React.CSSProperties = {
   textDecoration: 'none',
   borderRadius: 8,
   border: '1px solid #e0e0e0',
+  transition: 'color 0.15s ease, border-color 0.15s ease',
 }
 
 const fileStatus: React.CSSProperties = {
@@ -389,7 +443,7 @@ const uploadBtn: React.CSSProperties = {
   fontSize: 13,
   color: '#333',
   fontFamily: 'system-ui, sans-serif',
-  cursor: 'pointer',
+  transition: 'background 0.15s ease',
 }
 
 const progressTrack: React.CSSProperties = {

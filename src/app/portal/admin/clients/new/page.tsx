@@ -13,8 +13,17 @@ export default async function NewClientPage() {
 
   return (
     <div style={pageStyle}>
-      <div style={{ marginBottom: 24 }}>
-        <Link href="/portal/admin" style={backLink}>← Admin</Link>
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .new-client-page { animation: fadeUp 0.3s ease forwards; }
+        .back-link { transition: color 0.15s ease; }
+        .back-link:hover { color: #1a1a1a !important; }
+      `}</style>
+      <div style={{ marginBottom: 28 }} className="new-client-page">
+        <Link href="/portal/admin" style={backLink} className="back-link">← All clients</Link>
         <h1 style={h1Style}>New Client</h1>
       </div>
       <ClientForm />
@@ -31,9 +40,9 @@ const pageStyle: React.CSSProperties = {
 
 const backLink: React.CSSProperties = {
   fontSize: 13,
-  color: '#999',
+  color: '#aaa',
   textDecoration: 'none',
-  display: 'block',
+  display: 'inline-block',
   marginBottom: 8,
 }
 

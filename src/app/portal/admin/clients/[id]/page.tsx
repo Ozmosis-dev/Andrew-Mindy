@@ -30,15 +30,36 @@ export default async function EditClientPage({ params }: Props) {
 
   return (
     <div style={pageStyle}>
-      <div style={{ marginBottom: 24 }}>
-        <Link href="/portal/admin" style={backLink}>← Admin</Link>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 style={h1Style}>{client.name}</h1>
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .client-page { animation: fadeUp 0.3s ease forwards; }
+        .back-link { transition: color 0.15s ease; }
+        .back-link:hover { color: #1a1a1a !important; }
+        .preview-link {
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .preview-link:hover {
+          background: #1a1a1a !important;
+          border-color: #1a1a1a !important;
+          color: #fff !important;
+        }
+      `}</style>
+      <div style={{ marginBottom: 28 }} className="client-page">
+        <Link href="/portal/admin" style={backLink} className="back-link">← All clients</Link>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+          <div>
+            <h1 style={h1Style}>{client.name}</h1>
+            <p style={slugLine}>andrewmindy.com/portal/{client.slug}</p>
+          </div>
           <a
             href={`/portal/${client.slug}`}
             target="_blank"
             rel="noopener noreferrer"
             style={previewLink}
+            className="preview-link"
           >
             Preview portal →
           </a>
@@ -58,10 +79,9 @@ const pageStyle: React.CSSProperties = {
 
 const backLink: React.CSSProperties = {
   fontSize: 13,
-  color: '#999',
+  color: '#aaa',
   textDecoration: 'none',
-  display: 'block',
-  marginBottom: 8,
+  display: 'inline-block',
 }
 
 const h1Style: React.CSSProperties = {
@@ -72,11 +92,20 @@ const h1Style: React.CSSProperties = {
   letterSpacing: '-0.03em',
 }
 
+const slugLine: React.CSSProperties = {
+  fontSize: 12,
+  color: '#aaa',
+  margin: '3px 0 0',
+  fontFamily: 'monospace',
+}
+
 const previewLink: React.CSSProperties = {
   fontSize: 13,
-  color: '#555',
+  color: '#1a1a1a',
   textDecoration: 'none',
-  padding: '6px 12px',
-  border: '1px solid #e0e0e0',
-  borderRadius: 6,
+  padding: '7px 14px',
+  border: '1px solid rgba(0,0,0,0.18)',
+  borderRadius: 7,
+  fontWeight: 500,
+  letterSpacing: '0.01em',
 }
