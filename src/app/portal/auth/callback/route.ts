@@ -27,13 +27,12 @@ export async function GET(request: NextRequest) {
     }
   )
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code)
-  if (error) {
+  const { data: { session }, error } = await supabase.auth.exchangeCodeForSession(code)
+  if (error || !session) {
     return NextResponse.redirect(`${origin}/portal/admin/login?error=auth_failed`)
   }
 
-  const { data: { session } } = await supabase.auth.getSession()
-  const email = session?.user?.email
+  const email = session.user.email
 
   if (!email) {
     return NextResponse.redirect(`${origin}/portal/admin/login?error=auth_failed`)
