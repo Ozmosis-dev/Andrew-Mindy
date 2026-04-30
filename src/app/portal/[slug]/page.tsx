@@ -2,11 +2,17 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import PortalIframe from './PortalIframe'
+import SetPasswordForm from './SetPasswordForm'
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ first_login?: string }>
+}
 
-export default async function PortalPage({ params }: Props) {
+export default async function PortalPage({ params, searchParams }: Props) {
   const { slug } = await params
+  const { first_login } = await searchParams
+
   const supabase = await createClient()
   const { data: { session } } = await supabase.auth.getSession()
 
@@ -46,6 +52,16 @@ export default async function PortalPage({ params }: Props) {
         </form>
       </div>
     )
+  }
+
+  // First-time magic link visitor who hasn't set a password yet
+  const needsPassword =
+    !isAdmin &&
+    first_login === '1' &&
+    !session.user.user_metadata?.password_set
+
+  if (needsPassword) {
+    return <SetPasswordForm slug={slug} />
   }
 
   return (

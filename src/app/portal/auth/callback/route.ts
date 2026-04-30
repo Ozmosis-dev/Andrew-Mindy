@@ -25,7 +25,18 @@ export async function GET(request: NextRequest) {
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // Client portal routes get a first_login flag so the portal page can
+      // prompt password creation before showing brand content.
+      const isClientPortal =
+        next.startsWith('/portal/') &&
+        !next.startsWith('/portal/admin') &&
+        !next.startsWith('/portal/auth')
+
+      const redirectUrl = isClientPortal
+        ? `${origin}${next}?first_login=1`
+        : `${origin}${next}`
+
+      return NextResponse.redirect(redirectUrl)
     }
   }
 

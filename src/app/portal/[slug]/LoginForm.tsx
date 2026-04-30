@@ -2,34 +2,28 @@
 
 import { useState, FormEvent } from 'react'
 import { createClient } from '@/lib/supabase-browser'
+import { useRouter } from 'next/navigation'
 
 export default function LoginForm({ slug }: { slug: string }) {
+  const router = useRouter()
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
     const supabase = createClient()
-    const redirectTo = `${window.location.origin}/portal/auth/callback?next=/portal/${slug}`
-    await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo },
-    })
-    // Always show confirmation — never reveal whether email is registered
-    setSent(true)
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
-  }
-
-  if (sent) {
-    return (
-      <div style={confirmStyle}>
-        <p style={{ margin: 0, fontSize: 14, color: '#333' }}>
-          Check your email for a sign-in link. It expires in 1 hour.
-        </p>
-      </div>
-    )
+    if (error) {
+      setError('Incorrect email or password.')
+      return
+    }
+    router.push(`/portal/${slug}`)
+    router.refresh()
   }
 
   return (
@@ -43,9 +37,21 @@ export default function LoginForm({ slug }: { slug: string }) {
         style={inputStyle}
         autoFocus
       />
+      <input
+        type="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        required
+        placeholder="Password"
+        style={inputStyle}
+      />
+      {error && <p style={errorStyle}>{error}</p>}
       <button type="submit" disabled={loading} style={btnStyle}>
-        {loading ? 'Sending…' : 'Send sign-in link'}
+        {loading ? 'Signing in…' : 'Sign in'}
       </button>
+      <p style={hintStyle}>
+        First time? Your account manager will send you a sign-in link to get started.
+      </p>
     </form>
   )
 }
@@ -74,8 +80,18 @@ const btnStyle: React.CSSProperties = {
   letterSpacing: '-0.01em',
 }
 
-const confirmStyle: React.CSSProperties = {
-  background: '#f5f5f5',
-  borderRadius: 8,
-  padding: '16px',
+const errorStyle: React.CSSProperties = {
+  fontSize: 13,
+  color: '#ef4444',
+  margin: 0,
+  background: '#fef2f2',
+  borderRadius: 6,
+  padding: '8px 12px',
+}
+
+const hintStyle: React.CSSProperties = {
+  fontSize: 12,
+  color: '#aaa',
+  margin: '4px 0 0',
+  textAlign: 'center',
 }
