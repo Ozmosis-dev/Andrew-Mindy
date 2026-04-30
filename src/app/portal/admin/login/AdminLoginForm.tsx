@@ -12,7 +12,7 @@ export default function AdminLoginForm() {
     e.preventDefault()
     setLoading(true)
     const supabase = createClient()
-    const redirectTo = `${window.location.origin}/portal/auth/callback`
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/portal/auth/callback`
     await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: redirectTo },
