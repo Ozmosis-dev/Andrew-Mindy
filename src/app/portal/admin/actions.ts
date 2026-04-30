@@ -84,31 +84,26 @@ export async function updateClient(id: string, formData: FormData) {
   return { success: true }
 }
 
-export async function uploadHtml(id: string, slug: string, formData: FormData) {
-  const file = formData.get('html') as File
-  if (!file || file.size === 0) return { error: 'No file provided' }
-  if (!file.name.endsWith('.html')) return { error: 'Only .html files allowed' }
-
-  const buffer = Buffer.from(await file.arrayBuffer())
-  const storagePath = `${slug}/guidelines.html`
-
+// Returns a signed upload URL so the browser can PUT the file directly to
+// Supabase Storage — bypasses Next.js body size limits entirely.
+export async function getSignedUploadUrl(slug: string): Promise<{ signedUrl?: string; path?: string; error?: string }> {
   const supabase = service()
-  const { error: uploadError } = await supabase.storage
+  const path = `${slug}/guidelines.html`
+  const { data, error } = await supabase.storage
     .from('brand-guidelines')
-    .upload(storagePath, buffer, {
-      contentType: 'text/html',
-      upsert: true,
-    })
+    .createSignedUploadUrl(path, { upsert: true })
+  if (error) return { error: error.message }
+  return { signedUrl: data.signedUrl, path }
+}
 
-  if (uploadError) return { error: uploadError.message }
-
-  const { error: dbError } = await supabase
+export async function confirmHtmlUpload(id: string, path: string) {
+  const supabase = service()
+  const { error } = await supabase
     .from('clients')
-    .update({ html_storage_path: storagePath })
+    .update({ html_storage_path: path })
     .eq('id', id)
-
-  if (dbError) return { error: dbError.message }
-
+  if (error) return { error: error.message }
+  revalidatePath('/portal/admin')
   revalidatePath(`/portal/admin/clients/${id}`)
   return { success: true }
 }

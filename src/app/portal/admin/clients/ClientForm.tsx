@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import {
   createClient,
   updateClient,
-  uploadHtml,
+  getSignedUploadUrl,
+  confirmHtmlUpload,
   checkSlugAvailability,
   generateSlug,
 } from '../actions'
@@ -36,6 +37,7 @@ export default function ClientForm({ client }: { client?: Client }) {
   const [saving, setSaving] = useState(false)
 
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadMsg, setUploadMsg] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -90,17 +92,55 @@ export default function ClientForm({ client }: { client?: Client }) {
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file || !client) return
+    if (!file.name.endsWith('.html')) {
+      setUploadMsg('Error: Only .html files allowed')
+      return
+    }
+
     setUploading(true)
+    setUploadProgress(0)
     setUploadMsg('')
 
-    const fd = new FormData()
-    fd.append('html', file)
+    // Step 1: get signed upload URL from server (bypasses Next.js body limit)
+    const urlResult = await getSignedUploadUrl(client.slug)
+    if (urlResult.error || !urlResult.signedUrl) {
+      setUploadMsg(`Error: ${urlResult.error ?? 'Failed to get upload URL'}`)
+      setUploading(false)
+      return
+    }
 
-    const result = await uploadHtml(client.id, client.slug, fd)
+    // Step 2: PUT file directly to Supabase Storage with progress tracking
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.upload.addEventListener('progress', (ev) => {
+          if (ev.lengthComputable) {
+            setUploadProgress(Math.round((ev.loaded / ev.total) * 100))
+          }
+        })
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve()
+          else reject(new Error(`Upload failed: ${xhr.status}`))
+        })
+        xhr.addEventListener('error', () => reject(new Error('Network error')))
+        xhr.open('PUT', urlResult.signedUrl!)
+        xhr.setRequestHeader('Content-Type', 'text/html')
+        xhr.send(file)
+      })
+    } catch (err: unknown) {
+      setUploadMsg(`Error: ${err instanceof Error ? err.message : 'Upload failed'}`)
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+      return
+    }
+
+    // Step 3: update DB with storage path
+    const confirmResult = await confirmHtmlUpload(client.id, urlResult.path!)
     setUploading(false)
+    setUploadProgress(0)
 
-    if (result.error) {
-      setUploadMsg(`Error: ${result.error}`)
+    if (confirmResult.error) {
+      setUploadMsg(`Error: ${confirmResult.error}`)
     } else {
       setUploadMsg('Uploaded successfully')
       router.refresh()
@@ -137,8 +177,13 @@ export default function ClientForm({ client }: { client?: Client }) {
               disabled={uploading}
               style={{ display: 'none' }}
             />
-            <span style={uploadBtn}>{uploading ? 'Uploading…' : 'Upload HTML file'}</span>
+            <span style={uploadBtn}>{uploading ? `Uploading… ${uploadProgress}%` : 'Upload HTML file'}</span>
           </label>
+          {uploading && (
+            <div style={progressTrack}>
+              <div style={{ ...progressBar, width: `${uploadProgress}%` }} />
+            </div>
+          )}
           {uploadMsg && (
             <p style={{ fontSize: 12, margin: '8px 0 0', color: uploadMsg.startsWith('Error') ? '#ef4444' : '#22c55e' }}>
               {uploadMsg}
@@ -345,4 +390,20 @@ const uploadBtn: React.CSSProperties = {
   color: '#333',
   fontFamily: 'system-ui, sans-serif',
   cursor: 'pointer',
+}
+
+const progressTrack: React.CSSProperties = {
+  marginTop: 8,
+  height: 4,
+  background: '#e5e5e5',
+  borderRadius: 99,
+  overflow: 'hidden',
+  width: '100%',
+}
+
+const progressBar: React.CSSProperties = {
+  height: '100%',
+  background: '#1a1a1a',
+  borderRadius: 99,
+  transition: 'width 0.2s ease',
 }
