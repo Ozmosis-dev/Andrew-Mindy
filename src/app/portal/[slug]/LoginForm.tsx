@@ -10,6 +10,8 @@ export default function LoginForm({ slug }: { slug: string }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [btnHovered, setBtnHovered] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -32,21 +34,43 @@ export default function LoginForm({ slug }: { slug: string }) {
         type="email"
         value={email}
         onChange={e => setEmail(e.target.value)}
+        onFocus={() => setFocusedField('email')}
+        onBlur={() => setFocusedField(null)}
         required
         placeholder="you@company.com"
-        style={inputStyle}
+        style={{
+          ...inputStyle,
+          borderColor: focusedField === 'email' ? '#1a1a1a' : '#d0d0d0',
+          boxShadow: focusedField === 'email' ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+        }}
         autoFocus
       />
       <input
         type="password"
         value={password}
         onChange={e => setPassword(e.target.value)}
+        onFocus={() => setFocusedField('password')}
+        onBlur={() => setFocusedField(null)}
         required
         placeholder="Password"
-        style={inputStyle}
+        style={{
+          ...inputStyle,
+          borderColor: focusedField === 'password' ? '#1a1a1a' : '#d0d0d0',
+          boxShadow: focusedField === 'password' ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+        }}
       />
       {error && <p style={errorStyle}>{error}</p>}
-      <button type="submit" disabled={loading} style={btnStyle}>
+      <button
+        type="submit"
+        disabled={loading}
+        onMouseEnter={() => setBtnHovered(true)}
+        onMouseLeave={() => setBtnHovered(false)}
+        style={{
+          ...btnStyle,
+          background: loading ? '#555' : btnHovered ? '#333' : '#1a1a1a',
+          opacity: loading ? 0.7 : 1,
+        }}
+      >
         {loading ? 'Signing in…' : 'Sign in'}
       </button>
       <p style={hintStyle}>
@@ -65,6 +89,7 @@ const inputStyle: React.CSSProperties = {
   fontFamily: 'system-ui, sans-serif',
   color: '#1a1a1a',
   background: '#fff',
+  transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
 }
 
 const btnStyle: React.CSSProperties = {
@@ -78,6 +103,7 @@ const btnStyle: React.CSSProperties = {
   cursor: 'pointer',
   fontFamily: 'system-ui, sans-serif',
   letterSpacing: '-0.01em',
+  transition: 'background 0.15s ease, opacity 0.15s ease',
 }
 
 const errorStyle: React.CSSProperties = {

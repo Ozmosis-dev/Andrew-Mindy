@@ -18,6 +18,7 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
   const [inviteModal, setInviteModal] = useState<{ link: string; email: string } | null>(null)
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null)
 
   async function handleInvite(client: Client) {
     setLoadingId(client.id)
@@ -51,7 +52,37 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
 
   return (
     <>
-      <div style={tableWrap}>
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.97) translateY(8px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .table-wrap { animation: fadeUp 0.3s ease forwards; }
+        .action-link {
+          color: #555; font-size: 12px; text-decoration: none; margin-right: 12px;
+          font-weight: 500; transition: color 0.15s ease;
+        }
+        .action-link:hover { color: #1a1a1a; }
+        .action-btn {
+          background: none; border: 1px solid #d0d0d0; border-radius: 6px;
+          padding: 4px 10px; font-size: 12px; cursor: pointer;
+          font-family: system-ui, sans-serif; color: #333;
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .action-btn:hover:not(:disabled) { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+        .action-btn:disabled { opacity: 0.5; cursor: default; }
+        .modal-card { animation: modalIn 0.2s ease forwards; }
+        .copy-btn { transition: background 0.15s ease; }
+        .copy-btn:hover { background: #333 !important; }
+        .mailto-btn { transition: background 0.15s ease, border-color 0.15s ease; }
+        .mailto-btn:hover { background: #f5f5f5 !important; }
+      `}</style>
+
+      <div style={tableWrap} className="table-wrap">
         <table style={tableStyle}>
           <thead>
             <tr>
@@ -62,7 +93,16 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
           </thead>
           <tbody>
             {clients.map(client => (
-              <tr key={client.id} style={trStyle}>
+              <tr
+                key={client.id}
+                onMouseEnter={() => setHoveredRow(client.id)}
+                onMouseLeave={() => setHoveredRow(null)}
+                style={{
+                  ...trStyle,
+                  background: hoveredRow === client.id ? '#f9fafb' : '#fff',
+                  transition: 'background 0.15s ease',
+                }}
+              >
                 <td style={tdStyle}><span style={{ fontWeight: 500 }}>{client.name}</span></td>
                 <td style={tdStyle}><code style={codeStyle}>{client.slug}</code></td>
                 <td style={tdStyle}>{client.email}</td>
@@ -82,12 +122,12 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
                   </span>
                 </td>
                 <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
-                  <Link href={`/portal/admin/clients/${client.id}`} style={actionLink}>Edit</Link>
-                  <a href={`/portal/${client.slug}`} target="_blank" rel="noopener noreferrer" style={actionLink}>Preview</a>
+                  <Link href={`/portal/admin/clients/${client.id}`} className="action-link">Edit</Link>
+                  <a href={`/portal/${client.slug}`} target="_blank" rel="noopener noreferrer" className="action-link">Preview</a>
                   <button
                     onClick={() => handleInvite(client)}
                     disabled={loadingId === client.id}
-                    style={actionBtn}
+                    className="action-btn"
                   >
                     {loadingId === client.id ? '…' : 'Send Invite'}
                   </button>
@@ -100,19 +140,19 @@ export default function ClientsTable({ clients }: { clients: Client[] }) {
 
       {inviteModal && (
         <div style={overlayStyle} onClick={() => setInviteModal(null)}>
-          <div style={modalStyle} onClick={e => e.stopPropagation()}>
-            <h2 style={modalTitle}>Magic Link for {inviteModal.email}</h2>
-            <p style={modalSub}>Copy this link and send it to your client. It expires in 24 hours.</p>
+          <div style={modalStyle} className="modal-card" onClick={e => e.stopPropagation()}>
+            <h2 style={modalTitle}>Magic Link</h2>
+            <p style={modalSub}>Send this link to <strong style={{ color: '#333' }}>{inviteModal.email}</strong>. Expires in 24 hours.</p>
             <div style={linkBox}>
               <span style={{ fontSize: 12, color: '#555', wordBreak: 'break-all', flex: 1 }}>
                 {inviteModal.link}
               </span>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              <button onClick={copyLink} style={copyBtn}>
-                {copied ? 'Copied!' : 'Copy Link'}
+              <button onClick={copyLink} style={copyBtn} className="copy-btn">
+                {copied ? '✓ Copied' : 'Copy Link'}
               </button>
-              <a href={mailtoHref} style={mailtoBtn}>Send via Email</a>
+              <a href={mailtoHref} style={mailtoBtn} className="mailto-btn">Send via Email</a>
               <button onClick={() => setInviteModal(null)} style={closeBtn}>Close</button>
             </div>
           </div>
@@ -182,25 +222,6 @@ const inactivePill: React.CSSProperties = {
   fontWeight: 500,
 }
 
-const actionLink: React.CSSProperties = {
-  color: '#555',
-  fontSize: 12,
-  textDecoration: 'none',
-  marginRight: 12,
-  fontWeight: 500,
-}
-
-const actionBtn: React.CSSProperties = {
-  background: 'none',
-  border: '1px solid #d0d0d0',
-  borderRadius: 6,
-  padding: '4px 10px',
-  fontSize: 12,
-  cursor: 'pointer',
-  fontFamily: 'system-ui, sans-serif',
-  color: '#333',
-}
-
 const emptyStyle: React.CSSProperties = {
   background: '#fff',
   border: '1px solid #e5e5e5',
@@ -212,7 +233,9 @@ const emptyStyle: React.CSSProperties = {
 const overlayStyle: React.CSSProperties = {
   position: 'fixed',
   inset: 0,
-  background: 'rgba(0,0,0,0.4)',
+  background: 'rgba(0,0,0,0.35)',
+  backdropFilter: 'blur(4px)',
+  WebkitBackdropFilter: 'blur(4px)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -221,17 +244,18 @@ const overlayStyle: React.CSSProperties = {
 
 const modalStyle: React.CSSProperties = {
   background: '#fff',
-  borderRadius: 12,
+  borderRadius: 14,
   padding: '32px',
   maxWidth: 520,
   width: '90%',
+  boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
 }
 
 const modalTitle: React.CSSProperties = {
   fontSize: 16,
   fontWeight: 600,
   color: '#1a1a1a',
-  margin: '0 0 8px',
+  margin: '0 0 6px',
   letterSpacing: '-0.02em',
 }
 
@@ -273,6 +297,7 @@ const mailtoBtn: React.CSSProperties = {
   cursor: 'pointer',
   textDecoration: 'none',
   fontFamily: 'system-ui, sans-serif',
+  display: 'inline-block',
 }
 
 const closeBtn: React.CSSProperties = {
@@ -284,4 +309,5 @@ const closeBtn: React.CSSProperties = {
   fontSize: 13,
   cursor: 'pointer',
   fontFamily: 'system-ui, sans-serif',
+  marginLeft: 'auto',
 }

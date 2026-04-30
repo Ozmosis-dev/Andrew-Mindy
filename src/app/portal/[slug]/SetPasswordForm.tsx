@@ -10,6 +10,8 @@ export default function SetPasswordForm({ slug }: { slug: string }) {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [btnHovered, setBtnHovered] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -27,7 +29,6 @@ export default function SetPasswordForm({ slug }: { slug: string }) {
     setLoading(true)
     const supabase = createClient()
 
-    // Set password and mark metadata so future logins skip this prompt
     const { error } = await supabase.auth.updateUser({
       password,
       data: { password_set: true },
@@ -40,14 +41,21 @@ export default function SetPasswordForm({ slug }: { slug: string }) {
       return
     }
 
-    // Replace URL to strip first_login param before entering portal
     router.replace(`/portal/${slug}`)
     router.refresh()
   }
 
   return (
     <div style={pageStyle}>
-      <div style={cardStyle}>
+      <style>{`
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .setpw-card { animation: fadeSlideUp 0.35s ease forwards; }
+      `}</style>
+      <div style={cardStyle} className="setpw-card">
+        <div style={logoMark}>A</div>
         <h1 style={headingStyle}>Create your password</h1>
         <p style={subStyle}>You&apos;ll use this to sign in on future visits.</p>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -55,21 +63,43 @@ export default function SetPasswordForm({ slug }: { slug: string }) {
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            onFocus={() => setFocusedField('password')}
+            onBlur={() => setFocusedField(null)}
             required
             placeholder="New password (min. 8 characters)"
-            style={inputStyle}
+            style={{
+              ...inputStyle,
+              borderColor: focusedField === 'password' ? '#1a1a1a' : '#d0d0d0',
+              boxShadow: focusedField === 'password' ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+            }}
             autoFocus
           />
           <input
             type="password"
             value={confirm}
             onChange={e => setConfirm(e.target.value)}
+            onFocus={() => setFocusedField('confirm')}
+            onBlur={() => setFocusedField(null)}
             required
             placeholder="Confirm password"
-            style={inputStyle}
+            style={{
+              ...inputStyle,
+              borderColor: focusedField === 'confirm' ? '#1a1a1a' : '#d0d0d0',
+              boxShadow: focusedField === 'confirm' ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+            }}
           />
           {error && <p style={errorStyle}>{error}</p>}
-          <button type="submit" disabled={loading} style={btnStyle}>
+          <button
+            type="submit"
+            disabled={loading}
+            onMouseEnter={() => setBtnHovered(true)}
+            onMouseLeave={() => setBtnHovered(false)}
+            style={{
+              ...btnStyle,
+              background: loading ? '#555' : btnHovered ? '#333' : '#1a1a1a',
+              opacity: loading ? 0.7 : 1,
+            }}
+          >
             {loading ? 'Saving…' : 'Set password & continue'}
           </button>
         </form>
@@ -91,23 +121,39 @@ const pageStyle: React.CSSProperties = {
 const cardStyle: React.CSSProperties = {
   background: '#fff',
   border: '1px solid #e5e5e5',
-  borderRadius: 12,
+  borderRadius: 14,
   padding: '40px 36px',
   width: '100%',
   maxWidth: 400,
+  boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
+}
+
+const logoMark: React.CSSProperties = {
+  width: 36,
+  height: 36,
+  background: '#1a1a1a',
+  borderRadius: 8,
+  color: '#fff',
+  fontSize: 16,
+  fontWeight: 700,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: 20,
+  letterSpacing: '-0.02em',
 }
 
 const headingStyle: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 600,
   color: '#1a1a1a',
-  margin: '0 0 10px',
+  margin: '0 0 6px',
   letterSpacing: '-0.02em',
 }
 
 const subStyle: React.CSSProperties = {
-  fontSize: 14,
-  color: '#777',
+  fontSize: 13,
+  color: '#999',
   margin: '0 0 24px',
 }
 
@@ -120,6 +166,7 @@ const inputStyle: React.CSSProperties = {
   fontFamily: 'system-ui, sans-serif',
   color: '#1a1a1a',
   background: '#fff',
+  transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
 }
 
 const btnStyle: React.CSSProperties = {
@@ -133,6 +180,7 @@ const btnStyle: React.CSSProperties = {
   cursor: 'pointer',
   fontFamily: 'system-ui, sans-serif',
   letterSpacing: '-0.01em',
+  transition: 'background 0.15s ease, opacity 0.15s ease',
 }
 
 const errorStyle: React.CSSProperties = {

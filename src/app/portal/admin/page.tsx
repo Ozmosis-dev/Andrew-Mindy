@@ -22,16 +22,37 @@ export default async function AdminPage() {
     .select('id, name, slug, email, active, created_at, html_storage_path')
     .order('created_at', { ascending: false })
 
+  const activeCount = (clients ?? []).filter(c => c.active).length
+
   return (
     <div style={pageStyle}>
-      <header style={headerStyle}>
+      <style>{`
+        @keyframes fadeDown {
+          from { opacity: 0; transform: translateY(-6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .admin-header { animation: fadeDown 0.3s ease forwards; }
+        .new-btn { transition: background 0.15s ease; }
+        .new-btn:hover { background: #333 !important; }
+        .signout-btn { transition: color 0.15s ease; }
+        .signout-btn:hover { color: #1a1a1a !important; }
+      `}</style>
+
+      <header style={headerStyle} className="admin-header">
         <div>
           <h1 style={h1Style}>Brand Portal</h1>
-          <p style={subtitleStyle}>Client management</p>
+          <p style={subtitleStyle}>
+            {(clients ?? []).length} client{(clients ?? []).length !== 1 ? 's' : ''} · {activeCount} active
+          </p>
         </div>
-        <Link href="/portal/admin/clients/new" style={newBtnStyle}>
-          + New Client
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <form action="/portal/auth/signout" method="POST">
+            <button type="submit" style={signoutBtn} className="signout-btn">Sign out</button>
+          </form>
+          <Link href="/portal/admin/clients/new" style={newBtnStyle} className="new-btn">
+            + New Client
+          </Link>
+        </div>
       </header>
 
       <ClientsTable clients={clients ?? []} />
@@ -76,4 +97,14 @@ const newBtnStyle: React.CSSProperties = {
   fontWeight: 500,
   textDecoration: 'none',
   letterSpacing: '-0.01em',
+}
+
+const signoutBtn: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  color: '#bbb',
+  fontSize: 13,
+  cursor: 'pointer',
+  fontFamily: 'system-ui, sans-serif',
+  padding: '9px 4px',
 }
