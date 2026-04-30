@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { phosphate, montserrat, spaceGrotesk } from "./fonts";
-import NavBarWrapper from "../components/NavBarWrapper";
-import TopBlurMask from "../components/TopBlurMask";
-import GSAPInit from "../components/GSAPInit";
-import CustomCursor from "../components/CustomCursor";
+import SiteChrome from "../components/SiteChrome";
 import { ThemeProvider } from "../context/ThemeContext";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.scss";
@@ -42,10 +39,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId="G-HPSDL0Q5Y5" />
       <body className={`${phosphate.variable} ${montserrat.variable} ${spaceGrotesk.variable}`}>
         <ThemeProvider>
-          <CustomCursor />
-          <GSAPInit />
-          <TopBlurMask />
-          <NavBarWrapper />
+          <SiteChrome />
           {children}
         </ThemeProvider>
       </body>
